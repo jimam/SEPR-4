@@ -44,6 +44,7 @@ public class MainScreen implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //Go to main menu if press ESC
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
             parent.changeScreen(MyGdxGame.MENU);
         }
