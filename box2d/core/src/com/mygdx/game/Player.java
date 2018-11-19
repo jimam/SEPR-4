@@ -16,6 +16,7 @@ public class Player extends Sprite {
     }
 
     // IntelliJ test commit.
+    // Another test.
 
     @Override
     public void draw(Batch batch) {
