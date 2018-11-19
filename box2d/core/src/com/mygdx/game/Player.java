@@ -15,6 +15,8 @@ public class Player extends Sprite {
         super(sprite);
     }
 
+    // IntelliJ test commit.
+
     @Override
     public void draw(Batch batch) {
         // Passing update with the time that passed since the last frame.
