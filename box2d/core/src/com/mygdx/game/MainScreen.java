@@ -36,6 +36,8 @@ public class MainScreen implements Screen {
 
         player = new Player(new Sprite(new Texture("core/assets/player01.png")));
 
+        Gdx.input.setInputProcessor(player);
+
     }
 
     @Override
