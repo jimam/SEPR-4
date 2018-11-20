@@ -18,6 +18,7 @@ public class MainScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private Player player;
+    private Zombie testzombie;
 
     public MainScreen(MyGdxGame myGDXgame) {
         parent = myGDXgame;
@@ -35,6 +36,7 @@ public class MainScreen implements Screen {
         camera = new OrthographicCamera();
 
         player = new Player(new Sprite(new Texture("core/assets/player01.png")));
+        testzombie = new Zombie(new Sprite(new Texture("core/assets/anime1.png")), 100f, 0f);
 
     }
 
@@ -54,6 +56,7 @@ public class MainScreen implements Screen {
 
         renderer.getBatch().begin();
         player.draw(renderer.getBatch());
+        testzombie.draw(renderer.getBatch());
         renderer.getBatch().end();
     }
 
