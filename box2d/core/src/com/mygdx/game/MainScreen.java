@@ -46,6 +46,10 @@ public class MainScreen implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Keep the player central in the screen.
+        camera.position.set(player.getX() + (player.getHeight() / 2), player.getY() + (player.getHeight() / 2), 0);
+        camera.update();
+
         //Go to main menu if press ESC
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
             parent.changeScreen(MyGdxGame.MENU);
@@ -64,7 +68,6 @@ public class MainScreen implements Screen {
         // Resize the camera depending the size of the window.
         camera.viewportHeight = height;
         camera.viewportWidth = width;
-        camera.update();
     }
 
     @Override
