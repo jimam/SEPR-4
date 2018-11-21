@@ -52,7 +52,7 @@ public class MainScreen implements Screen {
         camera.position.set(player.getX() + (player.getHeight() / 2), player.getY() + (player.getHeight() / 2), 0);
         camera.update();
 
-        //Go to main menu if press ESC
+        // Go to main menu if press ESC
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
             parent.changeScreen(MyGdxGame.MENU);
         }

@@ -39,6 +39,7 @@ public class Player extends Sprite implements InputProcessor {
         // result.
         // Modulus 2pi of the angle must be taken as the angle is negative for the -x quadrants.
         // The angle must first be displaced by 2pi because the Java modulus function can return a -ve value.
+
         return(Math.atan2((coordinate.x - playerCenter.x), (coordinate.y - playerCenter.y)) + (2 * Math.PI))
                         % (2 * Math.PI);
     }
