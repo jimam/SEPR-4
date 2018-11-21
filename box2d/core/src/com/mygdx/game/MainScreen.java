@@ -38,6 +38,8 @@ public class MainScreen implements Screen {
         player = new Player(new Sprite(new Texture("core/assets/player01.png")));
         testzombie = new Zombie(new Sprite(new Texture("core/assets/anime1.png")), 100f, 0f);
 
+        Gdx.input.setInputProcessor(player);
+
     }
 
     @Override
@@ -45,6 +47,10 @@ public class MainScreen implements Screen {
         // Clears the screen to black.
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Keep the player central in the screen.
+        camera.position.set(player.getX() + (player.getHeight() / 2), player.getY() + (player.getHeight() / 2), 0);
+        camera.update();
 
         //Go to main menu if press ESC
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
@@ -65,7 +71,6 @@ public class MainScreen implements Screen {
         // Resize the camera depending the size of the window.
         camera.viewportHeight = height;
         camera.viewportWidth = width;
-        camera.update();
     }
 
     @Override
