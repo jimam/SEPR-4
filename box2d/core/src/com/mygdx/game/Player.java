@@ -27,6 +27,23 @@ public class Player extends Sprite implements InputProcessor {
     }
 
     /**
+     * Finds the direction (in degrees) that an object is in relative to the player.
+     * @param coordinate 2d vector representing the position of the object
+     * @return bearing   value in radians of the bearing from the player to the coordinate
+     */
+    private double getDirection(Vector2 coordinate) {
+        Vector2 playerCenter = new Vector2(this.getX() + (getWidth()/ 2),
+                                            this.getY()+ (getHeight() / 2));
+
+        // atan2 is uses the signs of both variables the determine the correct quadrant (relative to the player) of the
+        // result.
+        // Modulus 2pi of the angle must be taken as the angle is negative for the -x quadrants.
+        // The angle must first be displaced by 2pi because the Java modulus function can return a -ve value.
+        return(Math.atan2((coordinate.x - playerCenter.x), (coordinate.y - playerCenter.y)) + (2 * Math.PI))
+                        % (2 * Math.PI);
+    }
+
+    /**
      * This method updates all the players properties.
      *
      * @param delta the time passed since the last frame (render() call)
