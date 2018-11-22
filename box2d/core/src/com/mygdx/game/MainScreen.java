@@ -93,5 +93,6 @@ public class MainScreen implements Screen {
         map.dispose();
         renderer.dispose();
         player.getTexture().dispose();
+        testzombie.getTexture().dispose();
     }
 }
