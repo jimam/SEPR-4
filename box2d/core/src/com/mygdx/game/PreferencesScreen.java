@@ -140,7 +140,8 @@ public class PreferencesScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // TODO Auto-generated method stub
+        // Update the screen when the window resolution is changed.
+        this.stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -160,6 +161,6 @@ public class PreferencesScreen implements Screen {
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
+
     }
 }

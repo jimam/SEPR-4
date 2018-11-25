@@ -9,6 +9,7 @@ public class MyGdxGame extends Game {
     private MenuScreen menuScreen;
     private MainScreen mainScreen;
     private EndScreen endScreen;
+    private MapScreen mapScreen;
     private AppPreferences preferences;
 
 
@@ -16,6 +17,7 @@ public class MyGdxGame extends Game {
     public final static int PREFERENCES = 1;
     public final static int APPLICATION = 2;
     public final static int ENDGAME = 3;
+    public final static int MAP = 4;
 
     public void changeScreen(int screen) {
         switch(screen) {
@@ -34,6 +36,10 @@ public class MyGdxGame extends Game {
             case ENDGAME:
                 if(endScreen == null) endScreen = new EndScreen(this);
                 this.setScreen(endScreen);
+                break;
+            case MAP:
+                if (mapScreen == null) mapScreen = new MapScreen(this);
+                this.setScreen(mapScreen);
                 break;
         }
     }
