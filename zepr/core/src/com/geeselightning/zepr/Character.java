@@ -10,6 +10,7 @@ public class Character extends Sprite {
 
     protected Vector2 velocity = new Vector2(); // 2D vector
     protected float speed = 120;
+    protected int health = 100;
 
     public Character(Sprite sprite, Vector2 spawn) {
         super(sprite);
@@ -67,6 +68,16 @@ public class Character extends Sprite {
         // New position is the old position plus the distance moved as a result of the velocity
         setX(getX()  + velocity.x * delta);
         setY(getY() + velocity.y * delta);
+    }
+
+    // Returns the value of health
+    protected int getHealth(){
+        return health;
+    }
+
+    // Decreases health by value of dmg
+    protected void takeDamage(int dmg){
+        health -= dmg;
     }
 
 }

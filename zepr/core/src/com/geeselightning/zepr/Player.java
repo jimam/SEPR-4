@@ -12,6 +12,7 @@ public class Player extends Character implements InputProcessor {
     }
 
 
+
     @Override
     public boolean keyDown(int keycode) {
         // Adding inputs for WASD as movement in the x and y axis.
