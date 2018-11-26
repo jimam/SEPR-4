@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Stage implements Screen {
 
     private Zepr parent;
-    private TiledMap map;
+    protected static TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private Player player;
@@ -72,6 +73,11 @@ public class Stage implements Screen {
         renderer.getBatch().begin();
         player.draw(renderer.getBatch());
         testzombie.draw(renderer.getBatch());
+
+        // test collision detection
+        BitmapFont font = new BitmapFont();
+        font.draw(renderer.getBatch(), Boolean.toString(player.isBlocked()), 10, 10);
+
         renderer.getBatch().end();
     }
 

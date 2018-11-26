@@ -4,7 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.Iterator;
 
 public class Character extends Sprite {
 
@@ -25,6 +29,19 @@ public class Character extends Sprite {
         update(Gdx.graphics.getDeltaTime());
 
         super.draw(batch);
+    }
+
+    public boolean isBlocked() {
+        TiledMapTileLayer collisionLayer = (TiledMapTileLayer) Stage.map.getLayers().get(1);
+        TiledMapTileLayer.Cell cell = collisionLayer.getCell((int) (getX() / collisionLayer.getTileWidth()), (int) (getY() / collisionLayer.getTileHeight()));
+
+        if (cell == null || cell.getTile() == null) {
+            return false;
+        }
+
+        MapProperties properties = cell.getTile().getProperties();
+
+        return (properties.containsKey("solid"));
     }
 
     /**
