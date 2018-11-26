@@ -41,7 +41,13 @@ public class Character extends Sprite {
 
         MapProperties properties = cell.getTile().getProperties();
 
-        return (properties.containsKey("solid"));
+        if (properties.containsKey("solid")) {
+            if ((Boolean) properties.get("solid") == true) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
