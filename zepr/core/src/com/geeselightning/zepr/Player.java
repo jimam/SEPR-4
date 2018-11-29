@@ -1,5 +1,6 @@
 package com.geeselightning.zepr;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,7 +11,7 @@ public class Player extends Character implements InputProcessor {
     public Player(Sprite sprite, Vector2 playerSpawn) {
         super(sprite, playerSpawn);
     }
-
+    public int[] mouseCoordinate = {0,0};
 
 
     @Override
@@ -65,7 +66,8 @@ public class Player extends Character implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        return false;
+        mouseCoordinate = new int[] {Gdx.input.getX(), Gdx.input.getY()};
+        return true;
     }
 
     @Override
