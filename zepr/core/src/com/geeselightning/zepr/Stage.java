@@ -43,7 +43,9 @@ public class Stage implements Screen {
         // It is only possible to view the render of the map through an orthographic camera.
         camera = new OrthographicCamera();
 
-        player = new Player(new Sprite(new Texture("core/assets/player01.png")), playerSpawn);
+        //retrieve player instance and reset it
+        player = Player.getInstance();
+        player.respawn(playerSpawn);
 
         // Single zombie
         testzombie = new Zombie(new Sprite(new Texture("core/assets/anime1.png")), testZombieSpawn);
