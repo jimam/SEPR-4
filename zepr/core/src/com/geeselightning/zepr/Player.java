@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Player extends Character implements InputProcessor {
 
     private static final Player instance = new Player(new Sprite(new Texture("core/assets/player01.png")), new Vector2(0, 0));
-    private Vector2 mouseCoordinate = new Vector2(0, 0);
+    private Vector2 mouseScreenCoordinate = new Vector2(0, 0);
     private Stage currentStage;
 
     private Player(Sprite sprite, Vector2 playerSpawn) {
@@ -25,7 +25,7 @@ public class Player extends Character implements InputProcessor {
         setX(playerSpawn.x);
         setY(playerSpawn.y);
         this.speed = Constant.PLAYERSPEED;
-        this.health = Constant.ZOMBIEMAXHP;
+        this.health = Constant.PLAYERMAXHP;
         this.currentStage = stage;
         this.setTexture(new Texture("core/assets/player01.png"));
     }
@@ -82,7 +82,7 @@ public class Player extends Character implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        mouseCoordinate.set(Gdx.input.getX(), Gdx.input.getY());
+        mouseScreenCoordinate.set(Gdx.input.getX(), Gdx.input.getY());
         return true;
     }
 

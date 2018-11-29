@@ -50,6 +50,10 @@ public class Character extends Sprite {
         return false;
     }
 
+    public Vector2 getCenter() {
+        return new Vector2(getX() + (getHeight() / 2), getY() + (getWidth() / 2));
+    }
+
     /**
      * Finds the direction (in degrees) that an object is in relative to the character.
      * @param coordinate 2d vector representing the position of the object
