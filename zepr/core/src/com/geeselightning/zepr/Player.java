@@ -8,11 +8,12 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Player extends Character implements InputProcessor {
 
+    private Vector2 mouseCoordinate = new Vector2(0, 0);
+
+
     public Player(Sprite sprite, Vector2 playerSpawn) {
         super(sprite, playerSpawn);
     }
-    public int[] mouseCoordinate = {0,0};
-
 
     @Override
     public boolean keyDown(int keycode) {
@@ -66,7 +67,7 @@ public class Player extends Character implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        mouseCoordinate = new int[] {Gdx.input.getX(), Gdx.input.getY()};
+        mouseCoordinate.set(Gdx.input.getX(), Gdx.input.getY());
         return true;
     }
 
