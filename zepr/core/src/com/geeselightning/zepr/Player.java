@@ -11,6 +11,7 @@ public class Player extends Character implements InputProcessor {
 
     private static final Player instance = new Player(new Sprite(new Texture("core/assets/player01.png")), new Vector2(0, 0));
     private Vector2 mouseCoordinate = new Vector2(0, 0);
+    private Stage currentStage;
 
     private Player(Sprite sprite, Vector2 playerSpawn) {
         super(sprite, playerSpawn);
@@ -20,11 +21,12 @@ public class Player extends Character implements InputProcessor {
         return instance;
     }
 
-    public void respawn(Vector2 playerSpawn){
+    public void respawn(Vector2 playerSpawn, Stage stage){
         setX(playerSpawn.x);
         setY(playerSpawn.y);
         this.speed = 120;
         this.health = 100;
+        this.currentStage = stage;
         this.setTexture(new Texture("core/assets/player01.png"));
     }
 
