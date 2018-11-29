@@ -18,7 +18,7 @@ public class Stage implements Screen {
     private Zepr parent;
     protected static TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-    private OrthographicCamera camera;
+    protected OrthographicCamera camera;
     private Player player;
     private Zombie testzombie;
     private String mapLocation;
@@ -45,7 +45,7 @@ public class Stage implements Screen {
 
         //retrieve player instance and reset it
         player = Player.getInstance();
-        player.respawn(playerSpawn);
+        player.respawn(playerSpawn, this);
 
         // Single zombie
         testzombie = new Zombie(new Sprite(new Texture("core/assets/anime1.png")), testZombieSpawn);
