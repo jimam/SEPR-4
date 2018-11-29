@@ -23,8 +23,8 @@ public class Player extends Character implements InputProcessor {
     public void respawn(Vector2 playerSpawn){
         setX(playerSpawn.x);
         setY(playerSpawn.y);
-        this.speed = 120;
-        this.health = 100;
+        this.speed = Constant.PLAYERSPEED;
+        this.health = Constant.PLAYERMAXHP;
         this.setTexture(new Texture("core/assets/player01.png"));
     }
 

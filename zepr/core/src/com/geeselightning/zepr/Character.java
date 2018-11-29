@@ -13,8 +13,8 @@ import java.util.Iterator;
 public class Character extends Sprite {
 
     protected Vector2 velocity = new Vector2(); // 2D vector
-    protected float speed = 120;
-    protected int health = 100;
+    protected float speed;
+    protected int health;
 
     public Character(Sprite sprite, Vector2 spawn) {
         super(sprite);

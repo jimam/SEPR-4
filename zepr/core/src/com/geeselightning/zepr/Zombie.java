@@ -7,6 +7,8 @@ public class Zombie extends Character {
 
     public Zombie(Sprite sprite, Vector2 zombieSpawn) {
         super(sprite, zombieSpawn);
+        this.speed = Constant.ZOMBIESPEED;
+        this.health = Constant.ZOMBIEMAXHP;
     }
 
     @Override
