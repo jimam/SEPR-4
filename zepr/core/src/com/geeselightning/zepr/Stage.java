@@ -50,7 +50,7 @@ public class Stage implements Screen {
         // Single zombie
         testzombie = new Zombie(new Sprite(new Texture("core/assets/anime1.png")), testZombieSpawn);
 
-        Gdx.input.setInputProcessor(player);
+        Gdx.input.setInputProcessor(new ZeprInputProcessor());
 
     }
 
