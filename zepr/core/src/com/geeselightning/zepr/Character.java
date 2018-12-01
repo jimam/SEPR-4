@@ -30,6 +30,8 @@ public class Character extends Sprite {
         update(Gdx.graphics.getDeltaTime());
 
         super.draw(batch);
+
+        setRotation((float) Math.toDegrees(- direction));
     }
 
     public boolean isBlocked() {
