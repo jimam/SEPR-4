@@ -2,9 +2,11 @@ package com.geeselightning.zepr;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -15,6 +17,7 @@ public class MenuScreen implements Screen {
 
     private Zepr parent;
     private Stage stage;
+    private Label titleLabel;
 
     public MenuScreen(Zepr zepr) {
         // Constructor builds the gui of the menu screen.
@@ -37,18 +40,23 @@ public class MenuScreen implements Screen {
         stage.addActor(table);
 
         // Importing the necessary assets for the button textures.
-        Skin skin = new Skin(Gdx.files.internal("core/assets/skin/glassy-ui.json"));
+        Skin skin = new Skin(Gdx.files.internal("core/assets/skin/pixthulhu-ui.json"));
+
+        // Creating a title.
+        titleLabel = new Label( "Zombie Engineering Project", skin, "subtitle");
 
         // Creating buttons.
         TextButton newGame = new TextButton("New Game", skin);
         TextButton preferences = new TextButton("Preferences", skin);
         TextButton exit = new TextButton("Exit", skin);
 
-        // Adding buttons to the table (screen).
+        // Adding content to the table (screen).
+        table.add(titleLabel);
+        table.row().pad(10, 40, 10, 40);
         table.add(newGame).fillX().uniformX();
-        table.row().pad(10, 0, 10, 0);
+        table.row().pad(10, 40, 10, 40);
         table.add(preferences).fillX().uniformX();
-        table.row();
+        table.row().pad(10, 40, 10, 40);
         table.add(exit).fillX().uniformX();
 
         // Defining actions for the exit button.

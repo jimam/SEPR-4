@@ -43,10 +43,10 @@ public class PreferencesScreen implements Screen {
         stage.addActor(table);
 
         // Importing the necessary assets for the button textures.
-        Skin skin = new Skin(Gdx.files.internal("core/assets/skin/glassy-ui.json"));
+        Skin skin = new Skin(Gdx.files.internal("core/assets/skin/pixthulhu-ui.json"));
 
         // Adding labels for the table.
-        titleLabel = new Label( "Preferences", skin );
+        titleLabel = new Label( "Preferences", skin, "subtitle");
         volumeMusicLabel = new Label( "Music Volume", skin );
         volumeSoundLabel = new Label( "Sound Volume", skin );
         musicOnOffLabel = new Label( "Music Toggle", skin );
@@ -99,9 +99,7 @@ public class PreferencesScreen implements Screen {
         });
 
         // Button to return to the main menu.
-        final TextButton backButton = new TextButton("Back", skin, "small");
-        // The extra argument here "small" is used to set the button to the smaller version instead of the big default
-        // version.
+        final TextButton backButton = new TextButton("Back", skin);
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -112,17 +110,17 @@ public class PreferencesScreen implements Screen {
         // Adding rows to the table.
         table.add(titleLabel).colspan(2);
         table.row().pad(10, 0, 0, 10);
-        table.add(volumeMusicLabel).left();
-        table.add(volumeMusicSlider);
+        table.add(volumeMusicLabel).left().padLeft(40.f);
+        table.add(volumeMusicSlider).growX().padRight(40.0f);
         table.row().pad(10, 0, 0, 10);
-        table.add(musicOnOffLabel).left();
-        table.add(musicCheckbox);
+        table.add(musicOnOffLabel).left().padLeft(40.f);
+        table.add(musicCheckbox).left();
         table.row().pad(10, 0, 0, 10);
-        table.add(volumeSoundLabel).left();
-        table.add(soundMusicSlider);
+        table.add(volumeSoundLabel).left().padLeft(40.f);
+        table.add(soundMusicSlider).growX().padRight(40.0f);
         table.row().pad(10, 0, 0, 10);
-        table.add(soundOnOffLabel).left();
-        table.add(soundEffectsCheckbox);
+        table.add(soundOnOffLabel).left().padLeft(40.f);
+        table.add(soundEffectsCheckbox).left();
         table.row().pad(10, 0, 0, 10);
         table.add(backButton).colspan(2);
     }
