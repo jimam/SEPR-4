@@ -8,15 +8,12 @@ public class Zepr extends Game {
 	private PreferencesScreen preferencesScreen;
 	private MenuScreen menuScreen;
 	private Stage stage;
-	private MapScreen mapScreen;
 	private AppPreferences preferences;
 
 
 	public final static int MENU = 0;
 	public final static int PREFERENCES = 1;
 	public final static int APPLICATION = 2;
-	public final static int ENDGAME = 3;
-	public final static int MAP = 4;
 
 	public void changeScreen(int screen) {
 		switch(screen) {
@@ -32,10 +29,6 @@ public class Zepr extends Game {
 				// create town stage for now
 				if(stage == null) stage = new StageTown(this);
 				this.setScreen(stage);
-				break;
-			case MAP:
-				if (mapScreen == null) mapScreen = new MapScreen(this);
-				this.setScreen(mapScreen);
 				break;
 		}
 	}

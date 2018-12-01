@@ -43,15 +43,12 @@ public class MenuScreen implements Screen {
         TextButton newGame = new TextButton("New Game", skin);
         TextButton preferences = new TextButton("Preferences", skin);
         TextButton exit = new TextButton("Exit", skin);
-        TextButton map = new TextButton("Map", skin);
 
         // Adding buttons to the table (screen).
         table.add(newGame).fillX().uniformX();
         table.row().pad(10, 0, 10, 0);
         table.add(preferences).fillX().uniformX();
         table.row();
-        table.add(map).fillX().uniformX();
-        table.row().pad(10, 0, 10, 0);
         table.add(exit).fillX().uniformX();
 
         // Defining actions for the exit button.
@@ -67,14 +64,6 @@ public class MenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 parent.changeScreen(Zepr.PREFERENCES);
-            }
-        });
-
-        // Defining actions for the preferences button.
-        map.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                parent.changeScreen(Zepr.MAP);
             }
         });
 
