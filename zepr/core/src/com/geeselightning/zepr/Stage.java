@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class Stage implements Screen {
 
@@ -24,12 +25,27 @@ public class Stage implements Screen {
     private String mapLocation;
     private Vector2 playerSpawn;
     private Vector2 testZombieSpawn;
+    private ZeprInputProcessor inputProcessor = new ZeprInputProcessor();
 
     public Stage(Zepr zepr, String mapLocation, Vector2 playerSpawn, Vector2 testZombieSpawn) {
         parent = zepr;
         this.mapLocation = mapLocation;
         this.playerSpawn = playerSpawn;
         this.testZombieSpawn = testZombieSpawn;
+    }
+
+
+    /**
+     * Converts the mousePosition which is a Vector2 representing the coordinates of the mouse within the game window
+     * to a Vector2 of the equivalent coordinates in the world.
+     * @return Vector2 of the mouse position in the world.
+     */
+    public Vector2 getMouseWorldCoordinates() {
+        // Must first convert to 3D vector as camera.unproject() does not take 2D vectors.
+        Vector3 screenCoordinates = new Vector3(inputProcessor.mousePosition.x, inputProcessor.mousePosition.y, 0);
+        Vector3 worldCoords3 = camera.unproject(screenCoordinates);
+
+        return new Vector2(worldCoords3.x, worldCoords3.y);
     }
 
     @Override
@@ -50,8 +66,7 @@ public class Stage implements Screen {
         // Single zombie
         testzombie = new Zombie(new Sprite(new Texture("core/assets/anime1.png")), testZombieSpawn);
 
-        Gdx.input.setInputProcessor(new ZeprInputProcessor());
-
+        Gdx.input.setInputProcessor(inputProcessor);
     }
 
     @Override
@@ -75,11 +90,6 @@ public class Stage implements Screen {
         renderer.getBatch().begin();
         player.draw(renderer.getBatch());
         testzombie.draw(renderer.getBatch());
-
-        // test collision detection
-        BitmapFont font = new BitmapFont();
-        font.draw(renderer.getBatch(), Boolean.toString(player.isBlocked()), 10, 10);
-
         renderer.getBatch().end();
     }
 

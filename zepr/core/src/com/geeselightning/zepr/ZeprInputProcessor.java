@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class ZeprInputProcessor implements InputProcessor {
 
-    private Vector2 mousePosition = new Vector2(0, 0);
+    protected Vector2 mousePosition = new Vector2(0, 0);
     private Player player = Player.getInstance();
 
     @Override
