@@ -39,14 +39,16 @@ public class Stage implements Screen {
 
 
     public boolean isBlocked(float x, float y) {
-        TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get(1);
+        TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get("collisionLayer");
         Cell cell = collisionLayer.getCell((int) (x / collisionLayer.getTileWidth()), (int) (y / collisionLayer.getTileHeight()));
 
+        // have to include this in case this cell is transparent on the collisionLayer
         if (cell == null || cell.getTile() == null) {
             return false;
         }
 
         MapProperties properties = cell.getTile().getProperties();
+        // we have to add the property now because the properties don't load from the map file
         properties.put("solid", null);
 
         if (properties.containsKey("solid")) {
@@ -112,11 +114,6 @@ public class Stage implements Screen {
         renderer.getBatch().begin();
         player.draw(renderer.getBatch());
         testzombie.draw(renderer.getBatch());
-
-        // test collision detection
-        BitmapFont font = new BitmapFont();
-        font.draw(renderer.getBatch(), Boolean.toString(isBlocked(player.getX(), player.getY())) , 10, 10);
-
         renderer.getBatch().end();
     }
 
