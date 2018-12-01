@@ -57,7 +57,7 @@
  </layer>
  <layer id="2" name="collisionLayer" width="50" height="50">
   <properties>
-   <property name="solid" type="bool" value="true"/>
+   <property name="solid" value=""/>
   </properties>
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

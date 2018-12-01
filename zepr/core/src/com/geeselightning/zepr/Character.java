@@ -34,25 +34,6 @@ public class Character extends Sprite {
         setRotation((float) Math.toDegrees(- direction));
     }
 
-    public boolean isBlocked() {
-        TiledMapTileLayer collisionLayer = (TiledMapTileLayer) Stage.map.getLayers().get(1);
-        TiledMapTileLayer.Cell cell = collisionLayer.getCell((int) (getX() / collisionLayer.getTileWidth()), (int) (getY() / collisionLayer.getTileHeight()));
-
-        if (cell == null || cell.getTile() == null) {
-            return false;
-        }
-
-        MapProperties properties = cell.getTile().getProperties();
-
-        if (properties.containsKey("solid")) {
-            if ((Boolean) properties.get("solid") == true) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public Vector2 getCenter() {
         return new Vector2(getX() + (getHeight() / 2), getY() + (getWidth() / 2));
     }

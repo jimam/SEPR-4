@@ -8,7 +8,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -17,7 +20,7 @@ import com.badlogic.gdx.math.Vector3;
 public class Stage implements Screen {
 
     private Zepr parent;
-    protected static TiledMap map;
+    protected TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     protected OrthographicCamera camera;
     private Player player;
@@ -32,6 +35,25 @@ public class Stage implements Screen {
         this.mapLocation = mapLocation;
         this.playerSpawn = playerSpawn;
         this.testZombieSpawn = testZombieSpawn;
+    }
+
+
+    public boolean isBlocked(float x, float y) {
+        TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get(1);
+        Cell cell = collisionLayer.getCell((int) (x / collisionLayer.getTileWidth()), (int) (y / collisionLayer.getTileHeight()));
+
+        if (cell == null || cell.getTile() == null) {
+            return false;
+        }
+
+        MapProperties properties = cell.getTile().getProperties();
+        properties.put("solid", null);
+
+        if (properties.containsKey("solid")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
@@ -76,7 +98,7 @@ public class Stage implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Keep the player central in the screen.
-        camera.position.set(player.getX() + (player.getHeight() / 2), player.getY() + (player.getHeight() / 2), 0);
+        camera.position.set(player.getCenter().x, player.getCenter().y, 0);
         camera.update();
 
         // Go to main menu if press ESC
@@ -90,6 +112,11 @@ public class Stage implements Screen {
         renderer.getBatch().begin();
         player.draw(renderer.getBatch());
         testzombie.draw(renderer.getBatch());
+
+        // test collision detection
+        BitmapFont font = new BitmapFont();
+        font.draw(renderer.getBatch(), Boolean.toString(isBlocked(player.getX(), player.getY())) , 10, 10);
+
         renderer.getBatch().end();
     }
 
