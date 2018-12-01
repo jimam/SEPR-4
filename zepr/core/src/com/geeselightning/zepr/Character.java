@@ -15,6 +15,7 @@ public class Character extends Sprite {
     protected Vector2 velocity = new Vector2(); // 2D vector
     protected float speed;
     protected int health;
+    protected double direction;
 
     public Character(Sprite sprite, Vector2 spawn) {
         super(sprite);
@@ -55,9 +56,9 @@ public class Character extends Sprite {
     }
 
     /**
-     * Finds the direction (in degrees) that an object is in relative to the character.
+     * Finds the direction (in radians) that an object is in relative to the character.
      * @param coordinate 2d vector representing the position of the object
-     * @return bearing   value in radians of the bearing from the character to the coordinate
+     * @return bearing   double in radians of the bearing from the character to the coordinate
      */
     protected double getDirection(Vector2 coordinate) {
         Vector2 charCenter = new Vector2(this.getX() + (getWidth()/ 2),

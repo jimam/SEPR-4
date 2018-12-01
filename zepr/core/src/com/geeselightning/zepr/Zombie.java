@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Zombie extends Character {
 
+    private Player player = Player.getInstance();
+
     public Zombie(Sprite sprite, Vector2 zombieSpawn) {
         super(sprite, zombieSpawn);
         this.speed = Constant.ZOMBIESPEED;
@@ -17,8 +19,11 @@ public class Zombie extends Character {
         super.update(delta);
 
         // update velocity to move towards player
-        Vector2 playercoords= new Vector2(Player.getInstance().getX(),Player.getInstance().getY());
-        velocity = getDirNormVector(playercoords).scl(speed);
+        // Vector2.scl scales the vector
+        velocity = getDirNormVector(player.getCenter()).scl(speed);
+
+        // update direction to face the player
+        direction = getDirection(player.getCenter());
 
     }
 }

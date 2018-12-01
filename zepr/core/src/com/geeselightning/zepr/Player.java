@@ -1,8 +1,5 @@
 package com.geeselightning.zepr;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -27,5 +24,13 @@ public class Player extends Character {
         this.health = Constant.PLAYERMAXHP;
         this.currentStage = stage;
         this.setTexture(new Texture("core/assets/player01.png"));
+    }
+
+    @Override
+    public void update(float delta) {
+        super.update(delta);
+
+        // update the direction the player is facing
+        direction = getDirection(currentStage.getMouseWorldCoordinates());
     }
 }
