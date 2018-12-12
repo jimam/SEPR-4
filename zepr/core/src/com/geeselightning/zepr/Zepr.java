@@ -31,7 +31,7 @@ public class Zepr extends Game {
 				this.setScreen(preferencesScreen);
 				break;
 			case SELECT:
-				if(selectStage == null) selectStage = new  SelectStage(this);
+				selectStage = new  SelectStage(this);
 				this.setScreen(selectStage);
 				break;
 			case TOWN:

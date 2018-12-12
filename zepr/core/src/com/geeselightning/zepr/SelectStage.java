@@ -51,7 +51,7 @@ public class SelectStage implements Screen {
         TextButton play = new TextButton("Play", skin);
         TextButton save = new TextButton("Save", skin);
         TextButton load = new TextButton("Load", skin);
-        TextButton menu = new TextButton("Menu", skin);
+        TextButton back = new TextButton("Back", skin);
 
         // Creating stage descriptions.
         Label title = new Label("Choose a stage.", skin, "subtitle");
@@ -68,12 +68,12 @@ public class SelectStage implements Screen {
         // Adding menu bar.
         Table menuBar = new Table();
         menuBar.setFillParent(true);
-        menuBar.setDebug(true); // Adds borders for the table.
+        // menuBar.setDebug(true); // Adds borders for the table.
         stage.addActor(menuBar);
 
         menuBar.top().left();
         menuBar.row();
-        menuBar.add(menu).pad(10);
+        menuBar.add(back).pad(10);
         menuBar.add(save).pad(10);
         menuBar.add(load).pad(10);
 
@@ -107,8 +107,8 @@ public class SelectStage implements Screen {
 
         // Adding button logic.
 
-        // Defining actions for the menu button.
-        menu.addListener(new ChangeListener() {
+        // Defining actions for the back button.
+        back.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 parent.changeScreen(Zepr.MENU);

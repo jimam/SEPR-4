@@ -29,6 +29,7 @@ public class Stage implements Screen {
     private Vector2 playerSpawn;
     private Vector2 testZombieSpawn;
     private ZeprInputProcessor inputProcessor = new ZeprInputProcessor();
+    protected boolean isPaused = false;
 
     public Stage(Zepr zepr, String mapLocation, Vector2 playerSpawn, Vector2 testZombieSpawn) {
         parent = zepr;
@@ -95,6 +96,11 @@ public class Stage implements Screen {
 
     @Override
     public void render(float delta) {
+        // Go to main menu if press ESC
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            parent.changeScreen(Zepr.MENU);
+        }
+
         // Clears the screen to black.
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -102,11 +108,6 @@ public class Stage implements Screen {
         // Keep the player central in the screen.
         camera.position.set(player.getCenter().x, player.getCenter().y, 0);
         camera.update();
-
-        // Go to main menu if press ESC
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
-            parent.changeScreen(Zepr.MENU);
-        }
 
         renderer.setView(camera);
         renderer.render();
