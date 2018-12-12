@@ -9,11 +9,16 @@ public class Zepr extends Game {
 	private MenuScreen menuScreen;
 	private Stage stage;
 	private AppPreferences preferences;
+	private SelectStage selectStage;
 
 
 	public final static int MENU = 0;
 	public final static int PREFERENCES = 1;
-	public final static int APPLICATION = 2;
+	public final static int SELECT = 2;
+	public final static int TOWN = 3;
+	public final static int HALIFAX = 4;
+	public final static int COURTYARD = 5;
+
 
 	public void changeScreen(int screen) {
 		switch(screen) {
@@ -25,9 +30,20 @@ public class Zepr extends Game {
 				if(preferencesScreen == null) preferencesScreen = new PreferencesScreen(this);
 				this.setScreen(preferencesScreen);
 				break;
-			case APPLICATION:
-				// create town stage for now
+			case SELECT:
+				if(selectStage == null) selectStage = new  SelectStage(this);
+				this.setScreen(selectStage);
+				break;
+			case TOWN:
 				if(stage == null) stage = new StageTown(this);
+				this.setScreen(stage);
+				break;
+			case HALIFAX:
+				if(stage == null) stage = new StageHalifax(this);
+				this.setScreen(stage);
+				break;
+			case COURTYARD:
+				if(stage == null) stage = new StageCourtyard(this);
 				this.setScreen(stage);
 				break;
 		}

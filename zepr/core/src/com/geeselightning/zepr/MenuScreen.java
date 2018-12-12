@@ -46,14 +46,14 @@ public class MenuScreen implements Screen {
         titleLabel = new Label( "Zombie Engineering Project", skin, "subtitle");
 
         // Creating buttons.
-        TextButton newGame = new TextButton("New Game", skin);
+        TextButton start = new TextButton("Start", skin);
         TextButton preferences = new TextButton("Preferences", skin);
         TextButton exit = new TextButton("Exit", skin);
 
         // Adding content to the table (screen).
         table.add(titleLabel);
         table.row().pad(10, 40, 10, 40);
-        table.add(newGame).fillX().uniformX();
+        table.add(start).fillX().uniformX();
         table.row().pad(10, 40, 10, 40);
         table.add(preferences).fillX().uniformX();
         table.row().pad(10, 40, 10, 40);
@@ -75,12 +75,12 @@ public class MenuScreen implements Screen {
             }
         });
 
-        // Defining actions for the newGame button.
-        newGame.addListener(new ChangeListener() {
+        // Defining actions for the start button.
+        start.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // currently application only opens the town stage
-                parent.changeScreen(Zepr.APPLICATION);
+                parent.changeScreen(Zepr.SELECT);
             }
         });
     }
