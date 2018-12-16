@@ -16,6 +16,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Stage implements Screen {
 
@@ -29,13 +35,14 @@ public class Stage implements Screen {
     private Vector2 playerSpawn;
     private Vector2 testZombieSpawn;
     private ZeprInputProcessor inputProcessor = new ZeprInputProcessor();
-    protected boolean isPaused = false;
+    protected boolean isPaused;
 
     public Stage(Zepr zepr, String mapLocation, Vector2 playerSpawn, Vector2 testZombieSpawn) {
         parent = zepr;
         this.mapLocation = mapLocation;
         this.playerSpawn = playerSpawn;
         this.testZombieSpawn = testZombieSpawn;
+        this.isPaused = false;
     }
 
 
@@ -75,6 +82,9 @@ public class Stage implements Screen {
 
     @Override
     public void show() {
+        // Start the stage unpaused.
+        this.isPaused = false;
+
         // Loads the testmap.tmx file as map.
         TmxMapLoader loader = new TmxMapLoader();
         map = loader.load(mapLocation);
@@ -96,26 +106,70 @@ public class Stage implements Screen {
 
     @Override
     public void render(float delta) {
-        // Go to main menu if press ESC
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
-            parent.changeScreen(Zepr.MENU);
+        if (isPaused) {
+            // Clears the screen to black.
+            Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            // Need to refactor stage class so it doesn't overlap with the libgdx built in stage class
+            // Creating a new libgdx stage to contain the pause menu
+            com.badlogic.gdx.scenes.scene2d.Stage gdxstage = new com.badlogic.gdx.scenes.scene2d.Stage(new ScreenViewport());
+            // Input processor has to be changed back once unpaused.
+            Gdx.input.setInputProcessor(gdxstage);
+
+            // Show pause menu.
+            Table table = new Table();
+            table.setFillParent(true);
+            gdxstage.addActor(table);
+
+            // Importing the necessary assets for the button textures.
+            Skin skin = new Skin(Gdx.files.internal("core/assets/skin/pixthulhu-ui.json"));
+
+            TextButton resume = new TextButton("Resume", skin);
+            TextButton exit = new TextButton("Exit", skin);
+
+            table.center();
+            table.add(resume).pad(10);
+            table.row();
+            table.add(exit);
+
+            // Defining actions for the resume button.
+            resume.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    isPaused = false;
+                    // Change input processor back
+                    Gdx.input.setInputProcessor(inputProcessor);
+                }
+            });
+
+            // Defining actions for the exit button.
+            exit.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    parent.changeScreen(Zepr.SELECT);
+                }
+            });
+
+            gdxstage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+            gdxstage.draw();
+        } else {
+            // Clears the screen to black.
+            Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            // Keep the player central in the screen.
+            camera.position.set(player.getCenter().x, player.getCenter().y, 0);
+            camera.update();
+
+            renderer.setView(camera);
+            renderer.render();
+
+            renderer.getBatch().begin();
+            player.draw(renderer.getBatch());
+            testzombie.draw(renderer.getBatch());
+            renderer.getBatch().end();
         }
-
-        // Clears the screen to black.
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // Keep the player central in the screen.
-        camera.position.set(player.getCenter().x, player.getCenter().y, 0);
-        camera.update();
-
-        renderer.setView(camera);
-        renderer.render();
-
-        renderer.getBatch().begin();
-        player.draw(renderer.getBatch());
-        testzombie.draw(renderer.getBatch());
-        renderer.getBatch().end();
     }
 
     @Override

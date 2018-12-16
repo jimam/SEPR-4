@@ -25,6 +25,9 @@ public class ZeprInputProcessor implements InputProcessor {
         if (keycode == Input.Keys.A) {
             player.velocity.x = - Constant.PLAYERSPEED;
         }
+        if (keycode == Input.Keys.ESCAPE) {
+            player.currentStage.isPaused = !(player.currentStage.isPaused);
+        }
         return true;
     }
 
