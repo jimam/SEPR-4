@@ -1,12 +1,10 @@
 package com.geeselightning.zepr;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -22,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import java.util.ArrayList;
 
 public class Stage implements Screen {
 
@@ -30,21 +29,28 @@ public class Stage implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     protected OrthographicCamera camera;
     private Player player;
-    private Zombie testzombie;
+    private ArrayList<Zombie> aliveZombies = new ArrayList<Zombie>();
     private String mapLocation;
     private Vector2 playerSpawn;
-    private Vector2 testZombieSpawn;
+    private ArrayList<Vector2> zombieSpawnPoints;
     private ZeprInputProcessor inputProcessor = new ZeprInputProcessor();
     protected boolean isPaused;
 
-    public Stage(Zepr zepr, String mapLocation, Vector2 playerSpawn, Vector2 testZombieSpawn) {
+    public Stage(Zepr zepr, String mapLocation, Vector2 playerSpawn, ArrayList<Vector2> zombieSpawnPoints) {
         parent = zepr;
         this.mapLocation = mapLocation;
         this.playerSpawn = playerSpawn;
-        this.testZombieSpawn = testZombieSpawn;
+        this.zombieSpawnPoints = zombieSpawnPoints;
         this.isPaused = false;
     }
 
+    // Spawns multiple zombies cycling through the spawnPoints until the given amount have been spawned.
+    private void spawnZombies(int amount, ArrayList<Vector2> spawnPoints) {
+        for (int i = 0; i < amount; i++) {
+            aliveZombies.add(new Zombie(new Sprite(new Texture("core/assets/anime1.png")),
+                    spawnPoints.get(i % spawnPoints.size())));
+        }
+    }
 
     public boolean isBlocked(float x, float y) {
         TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get("collisionLayer");
@@ -99,7 +105,9 @@ public class Stage implements Screen {
         player.respawn(playerSpawn, this);
 
         // Single zombie
-        testzombie = new Zombie(new Sprite(new Texture("core/assets/anime1.png")), testZombieSpawn);
+        //testzombie = new Zombie(new Sprite(new Texture("core/assets/anime1.png")), testZombieSpawn);
+
+        spawnZombies(5, zombieSpawnPoints);
 
         Gdx.input.setInputProcessor(inputProcessor);
     }
@@ -166,8 +174,12 @@ public class Stage implements Screen {
             renderer.render();
 
             renderer.getBatch().begin();
+
             player.draw(renderer.getBatch());
-            testzombie.draw(renderer.getBatch());
+
+            for (Zombie zombie : aliveZombies) {
+                zombie.draw(renderer.getBatch());
+            }
             renderer.getBatch().end();
         }
     }
@@ -199,6 +211,8 @@ public class Stage implements Screen {
         map.dispose();
         renderer.dispose();
         player.getTexture().dispose();
-        testzombie.getTexture().dispose();
+        for (Zombie zombie : aliveZombies) {
+            zombie.getTexture().dispose();
+        }
     }
 }
