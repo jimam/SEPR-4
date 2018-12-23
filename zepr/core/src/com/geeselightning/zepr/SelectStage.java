@@ -12,12 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.sun.tools.javac.util.List;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import com.badlogic.gdx.graphics.Color;
 
 public class SelectStage implements Screen {
 
@@ -124,23 +119,33 @@ public class SelectStage implements Screen {
             }
         });
 
-        // Defining actions for the halifax button.
-        halifax.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                stageDescription.setText(halifaxDescription);
-                stageLink = Zepr.HALIFAX;
-            }
-        });
+        if (parent.progress < parent.TOWN) {
+            halifax.setColor(Color.DARK_GRAY);
+            halifax.getLabel().setColor(Color.DARK_GRAY);
+        } else {
+            // Defining actions for the halifax button.
+            halifax.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    stageDescription.setText(halifaxDescription);
+                    stageLink = Zepr.HALIFAX;
+                }
+            });
+        }
 
-        // Defining actions for the courtyard button.
-        courtyard.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                stageDescription.setText(courtyardDescription);
-                stageLink = Zepr.COURTYARD;
-            }
-        });
+        if (parent.progress < parent.HALIFAX) {
+            courtyard.setColor(Color.DARK_GRAY);
+            courtyard.getLabel().setColor(Color.DARK_GRAY);
+        } else {
+            // Defining actions for the courtyard button.
+            courtyard.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    stageDescription.setText(courtyardDescription);
+                    stageLink = Zepr.COURTYARD;
+                }
+            });
+        }
 
         // Defining actions for the play button.
         play.addListener(new ChangeListener() {

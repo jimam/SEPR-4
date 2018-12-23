@@ -12,4 +12,13 @@ public class StageTown extends Stage {
     public StageTown(Zepr zepr) {
         super(zepr, mapLocation, playerSpawn, testZombieSpawn);
     }
+
+    public void complete() {
+        // Update progress
+        if (parent.progress == 0) {
+            parent.progress = parent.TOWN;
+        }
+        // else the stage is being replayed
+    }
+
 }

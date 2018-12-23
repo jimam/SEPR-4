@@ -12,4 +12,12 @@ public class StageHalifax extends Stage {
     public StageHalifax(Zepr zepr) {
         super(zepr, mapLocation, playerSpawn, testZombieSpawn);
     }
+
+    public void complete() {
+        // Update progress
+        if (parent.progress == parent.TOWN) {
+            parent.progress = parent.HALIFAX;
+        }
+        // else the stage is being replayed
+    }
 }

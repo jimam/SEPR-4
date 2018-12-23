@@ -11,6 +11,8 @@ public class Zepr extends Game {
 	private AppPreferences preferences;
 	private SelectStage selectStage;
 
+	// The progress is the integer representing the last stage completed. i.e. 3 for Town
+	public int progress = 0;
 
 	public final static int MENU = 0;
 	public final static int PREFERENCES = 1;

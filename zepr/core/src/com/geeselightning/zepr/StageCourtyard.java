@@ -12,4 +12,12 @@ public class StageCourtyard extends Stage {
     public StageCourtyard(Zepr zepr) {
         super(zepr, mapLocation, playerSpawn, testZombieSpawn);
     }
+
+    public void complete() {
+        // Update progress
+        if (parent.progress == parent.HALIFAX) {
+            parent.progress = parent.COURTYARD;
+        }
+        // else the stage is being replayed
+    }
 }

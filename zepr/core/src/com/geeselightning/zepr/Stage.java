@@ -25,7 +25,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Stage implements Screen {
 
-    private Zepr parent;
+    protected Zepr parent;
     protected TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     protected OrthographicCamera camera;
