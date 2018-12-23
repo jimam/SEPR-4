@@ -44,11 +44,23 @@ public class Stage implements Screen {
         this.isPaused = false;
     }
 
+    public ArrayList<Character> getCharacters() {
+        ArrayList<Character> characters = new ArrayList<Character>();
+
+        for (Zombie zombie : aliveZombies) {
+            characters.add((Character) zombie);
+        }
+
+        characters.add(player);
+
+        return characters;
+    }
+
     // Spawns multiple zombies cycling through the spawnPoints until the given amount have been spawned.
     private void spawnZombies(int amount, ArrayList<Vector2> spawnPoints) {
         for (int i = 0; i < amount; i++) {
             aliveZombies.add(new Zombie(new Sprite(new Texture("core/assets/anime1.png")),
-                    spawnPoints.get(i % spawnPoints.size())));
+                    spawnPoints.get(i % spawnPoints.size()), this));
         }
     }
 

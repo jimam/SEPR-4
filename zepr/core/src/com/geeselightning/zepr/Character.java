@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Character extends Sprite {
@@ -16,11 +17,20 @@ public class Character extends Sprite {
     protected float speed;
     protected int health;
     protected double direction;
+    protected Stage currentStage;
 
-    public Character(Sprite sprite, Vector2 spawn) {
+    public Character(Sprite sprite, Vector2 spawn, Stage currentStage) {
         super(sprite);
         setX(spawn.x);
         setY(spawn.y);
+        this.currentStage = currentStage;
+    }
+
+    private boolean collidesWith(Character character) {
+        double diameter = 10;
+        double distanceBetweenCenters = (Math.pow(getCenter().x - character.getCenter().x, 2)
+                + Math.pow(getCenter().y - character.getCenter().y, 2));
+        return (0 <= distanceBetweenCenters && distanceBetweenCenters <= Math.pow(diameter, 2));
     }
 
     @Override
@@ -77,8 +87,21 @@ public class Character extends Sprite {
     public void update(float delta) {
         // Update x, y position of character.
         // New position is the old position plus the distance moved as a result of the velocity
-        setX(getX()  + velocity.x * delta);
+        float oldX = getX();
+        float oldY = getY();
+
+        setX(getX() + velocity.x * delta);
         setY(getY() + velocity.y * delta);
+
+        ArrayList<Character> otherCharacters = currentStage.getCharacters();
+        otherCharacters.remove(this);
+
+        for (Character character : otherCharacters) {
+            if (collidesWith(character)) {
+                setX(oldX);
+                setY(oldY);
+            }
+        }
     }
 
     // Returns the value of health

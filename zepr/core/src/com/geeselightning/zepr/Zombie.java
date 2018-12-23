@@ -7,8 +7,8 @@ public class Zombie extends Character {
 
     private Player player = Player.getInstance();
 
-    public Zombie(Sprite sprite, Vector2 zombieSpawn) {
-        super(sprite, zombieSpawn);
+    public Zombie(Sprite sprite, Vector2 zombieSpawn, Stage currentStage) {
+        super(sprite, zombieSpawn, currentStage);
         this.speed = Constant.ZOMBIESPEED;
         this.health = Constant.ZOMBIEMAXHP;
     }

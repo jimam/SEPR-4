@@ -7,10 +7,9 @@ import com.badlogic.gdx.math.Vector2;
 public class Player extends Character {
 
     private static final Player instance = new Player(new Sprite(new Texture("core/assets/player01.png")), new Vector2(0, 0));
-    protected Stage currentStage;
 
     private Player(Sprite sprite, Vector2 playerSpawn) {
-        super(sprite, playerSpawn);
+        super(sprite, playerSpawn, null);
     }
 
     public static Player getInstance(){
