@@ -26,7 +26,14 @@ public class Character extends Sprite {
         this.currentStage = currentStage;
     }
 
+    /**
+     * Uses circles with diameter to determine if this character collides with the passed character.
+     *
+     * @param character Character to check if this collides with
+     * @return boolean true if they collide, false otherwise
+     */
     private boolean collidesWith(Character character) {
+        // Circles less buggy than character.getBoundingRectangle()
         double diameter = 10;
         double distanceBetweenCenters = (Math.pow(getCenter().x - character.getCenter().x, 2)
                 + Math.pow(getCenter().y - character.getCenter().y, 2));
@@ -50,6 +57,7 @@ public class Character extends Sprite {
 
     /**
      * Finds the direction (in radians) that an object is in relative to the character.
+     *
      * @param coordinate 2d vector representing the position of the object
      * @return bearing   double in radians of the bearing from the character to the coordinate
      */
@@ -67,9 +75,10 @@ public class Character extends Sprite {
     }
 
     /**
-     * returns a normailised vector that points torwards given coordinate.
-     * @param coordinate 2d vector representing the position of the object
-     * @return normalised 2d vector that from this will point towards given coordinate
+     * Calculates a normailised vector that points torwards given coordinate.
+     *
+     * @param coordinate Vector2 representing the position of the object
+     * @return normalised Vector2 that from this will point towards given coordinate
      */
     protected Vector2 getDirNormVector(Vector2 coordinate) {
         Vector2 charCenter = new Vector2(this.getX() + (getWidth() / 2),
@@ -93,7 +102,9 @@ public class Character extends Sprite {
         setX(getX() + velocity.x * delta);
         setY(getY() + velocity.y * delta);
 
+        // Get all characters in the currentStage
         ArrayList<Character> otherCharacters = currentStage.getCharacters();
+        // Remove this character otherwise it will collide with itself
         otherCharacters.remove(this);
 
         for (Character character : otherCharacters) {

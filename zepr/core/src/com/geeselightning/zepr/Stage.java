@@ -25,9 +25,9 @@ import java.util.ArrayList;
 public class Stage implements Screen {
 
     protected Zepr parent;
-    protected TiledMap map;
+    private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-    protected OrthographicCamera camera;
+    private OrthographicCamera camera;
     private Player player;
     private ArrayList<Zombie> aliveZombies = new ArrayList<Zombie>();
     private String mapLocation;
@@ -44,19 +44,30 @@ public class Stage implements Screen {
         this.isPaused = false;
     }
 
+    /**
+     * Used for collision detection between characters in Character.update()
+     *
+     * @return ArrayList containing all the characters currently in the stage
+     */
     public ArrayList<Character> getCharacters() {
         ArrayList<Character> characters = new ArrayList<Character>();
 
         for (Zombie zombie : aliveZombies) {
-            characters.add((Character) zombie);
+            characters.add(zombie);
         }
-
         characters.add(player);
 
         return characters;
     }
 
     // Spawns multiple zombies cycling through the spawnPoints until the given amount have been spawned.
+
+    /**
+     * Spawns multiple zombies cycling through spawnPoints until the given amount have been spawned.
+     *
+     * @param spawnPoints locations where zombies should be spawned on this stage
+     * @param amount number of zombies to spawn
+     */
     private void spawnZombies(int amount, ArrayList<Vector2> spawnPoints) {
         for (int i = 0; i < amount; i++) {
             aliveZombies.add(new Zombie(new Sprite(new Texture("core/assets/anime1.png")),
@@ -64,6 +75,11 @@ public class Stage implements Screen {
         }
     }
 
+    /**
+     * Used for collision detection between the player and map
+     *
+     * @return boolean if the point (x, y) is in a blocked tile
+     */
     public boolean isBlocked(float x, float y) {
         TiledMapTileLayer collisionLayer = (TiledMapTileLayer) map.getLayers().get("collisionLayer");
         Cell cell = collisionLayer.getCell((int) (x / collisionLayer.getTileWidth()), (int) (y / collisionLayer.getTileHeight()));
@@ -77,17 +93,14 @@ public class Stage implements Screen {
         // we have to add the property now because the properties don't load from the map file
         properties.put("solid", null);
 
-        if (properties.containsKey("solid")) {
-            return true;
-        } else {
-            return false;
-        }
+        return properties.containsKey("solid");
     }
 
 
     /**
      * Converts the mousePosition which is a Vector2 representing the coordinates of the mouse within the game window
      * to a Vector2 of the equivalent coordinates in the world.
+     *
      * @return Vector2 of the mouse position in the world.
      */
     public Vector2 getMouseWorldCoordinates() {
@@ -205,12 +218,10 @@ public class Stage implements Screen {
 
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
     }
 
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
     }
 
     @Override
