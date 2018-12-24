@@ -180,6 +180,9 @@ public class Stage implements Screen {
             exit.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
+                    // Despawn zombies
+                    aliveZombies = new ArrayList<Zombie>();
+
                     parent.changeScreen(Zepr.SELECT);
                 }
             });
