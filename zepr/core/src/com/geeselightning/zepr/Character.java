@@ -32,7 +32,7 @@ public class Character extends Sprite {
      * @param character Character to check if this collides with
      * @return boolean true if they collide, false otherwise
      */
-    private boolean collidesWith(Character character) {
+    protected boolean collidesWith(Character character) {
         // Circles less buggy than character.getBoundingRectangle()
         double diameter = 10;
         double distanceBetweenCenters = (Math.pow(getCenter().x - character.getCenter().x, 2)

@@ -67,12 +67,33 @@ public class Stage implements Screen {
      *
      * @param spawnPoints locations where zombies should be spawned on this stage
      * @param amount number of zombies to spawn
+     *
+     * @return the number of zombies that failed to spawn
      */
-    private void spawnZombies(int amount, ArrayList<Vector2> spawnPoints) {
+    private int spawnZombies(int amount, ArrayList<Vector2> spawnPoints) {
+        int notSpawned = 0;
+
         for (int i = 0; i < amount; i++) {
-            aliveZombies.add(new Zombie(new Sprite(new Texture("core/assets/anime1.png")),
+
+            Zombie zombie = (new Zombie(new Sprite(new Texture("core/assets/anime1.png")),
                     spawnPoints.get(i % spawnPoints.size()), this));
+
+            // Check there isn't already a zombie there, or they will be stuck
+            boolean collides = false;
+            for (Zombie otherZombie : aliveZombies) {
+                if (zombie.collidesWith(otherZombie)) {
+                    collides = true;
+                    // Decrement counter as it didn't spawn.
+                    notSpawned++;
+                }
+            }
+
+            if (!collides) {
+                aliveZombies.add(zombie);
+            }
         }
+
+        return notSpawned;
     }
 
     /**
@@ -128,9 +149,6 @@ public class Stage implements Screen {
         //retrieve player instance and reset it
         player = Player.getInstance();
         player.respawn(playerSpawn, this);
-
-        // Single zombie
-        //testzombie = new Zombie(new Sprite(new Texture("core/assets/anime1.png")), testZombieSpawn);
 
         spawnZombies(5, zombieSpawnPoints);
 
