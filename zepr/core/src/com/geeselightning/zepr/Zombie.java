@@ -25,5 +25,10 @@ public class Zombie extends Character {
         // update direction to face the player
         direction = getDirection(player.getCenter());
 
+        if (getHealth() <= 0) {
+            currentStage.zombiesRemaining--;
+            currentStage.aliveZombies.remove(this);
+            this.getTexture().dispose();
+        }
     }
 }

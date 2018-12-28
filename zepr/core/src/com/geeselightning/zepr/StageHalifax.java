@@ -15,13 +15,14 @@ public class StageHalifax extends Stage {
                     new Vector2(50,50), new Vector2(50,0))
     );
 
+    // Defining the number of zombies to be spawned for each wave
+    private static final int[] waves = new int[]{5, 10, 15};
+
     public StageHalifax(Zepr zepr) {
-        super(zepr, mapLocation, playerSpawn, zombieSpawnPoints);
+        super(zepr, mapLocation, playerSpawn, zombieSpawnPoints, waves);
     }
 
-    /**
-     * Called once the stage is complete to update the game progress
-     */
+    @Override
     public void complete() {
         if (parent.progress == parent.TOWN) {
             parent.progress = parent.HALIFAX;

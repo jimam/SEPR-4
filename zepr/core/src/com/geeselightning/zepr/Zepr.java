@@ -1,6 +1,8 @@
 package com.geeselightning.zepr;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class Zepr extends Game {
 
@@ -12,7 +14,7 @@ public class Zepr extends Game {
 	private SelectStage selectStage;
 
 	// The progress is the integer representing the last stage completed. i.e. 3 for Town
-	public int progress = 0;
+	public int progress = 3;
 
 	public final static int MENU = 0;
 	public final static int PREFERENCES = 1;

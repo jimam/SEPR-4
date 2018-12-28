@@ -18,15 +18,13 @@ public class StageTown extends Stage {
             );
 
     // Defining the number of zombies to be spawned for each wave
-    int[] waves = new int[]{5, 10, 15};
+    private static final int[] waves = new int[]{5, 10, 15};
 
     public StageTown(Zepr zepr) {
-        super(zepr, mapLocation, playerSpawn, zombieSpawnPoints);
+        super(zepr, mapLocation, playerSpawn, zombieSpawnPoints, waves);
     }
 
-    /**
-     * Called once the stage is complete to update the game progress
-     */
+    @Override
     public void complete() {
         if (parent.progress == 0) {
             parent.progress = parent.TOWN;

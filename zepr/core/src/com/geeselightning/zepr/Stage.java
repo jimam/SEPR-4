@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -29,19 +31,47 @@ public class Stage implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private Player player;
-    private ArrayList<Zombie> aliveZombies = new ArrayList<Zombie>();
+    protected ArrayList<Zombie> aliveZombies = new ArrayList<Zombie>();
     private String mapLocation;
     private Vector2 playerSpawn;
     private ArrayList<Vector2> zombieSpawnPoints;
     private ZeprInputProcessor inputProcessor = new ZeprInputProcessor();
     protected boolean isPaused;
+    private com.badlogic.gdx.scenes.scene2d.Stage gdxstage;
+    private Table table;
+    private Skin skin = new Skin(Gdx.files.internal("core/assets/skin/pixthulhu-ui.json"));
+    private int[] waves;
+    private int currentWave = 1;
+    protected int zombiesRemaining; // the number of zombies left to kill to complete the wave
+    private int zombiesToSpawn; // the number of zombies that are left to be spawned this wave
 
-    public Stage(Zepr zepr, String mapLocation, Vector2 playerSpawn, ArrayList<Vector2> zombieSpawnPoints) {
+    public Stage(Zepr zepr, String mapLocation, Vector2 playerSpawn, ArrayList<Vector2> zombieSpawnPoints, int[] waves) {
         parent = zepr;
         this.mapLocation = mapLocation;
         this.playerSpawn = playerSpawn;
         this.zombieSpawnPoints = zombieSpawnPoints;
         this.isPaused = false;
+
+        // Set up data for first wave of zombies
+        this.waves = waves;
+        this.zombiesRemaining = waves[0];
+        this.zombiesToSpawn = zombiesRemaining;
+
+        // Need to refactor stage class so it doesn't overlap with the libgdx built in stage class
+        // Creating a new libgdx stage to contain the pause menu
+        this.gdxstage = new com.badlogic.gdx.scenes.scene2d.Stage(new ScreenViewport());
+
+        // Creating a table to hold the UI and pause menu
+        this.table = new Table();
+        table.setFillParent(true);
+        gdxstage.addActor(table);
+    }
+
+    /**
+     * Called once the stage is complete to update the game progress
+     */
+    protected void complete() {
+        // implemented in subclasses
     }
 
     /**
@@ -150,8 +180,6 @@ public class Stage implements Screen {
         player = Player.getInstance();
         player.respawn(playerSpawn, this);
 
-        spawnZombies(5, zombieSpawnPoints);
-
         Gdx.input.setInputProcessor(inputProcessor);
     }
 
@@ -162,19 +190,10 @@ public class Stage implements Screen {
             Gdx.gl.glClearColor(0f, 0f, 0f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-            // Need to refactor stage class so it doesn't overlap with the libgdx built in stage class
-            // Creating a new libgdx stage to contain the pause menu
-            com.badlogic.gdx.scenes.scene2d.Stage gdxstage = new com.badlogic.gdx.scenes.scene2d.Stage(new ScreenViewport());
+            table.clear();
+
             // Input processor has to be changed back once unpaused.
             Gdx.input.setInputProcessor(gdxstage);
-
-            // Show pause menu.
-            Table table = new Table();
-            table.setFillParent(true);
-            gdxstage.addActor(table);
-
-            // Importing the necessary assets for the button textures.
-            Skin skin = new Skin(Gdx.files.internal("core/assets/skin/pixthulhu-ui.json"));
 
             TextButton resume = new TextButton("Resume", skin);
             TextButton exit = new TextButton("Exit", skin);
@@ -212,6 +231,30 @@ public class Stage implements Screen {
             Gdx.gl.glClearColor(0f, 0f, 0f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+            table.clear();
+
+            // Try to spawn all zombie in the stage and update zombiesToSpawn with the amount that failed to spawn
+            zombiesToSpawn = spawnZombies(zombiesToSpawn, zombieSpawnPoints);
+
+            if (player.getHealth() <= 0) {
+                // Stage failed, back to select screen without completing.
+                parent.changeScreen(Zepr.SELECT);
+            }
+
+            if (zombiesRemaining == 0) {
+                // Wave complete, increment wave number
+                currentWave++;
+                if (currentWave > waves.length) {
+                    // Stage completed, back to select screen and complete stage.
+                    // If stage is being replayed complete() will stop progress being incremented.
+                    complete();
+                    parent.changeScreen(Zepr.SELECT);
+                }
+                // Update zombiesRemaining with the number of zombies of the new wave
+                zombiesRemaining = waves[currentWave - 1];
+                zombiesToSpawn = zombiesRemaining;
+            }
+
             // Keep the player central in the screen.
             camera.position.set(player.getCenter().x, player.getCenter().y, 0);
             camera.update();
@@ -226,7 +269,15 @@ public class Stage implements Screen {
             for (Zombie zombie : aliveZombies) {
                 zombie.draw(renderer.getBatch());
             }
+
             renderer.getBatch().end();
+
+            String progressString = ("Wave " + Integer.toString(currentWave) + ", " + Integer.toString(zombiesRemaining) + " zombies remaining.");
+            Label progressLabel = new Label(progressString, skin);
+            table.top().left();
+            table.add(progressLabel).pad(10);
+            gdxstage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+            gdxstage.draw();
         }
     }
 
@@ -252,6 +303,7 @@ public class Stage implements Screen {
 
     @Override
     public void dispose() {
+        gdxstage.dispose();
         map.dispose();
         renderer.dispose();
         player.getTexture().dispose();

@@ -31,5 +31,9 @@ public class Player extends Character {
 
         // update the direction the player is facing
         direction = getDirection(currentStage.getMouseWorldCoordinates());
+
+        if (health <= 0) {
+            // GAME OVER
+        }
     }
 }
