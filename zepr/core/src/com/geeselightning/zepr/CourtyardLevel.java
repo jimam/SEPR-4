@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class StageCourtyard extends Stage {
+public class CourtyardLevel extends Level {
 
     private static final String mapLocation = "core/assets/maps/courtyard.tmx";
     private static final Vector2 playerSpawn = new Vector2(0, 0);
@@ -18,7 +18,7 @@ public class StageCourtyard extends Stage {
     // Defining the number of zombies to be spawned for each wave
     private static final int[] waves = new int[]{5, 10, 15};
 
-    public StageCourtyard(Zepr zepr) {
+    public CourtyardLevel(Zepr zepr) {
         super(zepr, mapLocation, playerSpawn, zombieSpawnPoints, waves);
     }
 

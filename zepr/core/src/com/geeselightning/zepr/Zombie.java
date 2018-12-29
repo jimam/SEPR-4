@@ -7,8 +7,8 @@ public class Zombie extends Character {
 
     private Player player = Player.getInstance();
 
-    public Zombie(Sprite sprite, Vector2 zombieSpawn, Stage currentStage) {
-        super(sprite, zombieSpawn, currentStage);
+    public Zombie(Sprite sprite, Vector2 zombieSpawn, Level currentLevel) {
+        super(sprite, zombieSpawn, currentLevel);
         this.speed = Constant.ZOMBIESPEED;
         this.health = Constant.ZOMBIEMAXHP;
     }
@@ -26,8 +26,8 @@ public class Zombie extends Character {
         direction = getDirection(player.getCenter());
 
         if (getHealth() <= 0) {
-            currentStage.zombiesRemaining--;
-            currentStage.aliveZombies.remove(this);
+            currentLevel.zombiesRemaining--;
+            currentLevel.aliveZombies.remove(this);
             this.getTexture().dispose();
         }
     }

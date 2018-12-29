@@ -16,12 +16,12 @@ public class Player extends Character {
         return instance;
     }
 
-    public void respawn(Vector2 playerSpawn, Stage stage){
+    public void respawn(Vector2 playerSpawn, Level level){
         setX(playerSpawn.x);
         setY(playerSpawn.y);
         this.speed = Constant.PLAYERSPEED;
         this.health = Constant.PLAYERMAXHP;
-        this.currentStage = stage;
+        this.currentLevel = level;
         this.setTexture(new Texture("core/assets/player01.png"));
     }
 
@@ -30,7 +30,7 @@ public class Player extends Character {
         super.update(delta);
 
         // update the direction the player is facing
-        direction = getDirection(currentStage.getMouseWorldCoordinates());
+        direction = getDirection(currentLevel.getMouseWorldCoordinates());
 
         if (health <= 0) {
             // GAME OVER

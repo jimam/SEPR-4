@@ -1,15 +1,11 @@
 package com.geeselightning.zepr;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Character extends Sprite {
 
@@ -17,13 +13,13 @@ public class Character extends Sprite {
     protected float speed;
     protected int health;
     protected double direction;
-    protected Stage currentStage;
+    protected Level currentLevel;
 
-    public Character(Sprite sprite, Vector2 spawn, Stage currentStage) {
+    public Character(Sprite sprite, Vector2 spawn, Level currentLevel) {
         super(sprite);
         setX(spawn.x);
         setY(spawn.y);
-        this.currentStage = currentStage;
+        this.currentLevel = currentLevel;
     }
 
     /**
@@ -102,8 +98,8 @@ public class Character extends Sprite {
         setX(getX() + velocity.x * delta);
         setY(getY() + velocity.y * delta);
 
-        // Get all characters in the currentStage
-        ArrayList<Character> otherCharacters = currentStage.getCharacters();
+        // Get all characters in the currentLevel
+        ArrayList<Character> otherCharacters = currentLevel.getCharacters();
         // Remove this character otherwise it will collide with itself
         otherCharacters.remove(this);
 

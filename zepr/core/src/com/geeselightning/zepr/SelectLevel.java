@@ -14,14 +14,14 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.graphics.Color;
 
-public class SelectStage implements Screen {
+public class SelectLevel implements Screen {
 
     private Zepr parent;
     private Stage stage;
     private Label stageDescription;
     private int stageLink = -1;
 
-    public SelectStage(Zepr zepr) {
+    public SelectLevel(Zepr zepr) {
 
         parent = zepr;
 

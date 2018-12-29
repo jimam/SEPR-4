@@ -1,19 +1,17 @@
 package com.geeselightning.zepr;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class Zepr extends Game {
 
 	private LoadingScreen loadingScreen;
 	private PreferencesScreen preferencesScreen;
 	private MenuScreen menuScreen;
-	private Stage stage;
+	private Level level;
 	private AppPreferences preferences;
-	private SelectStage selectStage;
+	private SelectLevel selectLevel;
 
-	// The progress is the integer representing the last stage completed. i.e. 3 for Town
+	// The progress is the integer representing the last level completed. i.e. 3 for Town
 	public int progress = 3;
 
 	public final static int MENU = 0;
@@ -35,20 +33,20 @@ public class Zepr extends Game {
 				this.setScreen(preferencesScreen);
 				break;
 			case SELECT:
-				selectStage = new  SelectStage(this);
-				this.setScreen(selectStage);
+				selectLevel = new SelectLevel(this);
+				this.setScreen(selectLevel);
 				break;
 			case TOWN:
-				if(stage == null) stage = new StageTown(this);
-				this.setScreen(stage);
+				if(level == null) level = new TownLevel(this);
+				this.setScreen(level);
 				break;
 			case HALIFAX:
-				if(stage == null) stage = new StageHalifax(this);
-				this.setScreen(stage);
+				if(level == null) level = new HalifaxLevel(this);
+				this.setScreen(level);
 				break;
 			case COURTYARD:
-				if(stage == null) stage = new StageCourtyard(this);
-				this.setScreen(stage);
+				if(level == null) level = new CourtyardLevel(this);
+				this.setScreen(level);
 				break;
 		}
 	}
