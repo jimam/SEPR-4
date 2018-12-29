@@ -9,7 +9,7 @@ public class Zepr extends Game {
 	private MenuScreen menuScreen;
 	private Level level;
 	private AppPreferences preferences;
-	private SelectLevel selectLevel;
+	private SelectLevelScreen selectLevelScreen;
 
 	// The progress is the integer representing the last level completed. i.e. 3 for Town
 	public int progress = 3;
@@ -33,8 +33,8 @@ public class Zepr extends Game {
 				this.setScreen(preferencesScreen);
 				break;
 			case SELECT:
-				selectLevel = new SelectLevel(this);
-				this.setScreen(selectLevel);
+				selectLevelScreen = new SelectLevelScreen(this);
+				this.setScreen(selectLevelScreen);
 				break;
 			case TOWN:
 				if(level == null) level = new TownLevel(this);

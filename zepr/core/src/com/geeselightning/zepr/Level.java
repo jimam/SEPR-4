@@ -76,7 +76,7 @@ public class Level implements Screen {
     /**
      * Used for collision detection between characters in Character.update()
      *
-     * @return ArrayList containing all the characters currently in the stage
+     * @return ArrayList containing all the characters currently in the level
      */
     public ArrayList<Character> getCharacters() {
         ArrayList<Character> characters = new ArrayList<Character>();
@@ -88,8 +88,6 @@ public class Level implements Screen {
 
         return characters;
     }
-
-    // Spawns multiple zombies cycling through the spawnPoints until the given amount have been spawned.
 
     /**
      * Spawns multiple zombies cycling through spawnPoints until the given amount have been spawned.
