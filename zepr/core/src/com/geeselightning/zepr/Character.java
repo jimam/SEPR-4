@@ -92,8 +92,7 @@ public class Character extends Sprite {
     public void update(float delta) {
         // Update x, y position of character.
         // New position is the old position plus the distance moved as a result of the velocity
-        float oldX = getX();
-        float oldY = getY();
+        float oldX = getX(), oldY = getY();
 
         setX(getX() + velocity.x * delta);
         setY(getY() + velocity.y * delta);
@@ -108,6 +107,36 @@ public class Character extends Sprite {
                 setX(oldX);
                 setY(oldY);
             }
+        }
+
+        boolean collisionX = false, collisionY= false;
+
+        boolean collisionWithMap;
+        // check right side middle
+        collisionWithMap = currentLevel.isBlocked(getX(), getY());
+        // //////////////// React to Collision
+        if (collisionWithMap) {
+            collisionX = true;
+        }
+
+        //reacting to X collision.
+        if(collisionX){
+            setX(oldX);
+            velocity.x = 0;
+        }
+
+        boolean collisionWithMap2;
+        // check right side middle
+        collisionWithMap2 = currentLevel.isBlocked(getX(), getY());
+        // //////////////// React to Collision
+        if (collisionWithMap2) {
+            collisionY = true;
+        }
+
+        //reacting to y collision.
+        if(collisionY){
+            setY(oldY);
+            velocity.y = 0;
         }
     }
 
