@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Character extends Sprite {
 
@@ -109,35 +109,48 @@ public class Character extends Sprite {
             }
         }
 
-        boolean collisionX = false, collisionY= false;
+        // List of all corners of sprite
+        ArrayList<Vector2> spriteVertices = new ArrayList<Vector2>(Arrays.asList(new Vector2(getX(), getY()),
+                new Vector2(getX() + getWidth(), getY()), new Vector2(getX(), getY() + getHeight()),
+                new Vector2(getX() + getWidth(), getY() + getHeight())));
 
-        boolean collisionWithMap;
-        // check right side middle
-        collisionWithMap = currentLevel.isBlocked(getX(), getY());
-        // //////////////// React to Collision
-        if (collisionWithMap) {
-            collisionX = true;
+        // Make sure non of the corners goto a blocked region of the map
+        for (Vector2 vertex : spriteVertices) {
+            if (currentLevel.isBlocked(vertex.x, vertex.y)) {
+                setX(oldX);
+                setY(oldY);
+            }
         }
 
-        //reacting to X collision.
-        if(collisionX){
-            setX(oldX);
-            velocity.x = 0;
-        }
+//        boolean collisionX = false, collisionY= false;
 
-        boolean collisionWithMap2;
-        // check right side middle
-        collisionWithMap2 = currentLevel.isBlocked(getX(), getY());
-        // //////////////// React to Collision
-        if (collisionWithMap2) {
-            collisionY = true;
-        }
-
-        //reacting to y collision.
-        if(collisionY){
-            setY(oldY);
-            velocity.y = 0;
-        }
+//        boolean collisionWithMap;
+//        // check right side middle
+//        collisionWithMap = currentLevel.isBlocked(getX(), getY());
+//        // //////////////// React to Collision
+//        if (collisionWithMap) {
+//            collisionX = true;
+//        }
+//
+//        //reacting to X collision.
+//        if(collisionX){
+//            setX(oldX);
+//            velocity.x = 0;
+//        }
+//
+//        boolean collisionWithMap2;
+//        // check right side middle
+//        collisionWithMap2 = currentLevel.isBlocked(getX(), getY());
+//        // //////////////// React to Collision
+//        if (collisionWithMap2) {
+//            collisionY = true;
+//        }
+//
+//        //reacting to y collision.
+//        if(collisionY){
+//            setY(oldY);
+//            velocity.y = 0;
+//        }
     }
 
     // Returns the value of health
