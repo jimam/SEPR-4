@@ -9,11 +9,11 @@ import java.util.Arrays;
 
 public class Character extends Sprite {
 
-    protected Vector2 velocity = new Vector2(); // 2D vector
-    protected float speed;
-    protected int health;
-    protected double direction;
-    protected Level currentLevel;
+    Vector2 velocity = new Vector2(); // 2D vector
+    float speed;
+    int health;
+    double direction;
+    Level currentLevel;
 
     public Character(Sprite sprite, Vector2 spawn, Level currentLevel) {
         super(sprite);
@@ -28,7 +28,7 @@ public class Character extends Sprite {
      * @param character Character to check if this collides with
      * @return boolean true if they collide, false otherwise
      */
-    protected boolean collidesWith(Character character) {
+    public boolean collidesWith(Character character) {
         // Circles less buggy than character.getBoundingRectangle()
         double diameter = 10;
         double distanceBetweenCenters = (Math.pow(getCenter().x - character.getCenter().x, 2)
@@ -57,7 +57,7 @@ public class Character extends Sprite {
      * @param coordinate 2d vector representing the position of the object
      * @return bearing   double in radians of the bearing from the character to the coordinate
      */
-    protected double getDirection(Vector2 coordinate) {
+    public double getDirection(Vector2 coordinate) {
         Vector2 charCenter = new Vector2(this.getX() + (getWidth()/ 2),
                 this.getY()+ (getHeight() / 2));
 
@@ -76,7 +76,7 @@ public class Character extends Sprite {
      * @param coordinate Vector2 representing the position of the object
      * @return normalised Vector2 that from this will point towards given coordinate
      */
-    protected Vector2 getDirNormVector(Vector2 coordinate) {
+    public Vector2 getDirNormVector(Vector2 coordinate) {
         Vector2 charCenter = new Vector2(this.getX() + (getWidth() / 2),
                 this.getY() + (getHeight() / 2));
         // create vector that is the difference between character and the coordinate, and return it normalised
@@ -153,13 +153,8 @@ public class Character extends Sprite {
 //        }
     }
 
-    // Returns the value of health
-    protected int getHealth(){
-        return health;
-    }
-
     // Decreases health by value of dmg
-    protected void takeDamage(int dmg){
+    void takeDamage(int dmg){
         health -= dmg;
     }
 

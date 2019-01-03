@@ -233,7 +233,7 @@ public class Level implements Screen {
             // Try to spawn all zombie in the stage and update zombiesToSpawn with the amount that failed to spawn
             zombiesToSpawn = spawnZombies(zombiesToSpawn, zombieSpawnPoints);
 
-            if (player.getHealth() <= 0) {
+            if (player.health <= 0) {
                 // Level failed, back to select screen without completing.
                 parent.changeScreen(Zepr.SELECT);
             }
