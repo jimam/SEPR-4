@@ -102,7 +102,7 @@ public class Level implements Screen {
 
         for (int i = 0; i < amount; i++) {
 
-            Zombie zombie = (new Zombie(new Sprite(new Texture("core/assets/anime1.png")),
+            Zombie zombie = (new Zombie(new Sprite(new Texture("core/assets/zombie01.png")),
                     spawnPoints.get(i % spawnPoints.size()), this));
 
             // Check there isn't already a zombie there, or they will be stuck
