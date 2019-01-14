@@ -21,6 +21,7 @@ public class SelectLevelScreen implements Screen {
     private Label stageDescription;
     private Label characterDescription;
     private int stageLink = -1;
+    Player player = Player.getInstance();
 
     public SelectLevelScreen(Zepr zepr) {
 
@@ -170,18 +171,19 @@ public class SelectLevelScreen implements Screen {
         }
 
         //Defining actions for the nerdy button.
+
         nerdy.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 characterDescription.setText(nerdyDescription);
-                //change playertype
+                player.setType("nerdy");
             }
         });
         sporty.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 characterDescription.setText(sportyDescripton);
-                //change playertype
+                player.setType("sporty");
             }
         });
 
