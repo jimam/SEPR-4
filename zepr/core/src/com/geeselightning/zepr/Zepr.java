@@ -1,6 +1,7 @@
 package com.geeselightning.zepr;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 
 public class Zepr extends Game {
 
@@ -37,7 +38,6 @@ public class Zepr extends Game {
 				this.setScreen(selectLevelScreen);
 				break;
 			case TOWN:
-
 				level = new TownLevel(this);
 				this.setScreen(level);
 				break;
