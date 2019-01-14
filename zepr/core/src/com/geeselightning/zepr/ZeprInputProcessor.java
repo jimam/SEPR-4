@@ -50,12 +50,14 @@ public class ZeprInputProcessor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
+        player.attack = true;
+        return true;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
+        player.attack = false;
+        return true;
     }
 
     @Override

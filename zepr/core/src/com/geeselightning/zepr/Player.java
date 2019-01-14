@@ -11,6 +11,7 @@ public class Player extends Character {
     int attackDamage = Constant.PLAYERDMG;
     int hitRange = 30;
     final float hitCooldown = (float) 0.2;
+    boolean attack = false;
     float HPMult;
     float attackMult;
     String playertype;
@@ -28,6 +29,15 @@ public class Player extends Character {
         this.playertype = playertype;
     }
 
+    public void attack(Zombie zombie, float delta) {
+        if (canHitGlobal(zombie, hitRange) && hitRefresh > hitCooldown) {
+            zombie.takeDamage(attackDamage);
+            hitRefresh = 0;
+        } else {
+            hitRefresh += delta;
+        }
+    }
+
     public void respawn(Vector2 playerSpawn, Level level){
         setX(playerSpawn.x);
         setY(playerSpawn.y);
@@ -40,18 +50,14 @@ public class Player extends Character {
             HPMult = Constant.SPORTYHPMULT;
         }
         else if(playertype == null){
-            attackMult = 0.1f;
-            HPMult = 0.1f;
+            attackMult =1;
+            HPMult = 1;
         }
         this.attackDamage = (int)(Constant.PLAYERDMG * attackMult);
         this.speed = Constant.PLAYERSPEED;
         this.health = (int)(HPMult * Constant.PLAYERMAXHP);
         this.currentLevel = level;
         this.setTexture(new Texture("core/assets/player01.png"));
-    }
-
-    public boolean canHit(Character character){
-        return canHitGlobal(character, hitRange);
     }
 
     @Override

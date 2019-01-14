@@ -17,7 +17,7 @@ public class TownLevel extends Level {
             );
 
     // Defining the number of zombies to be spawned for each wave
-    private static final int[] waves = new int[]{5, 10, 15};
+    private static final int[] waves = new int[]{1, 1, 1};
 
     public TownLevel(Zepr zepr) {
         super(zepr, mapLocation, playerSpawn, zombieSpawnPoints, waves);
@@ -25,8 +25,8 @@ public class TownLevel extends Level {
 
     @Override
     public void complete() {
-        if (parent.progress == 0) {
-            parent.progress = parent.TOWN;
+        if (parent.progress == parent.TOWN) {
+            parent.progress = parent.HALIFAX;
         }
         // The stage is being replayed
     }
