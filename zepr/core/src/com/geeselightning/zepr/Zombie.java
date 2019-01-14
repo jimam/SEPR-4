@@ -16,8 +16,13 @@ public class Zombie extends Character {
         this.health = Constant.ZOMBIEMAXHP;
     }
 
-    public boolean canHit(Character character){
-        return canHitGlobal(character, hitRange);
+    public void attack(Player player, float delta) {
+        if (canHitGlobal(player, hitRange) && hitRefresh > hitCooldown) {
+            player.takeDamage(attackDamage);
+            hitRefresh = 0;
+        } else {
+            hitRefresh += delta;
+        }
     }
 
     @Override

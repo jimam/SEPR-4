@@ -10,6 +10,7 @@ public class Player extends Character {
     int attackDamage = 20;
     int hitRange = 30;
     final float hitCooldown = (float) 0.2;
+    boolean attack = false;
 
 
     private Player(Sprite sprite, Vector2 playerSpawn) {
@@ -22,6 +23,15 @@ public class Player extends Character {
 
     float HPMult;
     float attackMult;
+
+    public void attack(Zombie zombie, float delta) {
+        if (canHitGlobal(zombie, hitRange) && hitRefresh > hitCooldown) {
+            zombie.takeDamage(attackDamage);
+            hitRefresh = 0;
+        } else {
+            hitRefresh += delta;
+        }
+    }
 
     public void respawn(Vector2 playerSpawn, Level level, String playertype){
         setX(playerSpawn.x);
@@ -42,10 +52,6 @@ public class Player extends Character {
         this.health = (int)(HPMult * Constant.PLAYERMAXHP);
         this.currentLevel = level;
         this.setTexture(new Texture("core/assets/player01.png"));
-    }
-
-    public boolean canHit(Character character){
-        return canHitGlobal(character, hitRange);
     }
 
     @Override

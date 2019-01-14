@@ -37,7 +37,6 @@ public class Level implements Screen {
     private Vector2 playerSpawn;
     private ArrayList<Vector2> zombieSpawnPoints;
     private ZeprInputProcessor inputProcessor = new ZeprInputProcessor();
-    private SpriteBatch zombieBatch;
     protected boolean isPaused;
     private Stage stage;
     private Table table;
@@ -248,12 +247,14 @@ public class Level implements Screen {
                 if (currentWave > waves.length) {
                     // Level completed, back to select screen and complete stage.
                     // If stage is being replayed complete() will stop progress being incremented.
+                    isPaused = true;
                     complete();
                     parent.changeScreen(Zepr.SELECT);
+                } else {
+                    // Update zombiesRemaining with the number of zombies of the new wave
+                    zombiesRemaining = waves[currentWave - 1];
+                    zombiesToSpawn = zombiesRemaining;
                 }
-                // Update zombiesRemaining with the number of zombies of the new wave
-                zombiesRemaining = waves[currentWave - 1];
-                zombiesToSpawn = zombiesRemaining;
             }
 
             // Keep the player central in the screen.
@@ -267,21 +268,18 @@ public class Level implements Screen {
 
             player.draw(renderer.getBatch());
 
+            // Resolve all possible attacks
             for (int i = 0; i < aliveZombies.size(); i++) {
                 Zombie zombie = aliveZombies.get(i);
-                if (player.canHit(zombie) && player.hitRefresh > player.hitCooldown) {
-                    zombie.takeDamage(player.attackDamage);
-                    player.hitRefresh = 0;
-                } else {
-                    player.hitRefresh += delta;
+                // Zombies will only attack if they are in range, the attack has cooled down, and they are
+                // facing a player.
+                // Player will only attack in the reverse situation but player.attack must also be true. This is
+                //controlled by the ZeprInputProcessor. So the player will only attack when the user clicks.
+                if (player.attack) {
+                    player.attack(zombie, delta);
                 }
+                zombie.attack(player, delta);
 
-                if (zombie.canHit(player) && zombie.hitRefresh > zombie.hitCooldown) {
-                    player.takeDamage(zombie.attackDamage);
-                    zombie.hitRefresh = 0;
-                } else {
-                    zombie.hitRefresh += delta;
-                }
 
                 zombie.draw(renderer.getBatch());
             }
@@ -322,6 +320,7 @@ public class Level implements Screen {
 
     @Override
     public void dispose() {
+        skin.dispose();
         stage.dispose();
         map.dispose();
         renderer.dispose();

@@ -24,8 +24,8 @@ public class HalifaxLevel extends Level {
 
     @Override
     public void complete() {
-        if (parent.progress == parent.TOWN) {
-            parent.progress = parent.HALIFAX;
+        if (parent.progress == parent.HALIFAX) {
+            parent.progress = parent.COURTYARD;
         }
         // The stage is being replayed
     }
