@@ -80,7 +80,7 @@ public class Level implements Screen {
      */
     public void gameOver() {
         isPaused = true;
-        parent.changeScreen(Zepr.SELECT);
+        parent.setScreen(new TextScreen(parent, "You died."));
     }
 
 
@@ -249,7 +249,11 @@ public class Level implements Screen {
                     // If stage is being replayed complete() will stop progress being incremented.
                     isPaused = true;
                     complete();
-                    parent.changeScreen(Zepr.SELECT);
+                    if (parent.progress == parent.COURTYARD) {
+                        parent.setScreen(new TextScreen(parent, "Game completed."));
+                    } else {
+                        parent.setScreen(new TextScreen(parent, "Level completed."));
+                    }
                 } else {
                     // Update zombiesRemaining with the number of zombies of the new wave
                     zombiesRemaining = waves[currentWave - 1];
