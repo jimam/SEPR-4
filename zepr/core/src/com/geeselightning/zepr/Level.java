@@ -185,9 +185,9 @@ public class Level implements Screen {
         // It is only possible to view the render of the map through an orthographic camera.
         camera = new OrthographicCamera();
 
-        //retrieve player instance and reset it, playertype hardcoded as placeholder
+        //retrieve player instance and reset it
         player = Player.getInstance();
-        player.respawn(playerSpawn, this,"sporty");
+        player.respawn(playerSpawn, this);
 
         Gdx.input.setInputProcessor(inputProcessor);
     }
