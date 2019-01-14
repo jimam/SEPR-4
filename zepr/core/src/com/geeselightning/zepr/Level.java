@@ -73,6 +73,16 @@ public class Level implements Screen {
         // implemented in subclasses
     }
 
+
+    /**
+     * Called when the player's health <= 0 to end the stage.
+     */
+    public void gameOver() {
+        isPaused = true;
+        parent.changeScreen(Zepr.SELECT);
+    }
+
+
     /**
      * Used for collision detection between characters in Character.update()
      *
@@ -162,7 +172,7 @@ public class Level implements Screen {
     @Override
     public void show() {
         // Start the stage unpaused.
-        this.isPaused = false;
+        isPaused = false;
 
         // Loads the testmap.tmx file as map.
         TmxMapLoader loader = new TmxMapLoader();
@@ -214,9 +224,6 @@ public class Level implements Screen {
             exit.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    // Despawn zombies
-                    aliveZombies = new ArrayList<Zombie>();
-
                     parent.changeScreen(Zepr.SELECT);
                 }
             });
@@ -232,11 +239,6 @@ public class Level implements Screen {
 
             // Try to spawn all zombie in the stage and update zombiesToSpawn with the amount that failed to spawn
             zombiesToSpawn = spawnZombies(zombiesToSpawn, zombieSpawnPoints);
-
-            if (player.health <= 0) {
-                // Level failed, back to select screen without completing.
-                parent.changeScreen(Zepr.SELECT);
-            }
 
             if (zombiesRemaining == 0) {
                 // Wave complete, increment wave number
@@ -263,7 +265,22 @@ public class Level implements Screen {
 
             player.draw(renderer.getBatch());
 
-            for (Zombie zombie : aliveZombies) {
+            for (int i = 0; i < aliveZombies.size(); i++) {
+                Zombie zombie = aliveZombies.get(i);
+                if (player.canHit(zombie) && player.hitRefresh > player.hitCooldown) {
+                    zombie.takeDamage(player.attackDamage);
+                    player.hitRefresh = 0;
+                } else {
+                    player.hitRefresh += delta;
+                }
+
+                if (zombie.canHit(player) && zombie.hitRefresh > zombie.hitCooldown) {
+                    player.takeDamage(zombie.attackDamage);
+                    zombie.hitRefresh = 0;
+                } else {
+                    zombie.hitRefresh += delta;
+                }
+
                 zombie.draw(renderer.getBatch());
             }
 
@@ -271,8 +288,11 @@ public class Level implements Screen {
 
             String progressString = ("Wave " + Integer.toString(currentWave) + ", " + Integer.toString(zombiesRemaining) + " zombies remaining.");
             Label progressLabel = new Label(progressString, skin);
+            Label healthLabel = new Label("Health: " + Integer.toString(player.health) + "HP", skin);
             table.top().left();
             table.add(progressLabel).pad(10);
+            table.row().pad(10);
+            table.add(healthLabel).pad(10).left();
             stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
             stage.draw();
         }

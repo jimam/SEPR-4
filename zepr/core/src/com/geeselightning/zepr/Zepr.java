@@ -37,15 +37,16 @@ public class Zepr extends Game {
 				this.setScreen(selectLevelScreen);
 				break;
 			case TOWN:
-				if(level == null) level = new TownLevel(this);
+
+				level = new TownLevel(this);
 				this.setScreen(level);
 				break;
 			case HALIFAX:
-				if(level == null) level = new HalifaxLevel(this);
+				level = new HalifaxLevel(this);
 				this.setScreen(level);
 				break;
 			case COURTYARD:
-				if(level == null) level = new CourtyardLevel(this);
+				level = new CourtyardLevel(this);
 				this.setScreen(level);
 				break;
 		}

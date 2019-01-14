@@ -7,6 +7,10 @@ import com.badlogic.gdx.math.Vector2;
 public class Player extends Character {
 
     private static final Player instance = new Player(new Sprite(new Texture("core/assets/player01.png")), new Vector2(0, 0));
+    int attackDamage = 20;
+    int hitRange = 30;
+    final float hitCooldown = (float) 0.2;
+
 
     private Player(Sprite sprite, Vector2 playerSpawn) {
         super(sprite, playerSpawn, null);
@@ -25,6 +29,10 @@ public class Player extends Character {
         this.setTexture(new Texture("core/assets/player01.png"));
     }
 
+    public boolean canHit(Character character){
+        return canHitGlobal(character, hitRange);
+    }
+
     @Override
     public void update(float delta) {
         super.update(delta);
@@ -33,7 +41,7 @@ public class Player extends Character {
         direction = getDirection(currentLevel.getMouseWorldCoordinates());
 
         if (health <= 0) {
-            // GAME OVER
+            currentLevel.gameOver();
         }
     }
 }
