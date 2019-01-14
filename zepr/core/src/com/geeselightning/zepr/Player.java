@@ -16,11 +16,26 @@ public class Player extends Character {
         return instance;
     }
 
-    public void respawn(Vector2 playerSpawn, Level level){
+    float HPMult;
+    float attackMult;
+
+    public void respawn(Vector2 playerSpawn, Level level, String playertype){
         setX(playerSpawn.x);
         setY(playerSpawn.y);
+        if (playertype == "nerdy"){
+            attackMult = Constant.NERDYATTACKMULT;
+            HPMult = Constant.NERDYATTACKMULT;
+        }
+        else if (playertype == "sporty"){
+            attackMult = Constant.SPORTYATTACKMULT;
+            HPMult = Constant.SPORTYATTACKMULT;
+        }
+        else if(playertype == null){
+            attackMult =1;
+            HPMult = 1;
+        }
         this.speed = Constant.PLAYERSPEED;
-        this.health = Constant.PLAYERMAXHP;
+        this.health = (int)(HPMult * Constant.PLAYERMAXHP);
         this.currentLevel = level;
         this.setTexture(new Texture("core/assets/player01.png"));
     }

@@ -19,6 +19,7 @@ public class SelectLevelScreen implements Screen {
     private Zepr parent;
     private Stage stage;
     private Label stageDescription;
+    private Label characterDescription;
     private int stageLink = -1;
 
     public SelectLevelScreen(Zepr zepr) {
@@ -42,6 +43,10 @@ public class SelectLevelScreen implements Screen {
         TextButton halifax = new TextButton("Halifax", skin);
         TextButton courtyard = new TextButton("Courtyard", skin);
 
+        // Creating character buttons.
+        TextButton nerdy = new TextButton("nerdy",skin);
+        TextButton sporty = new TextButton("sporty",skin);
+
         // Creating other buttons.
         TextButton play = new TextButton("Play", skin);
         TextButton save = new TextButton("Save", skin);
@@ -49,7 +54,7 @@ public class SelectLevelScreen implements Screen {
         TextButton back = new TextButton("Back", skin);
 
         // Creating stage descriptions.
-        Label title = new Label("Choose a stage.", skin, "subtitle");
+        Label title = new Label("Choose a stage and character.", skin, "subtitle");
         final String townDescription = "You wake up hungover in town to discover there is a zombie apocalypse.";
         final String halifaxDescription = "You need to get your laptop with the work on it from your accomodation.";
         final String courtyardDescription = "You should go to Courtyard and get some breakfast.";
@@ -59,6 +64,15 @@ public class SelectLevelScreen implements Screen {
         stageDescription.setWrap(true);
         stageDescription.setWidth(100);
         stageDescription.setAlignment(Align.center);
+
+        // Creating character descriptions.
+        final String nerdyDescription = "Construct a mech suit for yourself so you can take more hits";
+        final String sportyDescripton = "Work out so you can hit zombies harder";
+        final String defaultCharacterDescription = "Select a type of student from the buttons above";
+        characterDescription = new Label(defaultCharacterDescription,skin);
+        characterDescription.setWrap(true);
+        characterDescription.setWidth(100);
+        characterDescription.setAlignment(Align.center);
 
         // Adding menu bar.
         Table menuBar = new Table();
@@ -90,6 +104,14 @@ public class SelectLevelScreen implements Screen {
 
         stageSelect.row();
         stageSelect.add(stageDescription).width(1000f).colspan(3);
+
+        // Adding select character Buttons
+        stageSelect.row();
+        stageSelect.add(nerdy).pad(10);
+        stageSelect.add(sporty).pad(10);
+
+        stageSelect.row();
+        stageSelect.add(characterDescription).width(1000f).colspan(2);
 
         // Adding play button at the bottom.
         Table bottomTable = new Table();
@@ -146,6 +168,22 @@ public class SelectLevelScreen implements Screen {
                 }
             });
         }
+
+        //Defining actions for the nerdy button.
+        nerdy.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                characterDescription.setText(nerdyDescription);
+                //change playertype
+            }
+        });
+        sporty.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                characterDescription.setText(sportyDescripton);
+                //change playertype
+            }
+        });
 
         // Defining actions for the play button.
         play.addListener(new ChangeListener() {

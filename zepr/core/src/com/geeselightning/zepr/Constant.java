@@ -8,4 +8,9 @@ public final class Constant {
     public static final int PLAYERMAXHP = 100;
     public static final float ZOMBIESPEED = 80;
     public static final int ZOMBIEMAXHP = 100;
+    public static final float NERDYHPMULT = 1.5f;
+    public static final float NERDYATTACKMULT = 1;
+    public static final float SPORTYHPMULT = 1;
+    public static final float SPORTYATTACKMULT = 1.5f;
+
 }

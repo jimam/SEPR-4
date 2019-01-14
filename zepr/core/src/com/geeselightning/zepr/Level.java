@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -36,6 +37,7 @@ public class Level implements Screen {
     private Vector2 playerSpawn;
     private ArrayList<Vector2> zombieSpawnPoints;
     private ZeprInputProcessor inputProcessor = new ZeprInputProcessor();
+    private SpriteBatch zombieBatch;
     protected boolean isPaused;
     private Stage stage;
     private Table table;
@@ -173,9 +175,9 @@ public class Level implements Screen {
         // It is only possible to view the render of the map through an orthographic camera.
         camera = new OrthographicCamera();
 
-        //retrieve player instance and reset it
+        //retrieve player instance and reset it, playertype hardcoded as placeholder
         player = Player.getInstance();
-        player.respawn(playerSpawn, this);
+        player.respawn(playerSpawn, this,"sporty");
 
         Gdx.input.setInputProcessor(inputProcessor);
     }
