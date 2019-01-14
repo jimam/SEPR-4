@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class TownLevel extends Level {
 
-    private static final String mapLocation = "core/assets/maps/town.tmx";
+    private static final String mapLocation = "core/assets/maps/townmap.tmx";
     private static final Vector2 playerSpawn = new Vector2(0, 0);
 
     // Defining possible zombie spawn locations on this map
