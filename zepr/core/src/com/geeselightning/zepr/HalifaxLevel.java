@@ -6,13 +6,13 @@ import java.util.Arrays;
 
 public class HalifaxLevel extends Level {
 
-    private static final String mapLocation = "core/assets/maps/halifax.tmx";
-    private static final Vector2 playerSpawn = new Vector2(0, 0);
+    private static final String mapLocation = "core/assets/maps/halifaxmap.tmx";
+    private static final Vector2 playerSpawn = new Vector2(300, 300);
 
     // Defining possible zombie spawn locations on this map
     private static final ArrayList<Vector2> zombieSpawnPoints = new ArrayList<Vector2>(
-            Arrays.asList(new Vector2(0,0), new Vector2(0,50),
-                    new Vector2(50,50), new Vector2(50,0))
+            Arrays.asList(new Vector2(600,100), new Vector2(100,200),
+                    new Vector2(600,500), new Vector2(100,600))
     );
 
     // Defining the number of zombies to be spawned for each wave

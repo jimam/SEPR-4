@@ -6,14 +6,16 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.Arrays;
+import static java.lang.Math.abs;
 
 public class Character extends Sprite {
 
     Vector2 velocity = new Vector2(); // 2D vector
     float speed;
-    int health;
+    int health = 100;
     double direction;
     Level currentLevel;
+    float hitRefresh = 0;
 
     public Character(Sprite sprite, Vector2 spawn, Level currentLevel) {
         super(sprite);
@@ -47,6 +49,19 @@ public class Character extends Sprite {
         setRotation((float) Math.toDegrees(- direction));
     }
 
+    // hitRange has to be passed by the subclass from the canHit method.
+    protected boolean canHitGlobal(Character character, int hitRange) {
+        double directionToCharacter = this.getDirection(character.getCenter());
+        double angle = abs(directionToCharacter - direction);
+        double distance = this.getCenter().sub(character.getCenter()).len();
+
+        if (angle < 0.5 && distance < hitRange) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public Vector2 getCenter() {
         return new Vector2(getX() + (getHeight() / 2), getY() + (getWidth() / 2));
     }
@@ -71,7 +86,7 @@ public class Character extends Sprite {
     }
 
     /**
-     * Calculates a normailised vector that points torwards given coordinate.
+     * Calculates a normailized vector that points torwards given coordinate.
      *
      * @param coordinate Vector2 representing the position of the object
      * @return normalised Vector2 that from this will point towards given coordinate
