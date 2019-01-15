@@ -2,11 +2,11 @@ package com.geeselightning.zepr;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -17,13 +17,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import javax.swing.plaf.ColorUIResource;
 import java.util.ArrayList;
+
+import static java.lang.Math.round;
 
 public class Level implements Screen {
 
@@ -46,6 +48,9 @@ public class Level implements Screen {
     protected int zombiesRemaining; // the number of zombies left to kill to complete the wave
     private int zombiesToSpawn; // the number of zombies that are left to be spawned this wave
 
+    ShapeRenderer shape;
+
+
     public Level(Zepr zepr, String mapLocation, Vector2 playerSpawn, ArrayList<Vector2> zombieSpawnPoints, int[] waves) {
         parent = zepr;
         this.mapLocation = mapLocation;
@@ -65,6 +70,25 @@ public class Level implements Screen {
         this.table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
+    }
+
+    private void drawHealthBar(Zombie zombie) {
+        float x = zombie.getX();
+        float y = zombie.getY() + 32;
+
+        int fillAmount = (int) (zombie.getHealth() / 100) * 30;
+
+        shape.setProjectionMatrix(camera.combined);
+        shape.begin(ShapeRenderer.ShapeType.Line);
+        shape.setColor(Color.BLACK);
+        shape.rect(x, y,32,4);
+        shape.end();
+
+        shape.setProjectionMatrix(camera.combined);
+        shape.begin(ShapeRenderer.ShapeType.Line);
+        shape.setColor(Color.RED);
+        shape.rect(x+1, y+1, fillAmount, 2);
+        shape.end();
     }
 
     /**
@@ -184,6 +208,8 @@ public class Level implements Screen {
         // It is only possible to view the render of the map through an orthographic camera.
         camera = new OrthographicCamera();
 
+        shape = new ShapeRenderer();
+
         //retrieve player instance and reset it
         player = Player.getInstance();
         player.respawn(playerSpawn, this);
@@ -272,9 +298,9 @@ public class Level implements Screen {
 
             player.draw(renderer.getBatch());
 
-            // Resolve all possible attacks
             for (int i = 0; i < aliveZombies.size(); i++) {
                 Zombie zombie = aliveZombies.get(i);
+                // Resolve all possible attacks
                 // Zombies will only attack if they are in range, the attack has cooled down, and they are
                 // facing a player.
                 // Player will only attack in the reverse situation but player.attack must also be true. This is
@@ -284,11 +310,17 @@ public class Level implements Screen {
                 }
                 zombie.attack(player, delta);
 
-
+                // Draw zombies
                 zombie.draw(renderer.getBatch());
+
             }
 
             renderer.getBatch().end();
+
+            // Draw zombie health bars
+            for (Zombie zombie : aliveZombies) {
+                drawHealthBar(zombie);
+            }
 
             String progressString = ("Wave " + Integer.toString(currentWave) + ", " + Integer.toString(zombiesRemaining) + " zombies remaining.");
             Label progressLabel = new Label(progressString, skin);
@@ -328,6 +360,7 @@ public class Level implements Screen {
         stage.dispose();
         map.dispose();
         renderer.dispose();
+        shape.dispose();
         player.getTexture().dispose();
         for (Zombie zombie : aliveZombies) {
             zombie.getTexture().dispose();
