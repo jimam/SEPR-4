@@ -28,6 +28,10 @@ public class Player extends Character {
         this.playertype = playertype;
     }
 
+    public String getType() {
+        return playertype;
+    }
+
     public void attack(Zombie zombie, float delta) {
         if (canHitGlobal(zombie, hitRange) && hitRefresh > hitCooldown) {
             zombie.takeDamage(attackDamage);

@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
-@RunWith(GdxTestRunner.class)
+//@RunWith(GdxTestRunner.class)
 public class PlayerTest {
 
     @Test
@@ -27,16 +27,16 @@ public class PlayerTest {
     @Test
     public void canHit() {
         Player player = Player.getInstance();
-        // player direction is initially 0.
+        // player direction is initially 0.0
 
-        Zombie zombie = new Zombie(new Sprite(), new Vector2(0, 30), null);
+        Zombie zombie = new Zombie(new Sprite(), new Vector2(player.getCenter().x, player.getCenter().y + 30), null);
         double originalHealth = zombie.getHealth();
         player.attack(zombie, 0);
 
         assertEquals("Zombie on the edge of range should not take damage when the player attacks.",
                 zombie.getHealth(), originalHealth, 0.1);
 
-        zombie = new Zombie(new Sprite(), new Vector2(0, 20), null);
+        zombie = new Zombie(new Sprite(), new Vector2(player.getCenter().x, player.getCenter().y + 20), null);
         originalHealth = zombie.getHealth();
         player.attack(zombie, 0);
 
@@ -51,7 +51,5 @@ public class PlayerTest {
                 zombie.getHealth(), originalHealth, 0.1);
     }
 
-    // can hit zombie in range
-    // can't hit zombie out of range
 
 }

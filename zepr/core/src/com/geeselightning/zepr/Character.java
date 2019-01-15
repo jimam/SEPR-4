@@ -13,9 +13,11 @@ public class Character extends Sprite {
     Vector2 velocity = new Vector2(); // 2D vector
     float speed;
     int health = 100;
+    // direction is a bearing in radians
     double direction = 0;
     Level currentLevel;
-    float hitRefresh = 0;
+    // All characters start ready to hit.
+    float hitRefresh = 1;
 
     public Character(Sprite sprite, Vector2 spawn, Level currentLevel) {
         super(sprite);
