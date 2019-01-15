@@ -48,8 +48,6 @@ public class Level implements Screen {
     protected int zombiesRemaining; // the number of zombies left to kill to complete the wave
     private int zombiesToSpawn; // the number of zombies that are left to be spawned this wave
 
-    ShapeRenderer shape;
-
 
     public Level(Zepr zepr, String mapLocation, Vector2 playerSpawn, ArrayList<Vector2> zombieSpawnPoints, int[] waves) {
         parent = zepr;
@@ -72,24 +70,6 @@ public class Level implements Screen {
         stage.addActor(table);
     }
 
-    private void drawHealthBar(Zombie zombie) {
-        float x = zombie.getX();
-        float y = zombie.getY() + 32;
-
-        int fillAmount = (int) (zombie.getHealth() / 100) * 30;
-
-        shape.setProjectionMatrix(camera.combined);
-        shape.begin(ShapeRenderer.ShapeType.Line);
-        shape.setColor(Color.BLACK);
-        shape.rect(x, y,32,4);
-        shape.end();
-
-        shape.setProjectionMatrix(camera.combined);
-        shape.begin(ShapeRenderer.ShapeType.Line);
-        shape.setColor(Color.RED);
-        shape.rect(x+1, y+1, fillAmount, 2);
-        shape.end();
-    }
 
     /**
      * Called once the stage is complete to update the game progress
@@ -208,8 +188,6 @@ public class Level implements Screen {
         // It is only possible to view the render of the map through an orthographic camera.
         camera = new OrthographicCamera();
 
-        shape = new ShapeRenderer();
-
         //retrieve player instance and reset it
         player = Player.getInstance();
         player.respawn(playerSpawn, this);
@@ -317,11 +295,6 @@ public class Level implements Screen {
 
             renderer.getBatch().end();
 
-            // Draw zombie health bars
-            for (Zombie zombie : aliveZombies) {
-                drawHealthBar(zombie);
-            }
-
             String progressString = ("Wave " + Integer.toString(currentWave) + ", " + Integer.toString(zombiesRemaining) + " zombies remaining.");
             Label progressLabel = new Label(progressString, skin);
             Label healthLabel = new Label("Health: " + Integer.toString(player.health) + "HP", skin);
@@ -360,7 +333,6 @@ public class Level implements Screen {
         stage.dispose();
         map.dispose();
         renderer.dispose();
-        shape.dispose();
         player.getTexture().dispose();
         for (Zombie zombie : aliveZombies) {
             zombie.getTexture().dispose();
