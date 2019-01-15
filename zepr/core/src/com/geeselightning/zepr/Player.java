@@ -8,11 +8,12 @@ public class Player extends Character {
 
     private static final Player instance = new Player(new Sprite(new Texture("core/assets/player01.png")), new Vector2(0, 0));
     int attackDamage = Constant.PLAYERDMG;
-    int hitRange = 30;
-    final float hitCooldown = (float) 0.2;
+    int hitRange = Constant.PLAYERRANGE;
+    final float hitCooldown =  Constant.PLAYERHITCOOLDOWN;
     boolean attack = false;
     float HPMult;
-    float attackMult;
+    float dmgMult;
+    float speedMult;
     String playertype;
 
 
@@ -41,19 +42,22 @@ public class Player extends Character {
         setX(playerSpawn.x);
         setY(playerSpawn.y);
         if (playertype == "nerdy"){
-            attackMult = Constant.NERDYATTACKMULT;
+            dmgMult = Constant.NERDYDMGMULT;
             HPMult = Constant.NERDYHPMULT;
+            speedMult = Constant.NERDYSPEEDMULT;
         }
         else if (playertype == "sporty"){
-            attackMult = Constant.SPORTYATTACKMULT;
+            dmgMult = Constant.SPORTYDMGMULT;
             HPMult = Constant.SPORTYHPMULT;
+            speedMult = Constant.SPORTYSPEEDMULT;
         }
         else if(playertype == null){
-            attackMult =1;
+            dmgMult =1;
             HPMult = 1;
+            speedMult = 1;
         }
-        this.attackDamage = (int)(Constant.PLAYERDMG * attackMult);
-        this.speed = Constant.PLAYERSPEED;
+        this.attackDamage = (int)(Constant.PLAYERDMG * dmgMult);
+        this.speed = (int)(Constant.PLAYERSPEED * speedMult);
         this.health = (int)(HPMult * Constant.PLAYERMAXHP);
         this.currentLevel = level;
         this.setTexture(new Texture("core/assets/player01.png"));
