@@ -1,5 +1,6 @@
 package de.tomgrill.gdxtesting;
 
+import com.geeselightning.zepr.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
@@ -10,6 +11,7 @@ public class LevelTest {
 //    @Test
 //    public void complete() {
 //        Zepr zepr = new Zepr();
+//        zepr.create();
 //
 //        assertTrue("Progress should be Town initially.",zepr.progress == 3);
 //
@@ -34,8 +36,17 @@ public class LevelTest {
 
     @Test
     public void getCharacters() {
-        // After creating a level should just be player
+        TownLevel level = new TownLevel(new Zepr());
+
+        // After creating a level, there should only be the player in the level.
+        assertEquals("Length of getCharacters() should be initially 1.", level.getCharacters().size(), 1);
+        assertTrue("Only member of getCharacters() should be of type Player", level.getCharacters().get(0) instanceof Player);
+
         // Add a zombie
+        level.spawnZombies(1, level.zombieSpawnPoints);
+        assertEquals("After spawning a zombie the length of getCharacters() should be 2.", level.getCharacters().size(), 2);
+        assertTrue("The next member of getCharacters() should be of type Zombie", level.getCharacters().get(1) instanceof Zombie);
+
         // Add a couple more zombies
     }
 

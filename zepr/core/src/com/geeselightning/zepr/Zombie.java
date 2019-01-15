@@ -35,7 +35,7 @@ public class Zombie extends Character {
         velocity = getDirNormVector(player.getCenter()).scl(speed);
 
         // update direction to face the player
-        direction = getDirection(player.getCenter());
+        direction = getDirectionTo(player.getCenter());
 
         if (health <= 0) {
             currentLevel.zombiesRemaining--;

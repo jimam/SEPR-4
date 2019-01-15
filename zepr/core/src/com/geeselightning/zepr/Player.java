@@ -3,7 +3,6 @@ package com.geeselightning.zepr;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 public class Player extends Character {
 
@@ -64,8 +63,8 @@ public class Player extends Character {
     public void update(float delta) {
         super.update(delta);
 
-        // update the direction the player is facing
-        direction = getDirection(currentLevel.getMouseWorldCoordinates());
+        // Update the direction the player is facing.
+        direction = getDirectionTo(currentLevel.getMouseWorldCoordinates());
 
         if (health <= 0) {
             currentLevel.gameOver();

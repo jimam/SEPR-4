@@ -13,7 +13,7 @@ public class Character extends Sprite {
     Vector2 velocity = new Vector2(); // 2D vector
     float speed;
     int health = 100;
-    double direction;
+    double direction = 0;
     Level currentLevel;
     float hitRefresh = 0;
 
@@ -22,6 +22,14 @@ public class Character extends Sprite {
         setX(spawn.x);
         setY(spawn.y);
         this.currentLevel = currentLevel;
+    }
+
+    public double getDirection() {
+        return direction;
+    }
+
+    public double getHealth() {
+        return health;
     }
 
     /**
@@ -51,7 +59,7 @@ public class Character extends Sprite {
 
     // hitRange has to be passed by the subclass from the canHit method.
     protected boolean canHitGlobal(Character character, int hitRange) {
-        double directionToCharacter = this.getDirection(character.getCenter());
+        double directionToCharacter = this.getDirectionTo(character.getCenter());
         double angle = abs(directionToCharacter - direction);
         double distance = this.getCenter().sub(character.getCenter()).len();
 
@@ -72,7 +80,7 @@ public class Character extends Sprite {
      * @param coordinate 2d vector representing the position of the object
      * @return bearing   double in radians of the bearing from the character to the coordinate
      */
-    public double getDirection(Vector2 coordinate) {
+    public double getDirectionTo(Vector2 coordinate) {
         Vector2 charCenter = new Vector2(this.getX() + (getWidth()/ 2),
                 this.getY()+ (getHeight() / 2));
 

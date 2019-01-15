@@ -45,8 +45,8 @@ public class SelectLevelScreen implements Screen {
         TextButton courtyard = new TextButton("Courtyard", skin);
 
         // Creating character buttons.
-        TextButton nerdy = new TextButton("nerdy",skin);
-        TextButton sporty = new TextButton("sporty",skin);
+        TextButton nerdy = new TextButton("Nerdy",skin);
+        TextButton sporty = new TextButton("Sporty",skin);
 
         // Creating other buttons.
         TextButton play = new TextButton("Play", skin);
@@ -67,9 +67,9 @@ public class SelectLevelScreen implements Screen {
         stageDescription.setAlignment(Align.center);
 
         // Creating character descriptions.
-        final String nerdyDescription = "Construct a mech suit for yourself so you can take more hits";
-        final String sportyDescripton = "Work out so you can hit zombies harder";
-        final String defaultCharacterDescription = "Select a type of student from the buttons above";
+        final String nerdyDescription = "Construct a mech suit for yourself so you can take more hits.";
+        final String sportyDescripton = "Work out so you can hit zombies harder.";
+        final String defaultCharacterDescription = "Select a type of student from the buttons above.";
         characterDescription = new Label(defaultCharacterDescription,skin);
         characterDescription.setWrap(true);
         characterDescription.setWidth(100);
@@ -107,12 +107,12 @@ public class SelectLevelScreen implements Screen {
         stageSelect.add(stageDescription).width(1000f).colspan(3);
 
         // Adding select character Buttons
-        stageSelect.row();
+        stageSelect.row().center();
         stageSelect.add(nerdy).pad(10);
         stageSelect.add(sporty).pad(10);
 
-        stageSelect.row();
-        stageSelect.add(characterDescription).width(1000f).colspan(2);
+        stageSelect.row().center();
+        stageSelect.add(characterDescription).width(1000f).colspan(3);
 
         // Adding play button at the bottom.
         Table bottomTable = new Table();

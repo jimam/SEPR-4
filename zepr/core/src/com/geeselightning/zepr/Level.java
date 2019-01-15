@@ -35,7 +35,7 @@ public class Level implements Screen {
     protected ArrayList<Zombie> aliveZombies = new ArrayList<Zombie>();
     private String mapLocation;
     private Vector2 playerSpawn;
-    private ArrayList<Vector2> zombieSpawnPoints;
+    public ArrayList<Vector2> zombieSpawnPoints;
     private ZeprInputProcessor inputProcessor = new ZeprInputProcessor();
     protected boolean isPaused;
     private Stage stage;
@@ -108,7 +108,7 @@ public class Level implements Screen {
      *
      * @return the number of zombies that failed to spawn
      */
-    private int spawnZombies(int amount, ArrayList<Vector2> spawnPoints) {
+    public int spawnZombies(int amount, ArrayList<Vector2> spawnPoints) {
         int notSpawned = 0;
 
         for (int i = 0; i < amount; i++) {
