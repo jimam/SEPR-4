@@ -47,6 +47,7 @@ public class Level implements Screen {
     private int currentWave = 1;
     protected int zombiesRemaining; // the number of zombies left to kill to complete the wave
     private int zombiesToSpawn; // the number of zombies that are left to be spawned this wave
+    private boolean pauseButton = false;
 
 
     public Level(Zepr zepr, String mapLocation, Vector2 playerSpawn, ArrayList<Vector2> zombieSpawnPoints, int[] waves) {
@@ -99,6 +100,7 @@ public class Level implements Screen {
         for (Zombie zombie : aliveZombies) {
             characters.add(zombie);
         }
+
         characters.add(player);
 
         return characters;
@@ -202,18 +204,25 @@ public class Level implements Screen {
             Gdx.gl.glClearColor(0f, 0f, 0f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-            table.clear();
-
-            // Input processor has to be changed back once unpaused.
-            Gdx.input.setInputProcessor(stage);
-
             TextButton resume = new TextButton("Resume", skin);
             TextButton exit = new TextButton("Exit", skin);
 
-            table.center();
-            table.add(resume).pad(10);
-            table.row();
-            table.add(exit);
+            if (!pauseButton) {
+
+                table.clear();
+
+                // Input processor has to be changed back once unpaused.
+                Gdx.input.setInputProcessor(stage);
+
+                table.center();
+                table.add(resume).pad(10);
+                table.row();
+                table.add(exit);
+                pauseButton = true;
+
+            }
+
+            Gdx.input.setInputProcessor(stage);
 
             // Defining actions for the resume button.
             resume.addListener(new ChangeListener() {
@@ -222,6 +231,7 @@ public class Level implements Screen {
                     isPaused = false;
                     // Change input processor back
                     Gdx.input.setInputProcessor(inputProcessor);
+                    pauseButton = false;
                 }
             });
 
