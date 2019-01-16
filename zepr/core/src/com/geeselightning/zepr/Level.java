@@ -211,9 +211,6 @@ public class Level implements Screen {
 
                 table.clear();
 
-                // Input processor has to be changed back once unpaused.
-                Gdx.input.setInputProcessor(stage);
-
                 table.center();
                 table.add(resume).pad(10);
                 table.row();
@@ -222,6 +219,7 @@ public class Level implements Screen {
 
             }
 
+            // Input processor has to be changed back once unpaused.
             Gdx.input.setInputProcessor(stage);
 
             // Defining actions for the resume button.
