@@ -4,9 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -19,13 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import javax.swing.plaf.ColorUIResource;
 import java.util.ArrayList;
 
-import static java.lang.Math.round;
 
 public class Level implements Screen {
 
@@ -48,6 +41,7 @@ public class Level implements Screen {
     protected int zombiesRemaining; // the number of zombies left to kill to complete the wave
     private int zombiesToSpawn; // the number of zombies that are left to be spawned this wave
     private boolean pauseButton = false;
+    Texture blank;
 
 
     public Level(Zepr zepr, String mapLocation, Vector2 playerSpawn, ArrayList<Vector2> zombieSpawnPoints, int[] waves) {
@@ -56,6 +50,7 @@ public class Level implements Screen {
         this.playerSpawn = playerSpawn;
         this.zombieSpawnPoints = zombieSpawnPoints;
         this.isPaused = false;
+        this.blank = new Texture("core/assets/blank.png");
 
         // Set up data for first wave of zombies
         this.waves = waves;
@@ -299,9 +294,17 @@ public class Level implements Screen {
                 // Draw zombies
                 zombie.draw(renderer.getBatch());
 
+                // Draw zombie health bars
+                int fillAmount = (int) (zombie.getHealth() / 100) * 30;
+                renderer.getBatch().setColor(Color.BLACK);
+                renderer.getBatch().draw(blank, zombie.getX(), zombie.getY()+32, 32, 3);
+                renderer.getBatch().setColor(Color.RED);
+                renderer.getBatch().draw(blank, zombie.getX()+1, zombie.getY()+33, fillAmount, 1);
+                renderer.getBatch().setColor(Color.WHITE);
             }
 
             // for powerup in level; powerup.draw(renderer.getBatch());
+
 
             renderer.getBatch().end();
 
