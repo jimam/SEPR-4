@@ -301,6 +301,8 @@ public class Level implements Screen {
 
             }
 
+            // for powerup in level; powerup.draw(renderer.getBatch());
+
             renderer.getBatch().end();
 
             String progressString = ("Wave " + Integer.toString(currentWave) + ", " + Integer.toString(zombiesRemaining) + " zombies remaining.");

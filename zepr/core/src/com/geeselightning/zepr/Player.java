@@ -10,6 +10,8 @@ public class Player extends Character {
     int attackDamage = Constant.PLAYERDMG;
     int hitRange = Constant.PLAYERRANGE;
     final float hitCooldown =  Constant.PLAYERHITCOOLDOWN;
+    Texture mainTexture;
+    Texture attackTexture;
     boolean attack = false;
     float HPMult;
     float dmgMult;
@@ -65,11 +67,16 @@ public class Player extends Character {
         this.speed = (int)(Constant.PLAYERSPEED * speedMult);
         this.health = (int)(HPMult * Constant.PLAYERMAXHP);
         this.currentLevel = level;
+
         if (playertype == "nerdy") {
-            this.setTexture(new Texture("core/assets/player01.png"));
+            mainTexture = new Texture("core/assets/player01.png");
+            attackTexture = new Texture("core/assets/player01_attack.png");
+            this.setTexture(mainTexture);
         } else {
             // playertype == sporty
-            this.setTexture(new Texture("core/assets/player02.png"));
+            mainTexture = new Texture("core/assets/player02.png");
+            attackTexture = new Texture("core/assets/player02_attack.png");
+            this.setTexture(mainTexture);
         }
     }
 
@@ -80,25 +87,20 @@ public class Player extends Character {
         // Update the direction the player is facing.
         direction = getDirectionTo(currentLevel.getMouseWorldCoordinates());
 
+
+        // When you die, end the level.
         if (health <= 0) {
             currentLevel.gameOver();
         }
 
-        if (hitRefresh == 0) {
-            if (playertype == "nerdy") {
-                this.setTexture(new Texture("core/assets/player01_attack.png"));
-            } else {
-                // playertype == sporty
-                this.setTexture(new Texture("core/assets/player02_attack.png"));
-            }
-        }
-        if (hitRefresh > 0.18) {
-            if (playertype == "nerdy") {
-                this.setTexture(new Texture("core/assets/player01.png"));
-            } else {
-                // playertype == sporty
-                this.setTexture(new Texture("core/assets/player02.png"));
-            }
+        // Gives the player the attack texture for 0.1s after an attack.
+        //if (hitRefresh <= 0.1 && getTexture() != attackTexture) {
+        if (attack) {
+            this.setTexture(attackTexture);
+        } else {
+        // Changes the texture back to the main one after 0.1s.
+        //if (hitRefresh > 0.1 && getTexture() == attackTexture) {
+            this.setTexture(mainTexture);
         }
     }
 }
