@@ -8,7 +8,7 @@ public class Zombie extends Character {
     private Player player = Player.getInstance();
     int attackDamage = Constant.ZOMBIEDMG;
     public int hitRange = Constant.ZOMBIERANGE;
-    final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
+    public final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
 
     public Zombie(Sprite sprite, Vector2 zombieSpawn, Level currentLevel) {
         super(sprite, zombieSpawn, currentLevel);
