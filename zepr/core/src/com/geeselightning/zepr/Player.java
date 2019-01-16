@@ -33,6 +33,7 @@ public class Player extends Character {
         return playertype;
     }
 
+
     public void attack(Zombie zombie, float delta) {
         if (canHitGlobal(zombie, hitRange) && hitRefresh > hitCooldown) {
             zombie.takeDamage(attackDamage);
@@ -55,7 +56,7 @@ public class Player extends Character {
             HPMult = Constant.SPORTYHPMULT;
             speedMult = Constant.SPORTYSPEEDMULT;
         }
-        else if(playertype == null){
+        else if (playertype == null){
             dmgMult =1;
             HPMult = 1;
             speedMult = 1;
@@ -64,12 +65,11 @@ public class Player extends Character {
         this.speed = (int)(Constant.PLAYERSPEED * speedMult);
         this.health = (int)(HPMult * Constant.PLAYERMAXHP);
         this.currentLevel = level;
-        if(playertype == "nerdy") {
+        if (playertype == "nerdy") {
             this.setTexture(new Texture("core/assets/player01.png"));
-        } else if (playertype == "sporty") {
-            this.setTexture(new Texture("core/assets/player02.png"));
         } else {
-            this.setTexture(new Texture("core/assets/player01.png"));
+            // playertype == sporty
+            this.setTexture(new Texture("core/assets/player02.png"));
         }
     }
 
@@ -82,6 +82,23 @@ public class Player extends Character {
 
         if (health <= 0) {
             currentLevel.gameOver();
+        }
+
+        if (hitRefresh == 0) {
+            if (playertype == "nerdy") {
+                this.setTexture(new Texture("core/assets/player01_attack.png"));
+            } else {
+                // playertype == sporty
+                this.setTexture(new Texture("core/assets/player02_attack.png"));
+            }
+        }
+        if (hitRefresh > 0.18) {
+            if (playertype == "nerdy") {
+                this.setTexture(new Texture("core/assets/player01.png"));
+            } else {
+                // playertype == sporty
+                this.setTexture(new Texture("core/assets/player02.png"));
+            }
         }
     }
 }
