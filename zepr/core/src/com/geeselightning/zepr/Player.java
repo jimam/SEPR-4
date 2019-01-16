@@ -64,7 +64,13 @@ public class Player extends Character {
         this.speed = (int)(Constant.PLAYERSPEED * speedMult);
         this.health = (int)(HPMult * Constant.PLAYERMAXHP);
         this.currentLevel = level;
-        this.setTexture(new Texture("core/assets/player01.png"));
+        if(playertype == "nerdy") {
+            this.setTexture(new Texture("core/assets/player01.png"));
+        } else if (playertype == "sporty") {
+            this.setTexture(new Texture("core/assets/player02.png"));
+        } else {
+            this.setTexture(new Texture("core/assets/player01.png"));
+        }
     }
 
     @Override
