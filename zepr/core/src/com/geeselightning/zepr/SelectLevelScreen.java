@@ -21,6 +21,7 @@ public class SelectLevelScreen implements Screen {
     private Label stageDescription;
     private Label characterDescription;
     private int stageLink = -1;
+    private boolean playerSet = false;
     Player player = Player.getInstance();
 
     public SelectLevelScreen(Zepr zepr) {
@@ -68,7 +69,7 @@ public class SelectLevelScreen implements Screen {
 
         // Creating character descriptions.
         final String nerdyDescription = "Construct a mech suit for yourself so you can take more hits.";
-        final String sportyDescripton = "Work out so you can hit zombies harder.";
+        final String sportyDescripton = "Work out so you run faster.";
         final String defaultCharacterDescription = "Select a type of student from the buttons above.";
         characterDescription = new Label(defaultCharacterDescription,skin);
         characterDescription.setWrap(true);
@@ -177,6 +178,7 @@ public class SelectLevelScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 characterDescription.setText(nerdyDescription);
                 player.setType("nerdy");
+                playerSet = true;
             }
         });
         sporty.addListener(new ChangeListener() {
@@ -184,6 +186,7 @@ public class SelectLevelScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 characterDescription.setText(sportyDescripton);
                 player.setType("sporty");
+                playerSet = true;
             }
         });
 
@@ -191,7 +194,7 @@ public class SelectLevelScreen implements Screen {
         play.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (stageLink != -1) {
+                if ((stageLink != -1) && (playerSet == true)) {
                     parent.changeScreen(stageLink);
                 }
             }

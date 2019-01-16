@@ -147,35 +147,6 @@ public class Character extends Sprite {
             }
         }
 
-//        boolean collisionX = false, collisionY= false;
-
-//        boolean collisionWithMap;
-//        // check right side middle
-//        collisionWithMap = currentLevel.isBlocked(getX(), getY());
-//        // //////////////// React to Collision
-//        if (collisionWithMap) {
-//            collisionX = true;
-//        }
-//
-//        //reacting to X collision.
-//        if(collisionX){
-//            setX(oldX);
-//            velocity.x = 0;
-//        }
-//
-//        boolean collisionWithMap2;
-//        // check right side middle
-//        collisionWithMap2 = currentLevel.isBlocked(getX(), getY());
-//        // //////////////// React to Collision
-//        if (collisionWithMap2) {
-//            collisionY = true;
-//        }
-//
-//        //reacting to y collision.
-//        if(collisionY){
-//            setY(oldY);
-//            velocity.y = 0;
-//        }
     }
 
     // Decreases health by value of dmg

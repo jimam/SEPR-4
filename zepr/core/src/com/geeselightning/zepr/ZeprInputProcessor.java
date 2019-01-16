@@ -14,16 +14,16 @@ public class ZeprInputProcessor implements InputProcessor {
     public boolean keyDown(int keycode) {
         // Adding inputs for WASD as movement in the x and y axis.
         if (keycode == Input.Keys.W) {
-            player.velocity.y = Constant.PLAYERSPEED;
+            player.velocity.y = player.speed;
         }
         if (keycode == Input.Keys.S) {
-            player.velocity.y = - Constant.PLAYERSPEED;
+            player.velocity.y = - player.speed;
         }
         if (keycode == Input.Keys.D) {
-            player.velocity.x = Constant.PLAYERSPEED;
+            player.velocity.x = player.speed;
         }
         if (keycode == Input.Keys.A) {
-            player.velocity.x = - Constant.PLAYERSPEED;
+            player.velocity.x = - player.speed;
         }
         if (keycode == Input.Keys.ESCAPE) {
             player.currentLevel.isPaused = !(player.currentLevel.isPaused);
