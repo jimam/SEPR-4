@@ -22,5 +22,5 @@ public final class Constant {
     public static final float SPORTYSPEEDMULT = 1.5f;
     public static final int HEALUP = 10;
     public static final int SPEEDUP = 10;
-    public static final int SPEEDUPTIME = 10000;
+    public static final float SPEEDUPTIME = 0.5f;
 }

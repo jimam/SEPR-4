@@ -8,6 +8,7 @@ public class CourtyardLevel extends Level {
 
     private static final String mapLocation = "core/assets/maps/courtyard.tmx";
     private static final Vector2 playerSpawn = new Vector2(0, 0);
+    private static final Vector2 powerSpawn = new Vector2(250, 250);
 
     // Defining possible zombie spawn locations on this map
     public static final ArrayList<Vector2> zombieSpawnPoints = new ArrayList<Vector2>(
@@ -19,7 +20,7 @@ public class CourtyardLevel extends Level {
     private static final int[] waves = new int[]{5, 10, 15};
 
     public CourtyardLevel(Zepr zepr) {
-        super(zepr, mapLocation, playerSpawn, zombieSpawnPoints, waves);
+        super(zepr, mapLocation, playerSpawn, zombieSpawnPoints, waves, powerSpawn);
     }
 
     @Override

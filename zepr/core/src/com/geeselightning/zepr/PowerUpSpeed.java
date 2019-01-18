@@ -1,18 +1,24 @@
 package com.geeselightning.zepr;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.TimeUtils;
+
 public class PowerUpSpeed extends PowerUp {
 
-    private long time;
+    PowerUpSpeed() {
+        super(2, new Texture("core/assets/speed.png"));
+    }
 
     @Override
     public void activate() {
-
-        time = System.currentTimeMillis(); // time in milliseconds
-
         super.player.speed += Constant.SPEEDUP;
+        super.isActive = true;
+    }
 
-        // reduce speed back to normal after some time passes
-        while(System.currentTimeMillis() < time + Constant.SPEEDUPTIME){}
+    @Override
+    public void deactivate(){
         super.player.speed -= Constant.SPEEDUP;
+        super.isActive = false;
     }
 }

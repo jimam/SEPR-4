@@ -9,6 +9,7 @@ public class TownLevel extends Level {
 
     private static final String mapLocation = "core/assets/maps/townmap.tmx";
     private static final Vector2 playerSpawn = new Vector2(530, 430);
+    private static final Vector2 powerSpawn = new Vector2(300, 300);
 
     // Defining possible zombie spawn locations on this map
     public static final ArrayList<Vector2> zombieSpawnPoints = new ArrayList<Vector2>(
@@ -20,7 +21,7 @@ public class TownLevel extends Level {
     private static final int[] waves = new int[]{5, 10, 15};
 
     public TownLevel(Zepr zepr) {
-        super(zepr, mapLocation, playerSpawn, zombieSpawnPoints, waves);
+        super(zepr, mapLocation, playerSpawn, zombieSpawnPoints, waves, powerSpawn);
     }
 
     @Override

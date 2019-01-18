@@ -8,6 +8,7 @@ public class HalifaxLevel extends Level {
 
     private static final String mapLocation = "core/assets/maps/halifaxmap.tmx";
     public static final Vector2 playerSpawn = new Vector2(300, 300);
+    public static final Vector2 powerSpawn = new Vector2(200, 200);
 
     // Defining possible zombie spawn locations on this map
     private static final ArrayList<Vector2> zombieSpawnPoints = new ArrayList<Vector2>(
@@ -19,7 +20,7 @@ public class HalifaxLevel extends Level {
     private static final int[] waves = new int[]{5, 10, 15};
 
     public HalifaxLevel(Zepr zepr) {
-        super(zepr, mapLocation, playerSpawn, zombieSpawnPoints, waves);
+        super(zepr, mapLocation, playerSpawn, zombieSpawnPoints, waves, powerSpawn);
     }
 
     @Override
