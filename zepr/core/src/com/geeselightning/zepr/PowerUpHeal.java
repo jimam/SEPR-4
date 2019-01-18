@@ -1,6 +1,12 @@
 package com.geeselightning.zepr;
 
+import com.badlogic.gdx.graphics.Texture;
+
 public class PowerUpHeal extends PowerUp {
+
+    PowerUpHeal() {
+        super(1, new Texture("core/assets/heal.png"));
+    }
 
     @Override
     public void activate() {

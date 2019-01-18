@@ -10,12 +10,15 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.ArrayList;
 
@@ -42,15 +45,17 @@ public class Level implements Screen {
     private int zombiesToSpawn; // the number of zombies that are left to be spawned this wave
     private boolean pauseButton = false;
     Texture blank;
+    Vector2 powerSpawn;
+    PowerUp power;
 
-
-    public Level(Zepr zepr, String mapLocation, Vector2 playerSpawn, ArrayList<Vector2> zombieSpawnPoints, int[] waves) {
+    public Level(Zepr zepr, String mapLocation, Vector2 playerSpawn, ArrayList<Vector2> zombieSpawnPoints, int[] waves, Vector2 powerSpawn) {
         parent = zepr;
         this.mapLocation = mapLocation;
         this.playerSpawn = playerSpawn;
         this.zombieSpawnPoints = zombieSpawnPoints;
         this.isPaused = false;
         this.blank = new Texture("core/assets/blank.png");
+        this.powerSpawn = powerSpawn;
 
         // Set up data for first wave of zombies
         this.waves = waves;
@@ -303,8 +308,29 @@ public class Level implements Screen {
                 renderer.getBatch().setColor(Color.WHITE);
             }
 
-            // for powerup in level; powerup.draw(renderer.getBatch());
+            // generate a powerup
+            if(currentWave%2==0) {
+                power = new PowerUpHeal();
+            } else {
+                power = new PowerUpSpeed();
+            }
+            power.sprite.setPosition(powerSpawn.x, powerSpawn.y);
+            power.sprite.draw(renderer.getBatch());
 
+            // detect if player found a new powerup and activate it
+            // DOESN'T WORK
+            if(power.overlapsPlayer() && !power.isActive){
+                power.activate();
+            }
+
+            // check if powerup is still active and deactivate it after time has passed
+            // DOESN'T WORK
+            if(power.isActive) {
+                power.elapsedTime += Gdx.graphics.getDeltaTime();
+                if(power.elapsedTime >= Constant.SPEEDUPTIME) {
+                    power.deactivate();
+                }
+            }
 
             renderer.getBatch().end();
 
