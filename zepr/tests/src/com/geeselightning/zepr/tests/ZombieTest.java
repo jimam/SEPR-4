@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
 public class ZombieTest {
 
     @Test
+    // Test 3.1.1
     public void zombieDoesDamageToPlayerWhenAtMaxRange() {
         Player player = Player.getInstance();
 
@@ -26,6 +27,7 @@ public class ZombieTest {
     }
 
     @Test
+    // Test 3.1.2
     public void zombieDoesDamageToPlayerWhenInRange() {
         Player player = Player.getInstance();
 
@@ -38,6 +40,7 @@ public class ZombieTest {
     }
 
     @Test
+    // Test 3.1.3
     public void zombieDoesNoDamageToPlayerOutOfRange() {
         Player player = Player.getInstance();
 

@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
 public class PlayerTest {
 
     @Test
+    // Test 2.1
     public void playerPositionResetsWhenRespawned() {
         Player player = Player.getInstance();
         Vector2 originalPosition = new Vector2(player.getX(), player.getY());
@@ -23,6 +24,7 @@ public class PlayerTest {
     }
 
     @Test
+    // Test 2.2.1
     public void playerDoesDamageToZombieWhenAtMaxRange() {
         Player player = Player.getInstance();
 
@@ -35,6 +37,7 @@ public class PlayerTest {
     }
 
     @Test
+    // Test 2.2.2
     public void playerDoesDamageToZombieWhenInRange() {
         Player player = Player.getInstance();
 
@@ -47,6 +50,7 @@ public class PlayerTest {
     }
 
     @Test
+    //Test 2.2.3
     public void playerDoesNoDamageToZombieOutOfRange() {
         Player player = Player.getInstance();
 
