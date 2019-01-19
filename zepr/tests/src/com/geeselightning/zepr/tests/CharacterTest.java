@@ -1,11 +1,6 @@
 package com.geeselightning.zepr.tests;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.graphics.GL20;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -14,7 +9,7 @@ import com.geeselightning.zepr.TownLevel;
 import com.geeselightning.zepr.Zepr;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lwjgl.Sys;
+//import org.lwjgl.Sys;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
