@@ -7,22 +7,27 @@ import com.badlogic.gdx.math.Vector2;
 
 public class PowerUp extends Sprite {
 
-    Sprite sprite;
     Player player = Player.getInstance();
-    private int type;
-    private Texture texture;
-    boolean isActive;
-    float elapsedTime = 0f;
+    public int type;
+    Level currentLevel;
+    public float timeRemaining;
+    public boolean active;
 
-    PowerUp(int type, Texture texture) {
+    PowerUp(int type, Texture texture, Level currentLevel) {
+        super(new Sprite(texture));
         this.type = type;
-        this.texture = texture;
-        sprite = new Sprite(texture);
+        this.currentLevel = currentLevel;
+        setPosition(currentLevel.powerSpawn.x, currentLevel.powerSpawn.y);
     }
 
-    public void activate(){}
+    public void activate(){
+        active = true;
+    }
 
-    public void deactivate(){}
+    public void deactivate(){
+        active = false;
+        currentLevel.currentPowerUp = null;
+    }
 
     public Vector2 getCenter() {
         return new Vector2(getX() + (getHeight() / 2), getY() + (getWidth() / 2));
@@ -30,8 +35,10 @@ public class PowerUp extends Sprite {
 
     public boolean overlapsPlayer(){
         Rectangle rectanglePlayer = player.getBoundingRectangle();
-        Rectangle rectanglePower = this.sprite.getBoundingRectangle();
+        Rectangle rectanglePower = this.getBoundingRectangle();
         return rectanglePlayer.overlaps(rectanglePower);
     }
+
+    public void update(float delta) {}
 
 }

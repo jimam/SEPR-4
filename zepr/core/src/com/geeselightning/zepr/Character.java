@@ -65,7 +65,7 @@ public class Character extends Sprite {
         double angle = abs(directionToCharacter - direction);
         double distance = this.getCenter().sub(character.getCenter()).len();
 
-        if (angle < 0.5 && distance < hitRange) {
+        if (angle < 0.8 && distance < hitRange) {
             return true;
         } else {
             return false;

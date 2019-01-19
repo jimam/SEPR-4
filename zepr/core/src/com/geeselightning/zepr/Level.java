@@ -46,7 +46,11 @@ public class Level implements Screen {
     private boolean pauseButton = false;
     Texture blank;
     Vector2 powerSpawn;
-    PowerUp power;
+    PowerUp currentPowerUp = null;
+
+    Label progressLabel = new Label("", skin);
+    Label healthLabel = new Label("", skin);
+    Label powerupLabel = new Label("", skin);
 
     public Level(Zepr zepr, String mapLocation, Vector2 playerSpawn, ArrayList<Vector2> zombieSpawnPoints, int[] waves, Vector2 powerSpawn) {
         parent = zepr;
@@ -253,6 +257,17 @@ public class Level implements Screen {
             // Try to spawn all zombie in the stage and update zombiesToSpawn with the amount that failed to spawn
             zombiesToSpawn = spawnZombies(zombiesToSpawn, zombieSpawnPoints);
 
+            // Spawn a power up and the end of a wave, if there isn't already a powerUp on the level
+            if (zombiesRemaining == 0 && currentPowerUp == null) {
+                int random = (int )(Math.random() * 2 + 1);
+                if (random == 1) {
+                    currentPowerUp = new PowerUpHeal(this);
+                } else {
+                    // random == 2
+                    currentPowerUp = new PowerUpSpeed(this);
+                }
+            }
+
             if (zombiesRemaining == 0) {
                 // Wave complete, increment wave number
                 currentWave++;
@@ -284,9 +299,9 @@ public class Level implements Screen {
 
             player.draw(renderer.getBatch());
 
+            // Resolve all possible attacks
             for (int i = 0; i < aliveZombies.size(); i++) {
                 Zombie zombie = aliveZombies.get(i);
-                // Resolve all possible attacks
                 // Zombies will only attack if they are in range, the attack has cooled down, and they are
                 // facing a player.
                 // Player will only attack in the reverse situation but player.attack must also be true. This is
@@ -308,39 +323,33 @@ public class Level implements Screen {
                 renderer.getBatch().setColor(Color.WHITE);
             }
 
-            // generate a powerup
-            if(currentWave%2==0) {
-                power = new PowerUpHeal();
-            } else {
-                power = new PowerUpSpeed();
-            }
-            power.sprite.setPosition(powerSpawn.x, powerSpawn.y);
-            power.sprite.draw(renderer.getBatch());
-
-            // detect if player found a new powerup and activate it
-            // DOESN'T WORK
-            if(power.overlapsPlayer() && !power.isActive){
-                power.activate();
-            }
-
-            // check if powerup is still active and deactivate it after time has passed
-            // DOESN'T WORK
-            if(power.isActive) {
-                power.elapsedTime += Gdx.graphics.getDeltaTime();
-                if(power.elapsedTime >= Constant.SPEEDUPTIME) {
-                    power.deactivate();
+            if (currentPowerUp != null) {
+                // Activate the powerup up if the player moves over it and it's not already active
+                if (currentPowerUp.overlapsPlayer() && !currentPowerUp.active) {
+                    currentPowerUp.activate();
                 }
+                // Only render the powerup if it is not active, otherwise it disappears
+                if (!currentPowerUp.active) {
+                    currentPowerUp.draw(renderer.getBatch());
+                }
+                currentPowerUp.update(delta);
             }
 
             renderer.getBatch().end();
 
+
             String progressString = ("Wave " + Integer.toString(currentWave) + ", " + Integer.toString(zombiesRemaining) + " zombies remaining.");
-            Label progressLabel = new Label(progressString, skin);
-            Label healthLabel = new Label("Health: " + Integer.toString(player.health) + "HP", skin);
+            String healthString = ("Health: " + Integer.toString(player.health) + "HP");
+
+            progressLabel.setText(progressString);
+            healthLabel.setText(healthString);
+
             table.top().left();
             table.add(progressLabel).pad(10);
             table.row().pad(10);
             table.add(healthLabel).pad(10).left();
+            table.row();
+            table.add(powerupLabel);
             stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
             stage.draw();
         }

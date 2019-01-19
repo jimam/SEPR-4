@@ -6,19 +6,35 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 public class PowerUpSpeed extends PowerUp {
 
-    PowerUpSpeed() {
-        super(2, new Texture("core/assets/speed.png"));
+    boolean isActive;
+    public float timeRemaining = Constant.SPEEDUPTIME;
+
+    PowerUpSpeed(Level currentLevel) {
+        super(2, new Texture("core/assets/speed.png"), currentLevel);
     }
 
     @Override
     public void activate() {
+        super.activate();
         super.player.speed += Constant.SPEEDUP;
-        super.isActive = true;
+        isActive = true;
+        this.getTexture().dispose();
     }
 
     @Override
-    public void deactivate(){
+    public void deactivate() {
+        super.deactivate();
         super.player.speed -= Constant.SPEEDUP;
-        super.isActive = false;
+        isActive = false;
+    }
+
+    @Override
+    public void update(float delta) {
+        if (isActive) {
+            timeRemaining -= delta;
+        }
+        if (timeRemaining < 0) {
+            deactivate();
+        }
     }
 }
