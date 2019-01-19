@@ -8,7 +8,9 @@ import static org.junit.Assert.*;
 
 @RunWith(GdxTestRunner.class)
 public class PowerUpTest {
+
     @Test
+    // Test 4.1
     public void powerUpHealthAddsHPToPlayer() {
         Player player = Player.getInstance();
         PowerUpHeal heal = new PowerUpHeal(null);
@@ -20,6 +22,7 @@ public class PowerUpTest {
     }
 
     @Test
+    // Test 4.2.1
     public void powerUpSpeedIncreasePlayersSpeed() {
         Player player = Player.getInstance();
         PowerUpSpeed speed = new PowerUpSpeed(null);
@@ -30,6 +33,7 @@ public class PowerUpTest {
     }
 
     @Test
+    // Test 4.2.2
     public void powerUpSpeedDeactivatesAfter10s() {
         Player player = Player.getInstance();
         PowerUpSpeed speed = new PowerUpSpeed(null);
@@ -40,6 +44,7 @@ public class PowerUpTest {
     }
 
     @Test
+    // Test 4.2.3
     public void powerUpSpeedDoesNotDeactiveBefore10s() {
         Player player = Player.getInstance();
         PowerUpSpeed speed = new PowerUpSpeed(null);
@@ -51,6 +56,7 @@ public class PowerUpTest {
     }
 
     @Test
+    // Test 4.2.3
     public void powerUpSpeedDeactivateMethodResetsPlayerSpeed() {
         Player player = Player.getInstance();
         PowerUpSpeed speed = new PowerUpSpeed(null);
@@ -63,6 +69,7 @@ public class PowerUpTest {
     }
 
     @Test
+    // Test 4.3.1
     public void playerCannotPickUpFarAwayPowerUp() {
         Player player = Player.getInstance();
         PowerUpHeal powerup = new PowerUpHeal(null);
@@ -72,6 +79,7 @@ public class PowerUpTest {
     }
 
     @Test
+    //Test 4.3.2
     public void playerCanPickUpClosePowerUp() {
         Player player = Player.getInstance();
         PowerUpHeal powerup = new PowerUpHeal(null);

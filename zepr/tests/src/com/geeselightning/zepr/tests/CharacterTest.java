@@ -84,6 +84,7 @@ public class CharacterTest {
     }
 
     @Test
+    // Test 1.4
     public void charactersTakeSpecifiedDamage() {
         Character character = new Character(new Sprite(), new Vector2(0, 0), null);
         double originalHealth = character.getHealth();
@@ -93,6 +94,7 @@ public class CharacterTest {
     }
 
     @Test
+    // Test 1.5.1
     public void getDirNormVectorToNegativePosition() {
         Character character = new Character(new Sprite(new Texture("core/assets/player01.png")), new Vector2(-16,-16), null);
         Vector2 position = new Vector2(-10, -30);
@@ -104,6 +106,7 @@ public class CharacterTest {
     }
 
     @Test
+    // Test 1.5.2
     public void getDirNormVectorToPositivePosition() {
         Character character = new Character(new Sprite(new Texture("core/assets/player01.png")), new Vector2(-16,-16), null);
         Vector2 position = new Vector2(47, 20);
