@@ -1,7 +1,6 @@
 package com.geeselightning.zepr;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 
 public class Zepr extends Game {
 

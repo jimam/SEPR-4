@@ -10,7 +10,6 @@ public class PowerUp extends Sprite {
     Player player = Player.getInstance();
     public int type;
     Level currentLevel;
-    public float timeRemaining;
     public boolean active;
 
     PowerUp(int type, Texture texture, Level currentLevel) {

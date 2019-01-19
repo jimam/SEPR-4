@@ -1,8 +1,6 @@
 package com.geeselightning.zepr;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.TimeUtils;
 
 public class PowerUpSpeed extends PowerUp {
 
