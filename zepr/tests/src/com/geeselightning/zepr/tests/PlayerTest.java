@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.geeselightning.zepr.Constant;
 import com.geeselightning.zepr.Player;
-import com.geeselightning.zepr.ZeprInputProcessor;
 import com.geeselightning.zepr.Zombie;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,14 +24,14 @@ public class PlayerTest {
 
     @Test
     // Test 2.2.1
-    public void playerDoesDamageToZombieWhenAtMaxRange() {
+    public void playerDoesNoDamageToZombieWhenAtMaxRange() {
         Player player = Player.getInstance();
 
         Zombie zombie = new Zombie(new Sprite(), new Vector2(player.getCenter().x, player.getCenter().y + Constant.PLAYERRANGE), null);
         double originalHealth = zombie.getHealth();
         player.attack(zombie, 0);
 
-        assertNotEquals("Zombie on the edge of range should not take damage when the player attacks.",
+        assertEquals("Zombie on the edge of range should not take damage when the player attacks.",
                 zombie.getHealth(), originalHealth, 0.1);
     }
 

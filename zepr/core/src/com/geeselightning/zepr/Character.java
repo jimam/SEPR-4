@@ -11,13 +11,13 @@ import static java.lang.Math.abs;
 public class Character extends Sprite {
 
     Vector2 velocity = new Vector2(); // 2D vector
-    float speed;
+    public float speed;
     int health = 100;
     // direction is a bearing in radians
     double direction = 0;
     Level currentLevel;
     // All characters start ready to hit.
-    float hitRefresh = 1;
+    float hitRefresh = 2;
 
     public Character(Sprite sprite, Vector2 spawn, Level currentLevel) {
         super(sprite);
@@ -150,7 +150,7 @@ public class Character extends Sprite {
     }
 
     // Decreases health by value of dmg
-    void takeDamage(int dmg){
+    public void takeDamage(int dmg){
         health -= dmg;
     }
 

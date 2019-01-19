@@ -12,11 +12,14 @@ public class PowerUp extends Sprite {
     Level currentLevel;
     public boolean active;
 
-    PowerUp(int type, Texture texture, Level currentLevel) {
+    public PowerUp(int type, Texture texture, Level currentLevel) {
         super(new Sprite(texture));
         this.type = type;
         this.currentLevel = currentLevel;
-        setPosition(currentLevel.powerSpawn.x, currentLevel.powerSpawn.y);
+        if (currentLevel != null) {
+            // Tests pass a null currentLevel
+            setPosition(currentLevel.powerSpawn.x, currentLevel.powerSpawn.y);
+        }
     }
 
     public void activate(){
@@ -25,7 +28,10 @@ public class PowerUp extends Sprite {
 
     public void deactivate(){
         active = false;
-        currentLevel.currentPowerUp = null;
+        if (currentLevel != null) {
+            // Tests pass a null currentLevel
+            currentLevel.currentPowerUp = null;
+        }
     }
 
     public Vector2 getCenter() {

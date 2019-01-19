@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class PowerUpHeal extends PowerUp {
 
-    PowerUpHeal(Level currentLevel) {
+    public PowerUpHeal(Level currentLevel) {
         super(1, new Texture("core/assets/heal.png"), currentLevel);
     }
 

@@ -1,49 +1,15 @@
 package com.geeselightning.zepr.tests;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.geeselightning.zepr.Character;
-import com.geeselightning.zepr.TownLevel;
-import com.geeselightning.zepr.Zepr;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.lwjgl.Sys;
-
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 @RunWith(GdxTestRunner.class)
 public class CharacterTest {
-
-//    Zepr zepr = new Zepr();
-//    TownLevel townLevel;
-//
-//    @Test
-//    public void gameTest() {
-//        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-//        LwjglApplication app = new LwjglApplication(zepr, config);
-//
-//        townLevel = new TownLevel(zepr);
-//        zepr.setScreen(townLevel);
-//
-//        app.postRunnable(new Runnable() {
-//            @Override
-//            public void run() {
-//                townLevel = new TownLevel(zepr);
-//                zepr.setScreen(townLevel);
-//            }
-//        });
-//
-//        System.out.println(townLevel.getCharacters().size());
-//
-//    }
 
     @Test
     // Test 1.1.1
@@ -117,9 +83,34 @@ public class CharacterTest {
         assertEquals("North-West direction should be 5.498.", 5.498, character.getDirectionTo(new Vector2(-1,1)), 0.001);
     }
 
+    @Test
+    public void charactersTakeSpecifiedDamage() {
+        Character character = new Character(new Sprite(), new Vector2(0, 0), null);
+        double originalHealth = character.getHealth();
+        character.takeDamage(50);
+        assertEquals("Character's health should be reduced by 50 when takeDamage(50).", originalHealth - 50,
+                character.getHealth(), 0.1);
+    }
 
     @Test
-    public void getDirNormVector() {
-        // TODO
+    public void getDirNormVectorToNegativePosition() {
+        Character character = new Character(new Sprite(new Texture("core/assets/player01.png")), new Vector2(-16,-16), null);
+        Vector2 position = new Vector2(-10, -30);
+        Vector2 normalizedDirection = character.getDirNormVector(position);
+        double expectedX = -10 / Math.sqrt(1000);
+        double expectedY = -30 / Math.sqrt(1000);
+        assertEquals("Correct x component for player with center at origin to (-10, -30).", expectedX, normalizedDirection.x, 0.1);
+        assertEquals("Correct y component for player with center at origin to (-10, -30).", expectedY, normalizedDirection.y, 0.1);
+    }
+
+    @Test
+    public void getDirNormVectorToPositivePosition() {
+        Character character = new Character(new Sprite(new Texture("core/assets/player01.png")), new Vector2(-16,-16), null);
+        Vector2 position = new Vector2(47, 20);
+        Vector2 normalizedDirection = character.getDirNormVector(position);
+        double expectedX = 47 / Math.sqrt(2609);
+        double expectedY = 20 / Math.sqrt(2609);
+        assertEquals("Correct x component for player with center at origin to (47, 20).", expectedX, normalizedDirection.x, 0.1);
+        assertEquals("Correct y component for player with center at origin to (47, 20).", expectedY, normalizedDirection.y, 0.1);
     }
 }
