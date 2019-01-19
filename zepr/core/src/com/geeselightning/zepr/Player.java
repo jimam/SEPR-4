@@ -17,6 +17,7 @@ public class Player extends Character {
     float dmgMult;
     float speedMult;
     String playertype;
+    public boolean isImmune;
 
 
     private Player(Sprite sprite, Vector2 playerSpawn) {
@@ -101,6 +102,14 @@ public class Player extends Character {
         // Changes the texture back to the main one after 0.1s.
         //if (hitRefresh > 0.1 && getTexture() == attackTexture) {
             this.setTexture(mainTexture);
+        }
+    }
+
+    @Override
+    public void takeDamage(int dmg){
+        if(!isImmune){
+            //If powerUpImmunity is activated
+            health -= dmg;
         }
     }
 

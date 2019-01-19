@@ -150,7 +150,7 @@ public class Character extends Sprite {
     }
 
     // Decreases health by value of dmg
-    void takeDamage(int dmg){
+    public void takeDamage(int dmg){
         health -= dmg;
     }
 
