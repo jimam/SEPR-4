@@ -7,13 +7,13 @@ import java.util.Arrays;
 public class CourtyardLevel extends Level {
 
     private static final String mapLocation = "core/assets/maps/courtyard.tmx";
-    private static final Vector2 playerSpawn = new Vector2(0, 0);
+    private static final Vector2 playerSpawn = new Vector2(300, 300);
     private static final Vector2 powerSpawn = new Vector2(250, 250);
 
     // Defining possible zombie spawn locations on this map
     public static final ArrayList<Vector2> zombieSpawnPoints = new ArrayList<Vector2>(
-            Arrays.asList(new Vector2(0,0), new Vector2(0,50),
-                    new Vector2(50,50), new Vector2(50,0))
+            Arrays.asList(new Vector2(120,100), new Vector2(630,600),
+                    new Vector2(630,100), new Vector2(120,500))
     );
 
     // Defining the number of zombies to be spawned for each wave
