@@ -7,8 +7,8 @@ import java.util.Arrays;
 public class HalifaxLevel extends Level {
 
     private static final String mapLocation = "maps/halifaxmap.tmx";
-    public static final Vector2 playerSpawn = new Vector2(300, 300);
-    public static final Vector2 powerSpawn = new Vector2(200, 200);
+    private static final Vector2 playerSpawn = new Vector2(300, 300);
+    private static final Vector2 powerSpawn = new Vector2(200, 200);
 
     // Defining possible zombie spawn locations on this map
     private static final ArrayList<Vector2> zombieSpawnPoints = new ArrayList<Vector2>(
