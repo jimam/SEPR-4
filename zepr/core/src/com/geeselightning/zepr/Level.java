@@ -275,7 +275,7 @@ public class Level implements Screen {
                     // If stage is being replayed complete() will stop progress being incremented.
                     isPaused = true;
                     complete();
-                    if (parent.progress == parent.COURTYARD) {
+                    if (parent.progress == parent.COMPLETE) {
                         parent.setScreen(new TextScreen(parent, "Game completed."));
                     } else {
                         parent.setScreen(new TextScreen(parent, "Level completed."));
@@ -380,6 +380,9 @@ public class Level implements Screen {
         stage.dispose();
         map.dispose();
         renderer.dispose();
+        if (currentPowerUp != null) {
+            currentPowerUp.getTexture().dispose();
+        }
         player.getTexture().dispose();
         for (Zombie zombie : aliveZombies) {
             zombie.getTexture().dispose();

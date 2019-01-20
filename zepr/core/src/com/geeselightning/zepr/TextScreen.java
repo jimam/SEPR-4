@@ -72,6 +72,7 @@ public class TextScreen implements Screen {
     public void resize(int width, int height) {
         // Update the screen when the window resolution is changed.
         this.stage.getViewport().update(width, height, true);
+        dispose();
     }
 
     @Override

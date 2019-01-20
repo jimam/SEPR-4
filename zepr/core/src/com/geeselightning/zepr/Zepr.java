@@ -17,6 +17,7 @@ public class Zepr extends Game {
 	public final static int TOWN = 3;
 	public final static int HALIFAX = 4;
 	public final static int COURTYARD = 5;
+	public final static int COMPLETE = 6;
 
 
 	public void changeScreen(int screen) {

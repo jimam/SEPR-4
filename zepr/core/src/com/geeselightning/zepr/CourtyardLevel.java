@@ -27,7 +27,7 @@ public class CourtyardLevel extends Level {
     public void complete() {
         // Update progress
         if (parent.progress == parent.COURTYARD) {
-            // Change progress to next level
+            parent.progress = parent.COMPLETE;
         }
         // The stage is being replayed
     }
