@@ -34,10 +34,6 @@ public class PowerUp extends Sprite {
         }
     }
 
-    public Vector2 getCenter() {
-        return new Vector2(getX() + (getHeight() / 2), getY() + (getWidth() / 2));
-    }
-
     public boolean overlapsPlayer(){
         Rectangle rectanglePlayer = player.getBoundingRectangle();
         Rectangle rectanglePower = this.getBoundingRectangle();

@@ -36,9 +36,8 @@ public class ZombieTest {
         double originalHealth = player.getHealth();
         zombie.attack(player, 0);
 
-        //assertNotEquals("Player within range should take damage when the zombie attacks.",
-         //       player.getHealth(), originalHealth, 0.1);
-        assertNotEquals(originalHealth, player.getHealth(), 0.1);
+        assertNotEquals("Player within range should take damage when the zombie attacks.",
+                player.getHealth(), originalHealth, 0.1);
     }
 
 

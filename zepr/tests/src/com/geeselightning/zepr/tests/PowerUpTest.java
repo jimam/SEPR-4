@@ -17,6 +17,7 @@ public class PowerUpTest {
         player.takeDamage(50);
         double originalHealth = player.getHealth();
         heal.activate();
+        heal.update(1);
         assertEquals("Heal powerup should give the player more hit points.",
                 originalHealth + Constant.HEALUP, player.getHealth(), 0.1);
     }
@@ -88,4 +89,44 @@ public class PowerUpTest {
         assertTrue("Player can pickup a power up if it is touching it.", powerup.overlapsPlayer());
     }
 
+    @Test
+    // Test 4.4.1
+    public void powerUpImmunityStopsThePlayerTakingDamge() {
+        Player player = Player.getInstance();
+        PowerUpImmunity immunity = new PowerUpImmunity(null);
+        immunity.activate();
+        double originalHealth = player.getHealth();
+        player.takeDamage(30);
+        assertEquals("Player health before and after taking damage should remain the same when immunity is activated.",
+                originalHealth, player.getHealth(), 0.1);
+    }
+
+    @Test
+    // Test 4.4.2
+    public void powerUpImmunityDeactivatesAfter5s() {
+        Player player = Player.getInstance();
+        PowerUpImmunity immunity = new PowerUpImmunity(null);
+        double originalHealth = player.getHealth();
+        immunity.activate();
+        player.takeDamage(40);
+        immunity.update(6);
+        player.takeDamage(30);
+        assertEquals("Player should take 30 damage after the immunity expires", originalHealth - 30,
+                player.getHealth(), 0.1);
+    }
+
+    @Test
+    // Test 4.4.3
+    public void powerUpImmunityDeactivateMethodCancelsImmunity() {
+        Player player = Player.getInstance();
+        PowerUpImmunity immunity = new PowerUpImmunity(null);
+        double originalHealth = player.getHealth();
+        immunity.activate();
+        immunity.update(2);
+        player.takeDamage(40);
+        immunity.deactivate();
+        player.takeDamage(30);
+        assertEquals("Player should take 30 damage afrer immunity is deactivated.", originalHealth-30,
+                player.getHealth(), 0.1);
+    }
 }

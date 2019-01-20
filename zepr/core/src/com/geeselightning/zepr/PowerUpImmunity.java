@@ -6,7 +6,7 @@ public class PowerUpImmunity extends PowerUp {
 
     public float timeRemaining = Constant.IMMUNITYTIME;
 
-    PowerUpImmunity(Level currentLevel) {
+    public PowerUpImmunity(Level currentLevel) {
         super(3, new Texture("speed.png"), currentLevel);
     }
 
