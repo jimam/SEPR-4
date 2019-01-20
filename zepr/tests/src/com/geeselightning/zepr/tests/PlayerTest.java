@@ -61,4 +61,30 @@ public class PlayerTest {
                 zombie.getHealth(), originalHealth, 0.1);
     }
 
+    @Test
+    // Test 2.3.1
+    public void playerTypesHaveDifferentHealth() {
+        Player player = Player.getInstance();
+        player.setType("nerdy");
+        player.respawn(Constant.ORIGIN, null);
+        double nerdyHealth = player.getHealth();
+        player.setType("sporty");
+        player.respawn(Constant.ORIGIN, null);
+        assertNotEquals("Sporty and nerdy students should have a different amount of hit points.",
+                nerdyHealth, player.getHealth(), 0.1);
+    }
+
+    @Test
+    // Test 2.3.2
+    public void playerTypesHaveDifferentSpeed() {
+        Player player = Player.getInstance();
+        player.setType("nerdy");
+        player.respawn(Constant.ORIGIN, null);
+        double nerdySpeed = player.speed;
+        player.setType("sporty");
+        player.respawn(Constant.ORIGIN, null);
+        assertNotEquals("Sporty and nerdy students should have a different amount of hit points.",
+                nerdySpeed, player.speed);
+    }
+
 }

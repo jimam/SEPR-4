@@ -1,5 +1,6 @@
 package com.geeselightning.zepr.tests;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.geeselightning.zepr.Constant;
@@ -53,4 +54,35 @@ public class ZombieTest {
         assertEquals("Player outside of range should not take damage when the zombie attacks.",
                 player.getHealth(), originalHealth, 0.1);
     }
+
+    @Test
+    // Test 3.2.1
+    public void zombieCannotAttackBeforeCooldownComplete() {
+        player.respawn(Constant.ORIGIN, null);
+
+        Zombie zombie = new Zombie(new Sprite(), new Vector2(player.getCenter().x, player.getCenter().y ), null);
+        double originalHealth = player.getHealth();
+        zombie.attack(player, 0);
+        zombie.attack(player, 0);
+
+        assertEquals("Player should only have taken one hit if attacked again before cooldown complete.",
+                originalHealth - Constant.ZOMBIEDMG, player.getHealth(), 0.1);
+    }
+
+    @Test
+    // Test 3.2.2
+    public void zombieCanAttackAfterCooldownComplete() {
+        player.respawn(Constant.ORIGIN, null);
+
+        Zombie zombie = new Zombie(new Sprite(), new Vector2(player.getCenter().x, player.getCenter().y ), null);
+        double originalHealth = player.getHealth();
+        zombie.attack(player, 0);
+        // zombie will not attack this go so has to be called a third time
+        zombie.attack(player, Constant.ZOMBIEHITCOOLDOWN + 1);
+        zombie.attack(player, 0);
+
+        assertEquals("Player should have taken two hits if attacked again after cooldown complete.",
+                originalHealth - (2 * Constant.ZOMBIEDMG), player.getHealth(), 0.1);
+    }
+
 }
