@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Player extends Character {
 
-    private static final Player instance = new Player(new Sprite(new Texture("core/assets/player01.png")), new Vector2(0, 0));
+    private static final Player instance = new Player(new Sprite(new Texture("player01.png")), new Vector2(0, 0));
     int attackDamage = Constant.PLAYERDMG;
     int hitRange = Constant.PLAYERRANGE;
     final float hitCooldown =  Constant.PLAYERHITCOOLDOWN;
@@ -70,13 +70,13 @@ public class Player extends Character {
         this.currentLevel = level;
 
         if (playertype == "nerdy") {
-            mainTexture = new Texture("core/assets/player01.png");
-            attackTexture = new Texture("core/assets/player01_attack.png");
+            mainTexture = new Texture("player01.png");
+            attackTexture = new Texture("player01_attack.png");
             this.setTexture(mainTexture);
         } else {
             // playertype == sporty
-            mainTexture = new Texture("core/assets/player02.png");
-            attackTexture = new Texture("core/assets/player02_attack.png");
+            mainTexture = new Texture("player02.png");
+            attackTexture = new Texture("player02_attack.png");
             this.setTexture(mainTexture);
         }
     }

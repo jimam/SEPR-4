@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class TownLevel extends Level {
 
-    private static final String mapLocation = "core/assets/maps/townmap.tmx";
+    private static final String mapLocation = "maps/townmap.tmx";
     private static final Vector2 playerSpawn = new Vector2(530, 430);
     private static final Vector2 powerSpawn = new Vector2(300, 300);
 

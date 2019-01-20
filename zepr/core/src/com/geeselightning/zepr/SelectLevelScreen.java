@@ -38,7 +38,7 @@ public class SelectLevelScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         // Importing the necessary assets for the button textures.
-        Skin skin = new Skin(Gdx.files.internal("core/assets/skin/pixthulhu-ui.json"));
+        Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
 
         // Creating stage buttons.
         final TextButton town = new TextButton("Town", skin);

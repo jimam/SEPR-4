@@ -35,7 +35,7 @@ public class Level implements Screen {
     protected boolean isPaused;
     private Stage stage;
     private Table table;
-    private Skin skin = new Skin(Gdx.files.internal("core/assets/skin/pixthulhu-ui.json"));
+    private Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
     private int[] waves;
     private int currentWave = 1;
     protected int zombiesRemaining; // the number of zombies left to kill to complete the wave
@@ -55,7 +55,7 @@ public class Level implements Screen {
         this.playerSpawn = playerSpawn;
         this.zombieSpawnPoints = zombieSpawnPoints;
         this.isPaused = false;
-        this.blank = new Texture("core/assets/blank.png");
+        this.blank = new Texture("blank.png");
         this.powerSpawn = powerSpawn;
 
         // Set up data for first wave of zombies
@@ -120,7 +120,7 @@ public class Level implements Screen {
 
         for (int i = 0; i < amount; i++) {
 
-            Zombie zombie = (new Zombie(new Sprite(new Texture("core/assets/zombie01.png")),
+            Zombie zombie = (new Zombie(new Sprite(new Texture("zombie01.png")),
                     spawnPoints.get(i % spawnPoints.size()), this));
 
             // Check there isn't already a zombie there, or they will be stuck

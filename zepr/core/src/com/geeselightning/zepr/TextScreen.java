@@ -17,7 +17,7 @@ public class TextScreen implements Screen {
     private Label title;
     private Zepr parent;
     private Stage stage;
-    private Skin skin = new Skin(Gdx.files.internal("core/assets/skin/pixthulhu-ui.json"));
+    private Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
 
     public TextScreen(Zepr zepr, String text) {
         // Constructor builds the gui of the menu screen.

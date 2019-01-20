@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class CourtyardLevel extends Level {
 
-    private static final String mapLocation = "core/assets/maps/courtyard.tmx";
+    private static final String mapLocation = "maps/courtyard.tmx";
     private static final Vector2 playerSpawn = new Vector2(300, 300);
     private static final Vector2 powerSpawn = new Vector2(250, 250);
 

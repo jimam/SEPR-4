@@ -39,7 +39,7 @@ public class MenuScreen implements Screen {
         stage.addActor(table);
 
         // Importing the necessary assets for the button textures.
-        Skin skin = new Skin(Gdx.files.internal("core/assets/skin/pixthulhu-ui.json"));
+        Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
 
         // Creating a title.
         titleLabel = new Label( "Zombie Engineering Project", skin, "subtitle");

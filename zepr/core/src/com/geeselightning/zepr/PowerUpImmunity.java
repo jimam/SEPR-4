@@ -7,7 +7,7 @@ public class PowerUpImmunity extends PowerUp {
     public float timeRemaining = Constant.IMMUNITYTIME;
 
     PowerUpImmunity(Level currentLevel) {
-        super(3, new Texture("core/assets/speed.png"), currentLevel);
+        super(3, new Texture("speed.png"), currentLevel);
     }
 
     @Override

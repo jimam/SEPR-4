@@ -7,7 +7,7 @@ public class PowerUpSpeed extends PowerUp {
     public float timeRemaining = Constant.SPEEDUPTIME;
 
     public PowerUpSpeed(Level currentLevel) {
-        super(2, new Texture("core/assets/speed.png"), currentLevel);
+        super(2, new Texture("speed.png"), currentLevel);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class CharacterTest {
     @Test
     // Test 1.2.1
     public void getCenterOnCharacterWithPositivePosition() {
-        Character character = new Character(new Sprite(new Texture("core/assets/player01.png")),
+        Character character = new Character(new Sprite(new Texture("player01.png")),
                 new Vector2(1,1), null);
         assertEquals("Testing center calculation with positive position.", new Vector2((float) 17.0, (float) 17.0),
                 character.getCenter());
@@ -47,7 +47,7 @@ public class CharacterTest {
     @Test
     // Test 1.2.2
     public void getCenterOnCharacterWithNegativePosition() {
-        Character character = new Character(new Sprite(new Texture("core/assets/player01.png")),
+        Character character = new Character(new Sprite(new Texture("player01.png")),
                 new Vector2(-50,-50), null);
         assertEquals("Testing center calculation with negative position.", new Vector2(-34, -34),
                 character.getCenter());
@@ -56,7 +56,7 @@ public class CharacterTest {
     @Test
     // Test 1.3.1
     public void getDirectionInTopRightQuadrant() {
-        Character character = new Character(new Sprite(new Texture("core/assets/player01.png")), new Vector2(-16,-16), null);
+        Character character = new Character(new Sprite(new Texture("player01.png")), new Vector2(-16,-16), null);
         assertEquals("North-East direction should be 0.785.", 0.785, character.getDirectionTo(new Vector2(1,1)), 0.001);
 
     }
@@ -64,7 +64,7 @@ public class CharacterTest {
     @Test
     // Test 1.3.2
     public void getDirectionInBottomRightQuadrant() {
-        Character character = new Character(new Sprite(new Texture("core/assets/player01.png")), new Vector2(-16,-16), null);
+        Character character = new Character(new Sprite(new Texture("player01.png")), new Vector2(-16,-16), null);
         assertEquals("South-East direction should be 2.356.", 2.356, character.getDirectionTo(new Vector2(1,-1)), 0.001);
 
     }
@@ -72,14 +72,14 @@ public class CharacterTest {
     @Test
     // Test 1.3.3
     public void getDirectionInBottomLeftQuadrant() {
-        Character character = new Character(new Sprite(new Texture("core/assets/player01.png")), new Vector2(-16,-16), null);
+        Character character = new Character(new Sprite(new Texture("player01.png")), new Vector2(-16,-16), null);
         assertEquals("South-West direction should be 3.927.", 3.927, character.getDirectionTo(new Vector2(-1,-1)), 0.001);
     }
 
     @Test
     // Test 1.3.4
     public void getDirectionInTopLeftQuadrant() {
-        Character character = new Character(new Sprite(new Texture("core/assets/player01.png")), new Vector2(-16,-16), null);
+        Character character = new Character(new Sprite(new Texture("player01.png")), new Vector2(-16,-16), null);
         assertEquals("North-West direction should be 5.498.", 5.498, character.getDirectionTo(new Vector2(-1,1)), 0.001);
     }
 
@@ -96,7 +96,7 @@ public class CharacterTest {
     @Test
     // Test 1.5.1
     public void getDirNormVectorToNegativePosition() {
-        Character character = new Character(new Sprite(new Texture("core/assets/player01.png")), new Vector2(-16,-16), null);
+        Character character = new Character(new Sprite(new Texture("player01.png")), new Vector2(-16,-16), null);
         Vector2 position = new Vector2(-10, -30);
         Vector2 normalizedDirection = character.getDirNormVector(position);
         double expectedX = -10 / Math.sqrt(1000);
@@ -108,7 +108,7 @@ public class CharacterTest {
     @Test
     // Test 1.5.2
     public void getDirNormVectorToPositivePosition() {
-        Character character = new Character(new Sprite(new Texture("core/assets/player01.png")), new Vector2(-16,-16), null);
+        Character character = new Character(new Sprite(new Texture("player01.png")), new Vector2(-16,-16), null);
         Vector2 position = new Vector2(47, 20);
         Vector2 normalizedDirection = character.getDirNormVector(position);
         double expectedX = 47 / Math.sqrt(2609);
