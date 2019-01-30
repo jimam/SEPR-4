@@ -353,7 +353,9 @@ public class Level implements Screen {
 
             progressLabel.setText(progressString);
             healthLabel.setText(healthString);
-
+			
+			
+			//HUD
             table.top().left();
             table.add(progressLabel).pad(10);
             table.row().pad(10);
