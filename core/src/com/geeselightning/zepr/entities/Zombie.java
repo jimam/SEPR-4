@@ -20,8 +20,11 @@ public class Zombie extends Character {
 
     public Zombie(Sprite sprite, Vector2 zombieSpawn, Level currentLevel) {
         super(sprite, zombieSpawn, currentLevel);
-        
-        if (zombieType == "slow") {
+      
+    }
+    
+    public void spawnZombies() {
+    	if (zombieType == "slow") {
         	HPMult = Constant.SLOWHPMULT;
         	speedMult = Constant.SLOWSPEEDMULT;
         	dmgMult = Constant.SLOWDMGMULT;
