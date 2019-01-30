@@ -1,5 +1,6 @@
 package com.geeselightning.zepr.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.geeselightning.zepr.Constant;
@@ -11,11 +12,36 @@ public class Zombie extends Character {
     int attackDamage = Constant.ZOMBIEDMG;
     public int hitRange = Constant.ZOMBIERANGE;
     public final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
+    float HPMult;
+    float speedMult;
+    float dmgMult;
+    String zombieType;
+    Texture mainTexture;
 
     public Zombie(Sprite sprite, Vector2 zombieSpawn, Level currentLevel) {
         super(sprite, zombieSpawn, currentLevel);
-        this.speed = Constant.ZOMBIESPEED;
-        this.health = Constant.ZOMBIEMAXHP;
+        
+        if (zombieType == "slow") {
+        	HPMult = Constant.SLOWHPMULT;
+        	speedMult = Constant.SLOWSPEEDMULT;
+        	dmgMult = Constant.SLOWDMGMULT;
+        	mainTexture = new Texture("zombie01.png");
+        }
+        else if (zombieType == "medium") {
+        	HPMult = Constant.MEDHPMULT;
+        	speedMult = Constant.MEDSPEEDMULT;
+        	dmgMult = Constant.MEDDMGMULT;
+        	mainTexture = new Texture("zombie02.png");
+        }
+        else if (zombieType == "fast"){
+        	HPMult = Constant.FASTHPMULT;
+        	speedMult = Constant.FASTSPEEDMULT;
+        	dmgMult = Constant.FASTDMGMULT;
+        	mainTexture = new Texture("zombie03.png");
+        }
+        this.speed = (int)(Constant.ZOMBIESPEED * speedMult);
+        this.health = (int)(Constant.ZOMBIEMAXHP * HPMult);
+        this.attackDamage = (int)(Constant.ZOMBIEDMG * dmgMult);
     }
 
     public void attack(Player player, float delta) {
