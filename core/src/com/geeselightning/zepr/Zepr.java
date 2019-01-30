@@ -7,7 +7,7 @@ import com.geeselightning.zepr.levels.Level;
 import com.geeselightning.zepr.levels.TownLevel;
 import com.geeselightning.zepr.screens.MenuScreen;
 import com.geeselightning.zepr.screens.SelectLevelScreen;
-import com.geeselightning.zepr.screns.LoadingScreen;
+import com.geeselightning.zepr.screens.LoadingScreen;
 
 public class Zepr extends Game {
 
