@@ -6,10 +6,10 @@ import com.geeselightning.zepr.levels.Level;
 
 public class PowerUpStrength extends PowerUp {
 
-    public float timeRemaining = Constant.SPEEDUPTIME;
+    public float timeRemaining = Constant.ATKUPTIME;
 
     public PowerUpStrength(Level currentLevel) {
-        super(2, new Texture("speed.png"), currentLevel);
+        super(4, new Texture("speed.png"), currentLevel);
     }
 
     @Override
