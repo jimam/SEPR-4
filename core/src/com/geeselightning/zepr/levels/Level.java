@@ -26,7 +26,7 @@ import com.geeselightning.zepr.entities.PowerUpHeal;
 import com.geeselightning.zepr.entities.PowerUpImmunity;
 import com.geeselightning.zepr.entities.PowerUpSpeed;
 import com.geeselightning.zepr.entities.Zombie;
-import com.geeselightning.zepr.screns.TextScreen;
+import com.geeselightning.zepr.screens.TextScreen;
 
 import java.util.ArrayList;
 

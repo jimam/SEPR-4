@@ -1,4 +1,4 @@
-package com.geeselightning.zepr.screns;
+package com.geeselightning.zepr.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
