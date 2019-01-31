@@ -11,7 +11,7 @@ public class Player extends Character {
     private static final Player instance = new Player(new Sprite(new Texture("player01.png")), new Vector2(0, 0));
     int attackDamage = Constant.PLAYERDMG;
     int hitRange = Constant.PLAYERRANGE;
-    final float hitCooldown =  Constant.PLAYERHITCOOLDOWN;
+    float hitCooldown =  Constant.PLAYERHITCOOLDOWN;
     Texture mainTexture;
     Texture attackTexture;
     public boolean attack = false;
