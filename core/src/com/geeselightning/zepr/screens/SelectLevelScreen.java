@@ -1,5 +1,9 @@
 package com.geeselightning.zepr.screens;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -42,13 +46,20 @@ public class SelectLevelScreen implements Screen {
 		// Importing the necessary assets for the button textures.
 		Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
 
+		List<TextButton> stageButtons = new LinkedList<>();
 		// Creating stage buttons.
+		String levels[] = new String[] {"Town", "Halifax", "Courtyard", "Locked", "Locked", "Locked"};
+		TextButton previousButton = new TextButton("Previous", skin);
+		TextButton levelSelect = new TextButton("Town", skin);
+		TextButton nextButton = new TextButton("Next", skin);
+		
 		TextButton town = new TextButton("Town", skin);
 		TextButton halifax = new TextButton("Halifax", skin);
 		TextButton courtyard = new TextButton("Courtyard", skin);
 		TextButton level4 = new TextButton("Locked", skin);
 		TextButton level5 = new TextButton("Locked", skin);
 		TextButton level6 = new TextButton("Locked", skin);
+		stageButtons.addAll(Arrays.asList(town, halifax, courtyard, level4, level5, level6));
 
 		// Creating character buttons.
 		TextButton nerdy = new TextButton("Nerdy", skin);
