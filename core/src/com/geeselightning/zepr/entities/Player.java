@@ -67,10 +67,10 @@ public class Player extends Character {
             mainTexture = new Texture("player02.png");
             attackTexture = new Texture("player02_attack.png");
         }
-        else if (playertype == "test") {
-        	dmgMult = Constant.TESTDMGMULT;
-        	HPMult = Constant.TESTHPMULT;
-        	speedMult = Constant.TESTSPEEDMULT;
+        else if (playertype == "heavy") {
+        	dmgMult = Constant.HEAVYDMGMULT;
+        	HPMult = Constant.HEAVYHPMULT;
+        	speedMult = Constant.HEAVYSPEEDMULT;
         	//Test Texture
         	mainTexture = new Texture("player03.png");
         	attackTexture = new Texture("player03_attack.png");
