@@ -24,4 +24,8 @@ public final class Constant {
     public static final int SPEEDUP = 50;
     public static final float SPEEDUPTIME = 10;
     public static final float IMMUNITYTIME = 5;
+	
+    public static final float TESTDMGMULT = 1.5f;
+	public static final float TESTHPMULT = 1;
+	public static final float TESTSPEEDMULT = 1;
 }

@@ -50,6 +50,7 @@ public class SelectLevelScreen implements Screen {
         // Creating character buttons.
         TextButton nerdy = new TextButton("Nerdy",skin);
         TextButton sporty = new TextButton("Sporty",skin);
+        TextButton test = new TextButton("Test", skin);
 
         // Creating other buttons.
         TextButton play = new TextButton("Play", skin);
@@ -72,6 +73,7 @@ public class SelectLevelScreen implements Screen {
         // Creating character descriptions.
         final String nerdyDescription = "Construct a mech suit for yourself so you can take more hits.";
         final String sportyDescripton = "Work out so you run faster.";
+        final String testDescription = "This is a test Character";
         final String defaultCharacterDescription = "Select a type of student from the buttons above.";
         characterDescription = new Label(defaultCharacterDescription,skin);
         characterDescription.setWrap(true);
@@ -113,6 +115,7 @@ public class SelectLevelScreen implements Screen {
         stageSelect.row().center();
         stageSelect.add(nerdy).pad(10);
         stageSelect.add(sporty).pad(10);
+        stageSelect.add(test).pad(10);
 
         stageSelect.row().center();
         stageSelect.add(characterDescription).width(1000f).colspan(3);
@@ -191,6 +194,14 @@ public class SelectLevelScreen implements Screen {
                 playerSet = true;
             }
         });
+        test.addListener(new ChangeListener() {
+        	@Override
+        	public void changed(ChangeEvent event, Actor actor) {
+        		characterDescription.setText(testDescription);
+        		player.setType("test");
+        		playerSet = true;
+        }
+    });
 
         // Defining actions for the play button.
         play.addListener(new ChangeListener() {
