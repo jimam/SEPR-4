@@ -3,7 +3,12 @@ package com.geeselightning.zepr.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.geeselightning.zepr.Constant;
 import com.geeselightning.zepr.levels.Level;
-
+/**
+ * 
+ * @author ljd546
+ *	Implements a powerup which increases the user's damage
+ *	NEW FOR ASSESSMENT 3
+ */
 public class PowerUpStrength extends PowerUp {
 
     public float timeRemaining = Constant.ATKUPTIME;
