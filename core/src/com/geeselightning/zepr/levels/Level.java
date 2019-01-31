@@ -425,4 +425,5 @@ public class Level implements Screen {
 			zombie.getTexture().dispose();
 		}
 	}
+
 }
