@@ -4,12 +4,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.geeselightning.zepr.Constant;
 import com.geeselightning.zepr.levels.Level;
 
+/**
+ * 
+ * @author ljd546
+ *	Implements a powerup which reduces the cool down between hits.
+ *	NEW FOR ASSESSMENT 3
+ */
 public class PowerUpRapidFire extends PowerUp {
-
+	
+	
     public float timeRemaining = Constant.SPEEDUPTIME;
 
     public PowerUpRapidFire(Level currentLevel) {
-        super(5, new Texture("speed.png"), currentLevel);
+        super(5, new Texture("rapidfire.png"), currentLevel);
     }
 
     @Override

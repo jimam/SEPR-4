@@ -14,7 +14,7 @@ public class PowerUpStrength extends PowerUp {
     public float timeRemaining = Constant.ATKUPTIME;
 
     public PowerUpStrength(Level currentLevel) {
-        super(4, new Texture("speed.png"), currentLevel);
+        super(4, new Texture("strength.png"), currentLevel);
     }
 
     @Override

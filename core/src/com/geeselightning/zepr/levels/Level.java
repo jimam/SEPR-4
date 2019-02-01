@@ -24,7 +24,9 @@ import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.PowerUp;
 import com.geeselightning.zepr.entities.PowerUpHeal;
 import com.geeselightning.zepr.entities.PowerUpImmunity;
+import com.geeselightning.zepr.entities.PowerUpRapidFire;
 import com.geeselightning.zepr.entities.PowerUpSpeed;
+import com.geeselightning.zepr.entities.PowerUpStrength;
 import com.geeselightning.zepr.entities.Zombie;
 import com.geeselightning.zepr.screens.TextScreen;
 
@@ -288,15 +290,20 @@ public class Level implements Screen {
 
 			// Spawn a power up and the end of a wave, if there isn't already a powerUp on
 			// the level
+			//IN ASSESSMENT 3: Added functionality for 2 new powerups, changed to an easier to read switch.
 			if (zombiesRemaining == 0 && currentPowerUp == null) {
 				int random = (int) (Math.random() * 3 + 1);
-				if (random == 1) {
-					currentPowerUp = new PowerUpHeal(this);
-				} else if (random == 2) {
-					// random == 2
-					currentPowerUp = new PowerUpSpeed(this);
-				} else {
-					currentPowerUp = new PowerUpImmunity(this);
+				switch (random) {
+				case 1: currentPowerUp = new PowerUpHeal(this);
+						break;
+				case 2: currentPowerUp = new PowerUpSpeed(this);
+						break;
+				case 3: currentPowerUp = new PowerUpImmunity(this);
+						break;
+				case 4: currentPowerUp = new PowerUpStrength(this);
+						break;
+				case 5: currentPowerUp = new PowerUpRapidFire(this);
+						break;
 				}
 			}
 
