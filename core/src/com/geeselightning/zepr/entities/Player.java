@@ -11,7 +11,7 @@ public class Player extends Character {
     private static final Player instance = new Player(new Sprite(new Texture("player01.png")), new Vector2(0, 0));
     int attackDamage = Constant.PLAYERDMG;
     int hitRange = Constant.PLAYERRANGE;
-    final float hitCooldown =  Constant.PLAYERHITCOOLDOWN;
+    float hitCooldown =  Constant.PLAYERHITCOOLDOWN;
     Texture mainTexture;
     Texture attackTexture;
     public boolean attack = false;
@@ -55,32 +55,40 @@ public class Player extends Character {
             dmgMult = Constant.NERDYDMGMULT;
             HPMult = Constant.NERDYHPMULT;
             speedMult = Constant.NERDYSPEEDMULT;
+            //Nerdy Texture
+            mainTexture = new Texture("player01.png");
+            attackTexture = new Texture("player01_attack.png");
         }
         else if (playertype == "sporty"){
             dmgMult = Constant.SPORTYDMGMULT;
             HPMult = Constant.SPORTYHPMULT;
             speedMult = Constant.SPORTYSPEEDMULT;
+            //Sporty Texture
+            mainTexture = new Texture("player02.png");
+            attackTexture = new Texture("player02_attack.png");
+        }
+        else if (playertype == "heavy") {
+        	dmgMult = Constant.HEAVYDMGMULT;
+        	HPMult = Constant.HEAVYHPMULT;
+        	speedMult = Constant.HEAVYSPEEDMULT;
+        	//Test Texture
+        	mainTexture = new Texture("player03.png");
+        	attackTexture = new Texture("player03_attack.png");
         }
         else if (playertype == null){
             dmgMult =1;
             HPMult = 1;
             speedMult = 1;
+            //Default Nerdy playertype
+            mainTexture = new Texture("player01.png");
+            attackTexture = new Texture("player01_attack.png");
         }
         this.attackDamage = (int)(Constant.PLAYERDMG * dmgMult);
         this.speed = (int)(Constant.PLAYERSPEED * speedMult);
         this.health = (int)(HPMult * Constant.PLAYERMAXHP);
         this.currentLevel = level;
+        this.setTexture(mainTexture);
 
-        if (playertype == "nerdy") {
-            mainTexture = new Texture("player01.png");
-            attackTexture = new Texture("player01_attack.png");
-            this.setTexture(mainTexture);
-        } else {
-            // playertype == sporty
-            mainTexture = new Texture("player02.png");
-            attackTexture = new Texture("player02_attack.png");
-            this.setTexture(mainTexture);
-        }
     }
 
     @Override

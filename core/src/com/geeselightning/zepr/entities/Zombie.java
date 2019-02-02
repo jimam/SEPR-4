@@ -1,5 +1,6 @@
 package com.geeselightning.zepr.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.geeselightning.zepr.Constant;
@@ -7,42 +8,67 @@ import com.geeselightning.zepr.levels.Level;
 
 public class Zombie extends Character {
 
-    private Player player = Player.getInstance();
-    int attackDamage = Constant.ZOMBIEDMG;
-    public int hitRange = Constant.ZOMBIERANGE;
-    public final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
+	private Player player = Player.getInstance();
+	int attackDamage = Constant.ZOMBIEDMG;
+	public int hitRange = Constant.ZOMBIERANGE;
+	public final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
+	float HPMult;
+	float speedMult;
+	float dmgMult;
 
-    public Zombie(Sprite sprite, Vector2 zombieSpawn, Level currentLevel) {
-        super(sprite, zombieSpawn, currentLevel);
-        this.speed = Constant.ZOMBIESPEED;
-        this.health = Constant.ZOMBIEMAXHP;
-    }
+	public Zombie(Sprite sprite, Vector2 zombieSpawn, Level currentLevel, Type type) {
+		super(sprite, zombieSpawn, currentLevel);
+		switch (type) {
+		case SLOW:
+			HPMult = Constant.SLOWHPMULT;
+			speedMult = Constant.SLOWSPEEDMULT;
+			dmgMult = Constant.SLOWDMGMULT;
+			break;
+		case MEDIUM:
+			HPMult = Constant.MEDHPMULT;
+			speedMult = Constant.MEDSPEEDMULT;
+			dmgMult = Constant.MEDDMGMULT;
+			break;
+		case FAST:
+			HPMult = Constant.FASTHPMULT;
+			speedMult = Constant.FASTSPEEDMULT;
+			dmgMult = Constant.FASTDMGMULT;
+			break;
+		}
+		this.speed = (int) (Constant.ZOMBIESPEED * speedMult);
+		this.health = (int) (Constant.ZOMBIEMAXHP * HPMult);
+		this.attackDamage = (int) (Constant.ZOMBIEDMG * dmgMult);
+	}
 
-    public void attack(Player player, float delta) {
-        if (canHitGlobal(player, hitRange) && hitRefresh > hitCooldown) {
-            player.takeDamage(attackDamage);
-            hitRefresh = 0;
-        } else {
-            hitRefresh += delta;
-        }
-    }
+	public enum Type {
+		SLOW, MEDIUM, FAST
+	}
 
-    @Override
-    public void update(float delta) {
-        //move according to velocity
-        super.update(delta);
+	public void attack(Player player, float delta) {
+		if (canHitGlobal(player, hitRange) && hitRefresh > hitCooldown) {
+			player.takeDamage(attackDamage);
+			hitRefresh = 0;
+		} else {
+			hitRefresh += delta;
+		}
+	}
 
-        // update velocity to move towards player
-        // Vector2.scl scales the vector
-        velocity = getDirNormVector(player.getCenter()).scl(speed);
+	@Override
+	public void update(float delta) {
+		// move according to velocity
+		super.update(delta);
 
-        // update direction to face the player
-        direction = getDirectionTo(player.getCenter());
+		// update velocity to move towards player
+		// Vector2.scl scales the vector
+		velocity = getDirNormVector(player.getCenter()).scl(speed);
 
-        if (health <= 0) {
-            currentLevel.zombiesRemaining--;
-            currentLevel.aliveZombies.remove(this);
-            this.getTexture().dispose();
-        }
-    }
+		// update direction to face the player
+		direction = getDirectionTo(player.getCenter());
+
+		if (health <= 0) {
+			currentLevel.zombiesRemaining--;
+			currentLevel.aliveZombies.remove(this);
+			this.getTexture().dispose();
+		}
+	}
 }
