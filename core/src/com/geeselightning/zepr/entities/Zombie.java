@@ -15,7 +15,6 @@ public class Zombie extends Character {
 	float HPMult;
 	float speedMult;
 	float dmgMult;
-	Texture mainTexture;
 
 	public Zombie(Sprite sprite, Vector2 zombieSpawn, Level currentLevel, Type type) {
 		super(sprite, zombieSpawn, currentLevel);
@@ -24,22 +23,18 @@ public class Zombie extends Character {
 			HPMult = Constant.SLOWHPMULT;
 			speedMult = Constant.SLOWSPEEDMULT;
 			dmgMult = Constant.SLOWDMGMULT;
-			mainTexture = new Texture("zombie01.png");
 			break;
 		case MEDIUM:
-			HPMult = Constant.FASTHPMULT;
-			speedMult = Constant.FASTSPEEDMULT;
-			dmgMult = Constant.FASTDMGMULT;
-			mainTexture = new Texture("zombie03.png");
-			break;
-		case FAST:
 			HPMult = Constant.MEDHPMULT;
 			speedMult = Constant.MEDSPEEDMULT;
 			dmgMult = Constant.MEDDMGMULT;
-			mainTexture = new Texture("zombie02.png");
+			break;
+		case FAST:
+			HPMult = Constant.FASTHPMULT;
+			speedMult = Constant.FASTSPEEDMULT;
+			dmgMult = Constant.FASTDMGMULT;
 			break;
 		}
-		this.setTexture(mainTexture);
 		this.speed = (int) (Constant.ZOMBIESPEED * speedMult);
 		this.health = (int) (Constant.ZOMBIEMAXHP * HPMult);
 		this.attackDamage = (int) (Constant.ZOMBIEDMG * dmgMult);
