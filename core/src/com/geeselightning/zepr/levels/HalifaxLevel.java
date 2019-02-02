@@ -1,7 +1,7 @@
 package com.geeselightning.zepr.levels;
 
 import com.badlogic.gdx.math.Vector2;
-import com.geeselightning.zepr.Zepr;
+import com.geeselightning.zepr.game.Zepr;
 
 import java.util.ArrayList;
 import java.util.Arrays;

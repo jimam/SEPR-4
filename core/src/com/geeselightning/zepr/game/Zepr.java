@@ -1,4 +1,4 @@
-package com.geeselightning.zepr;
+package com.geeselightning.zepr.game;
 
 import com.badlogic.gdx.Game;
 import com.geeselightning.zepr.levels.CourtyardLevel;
@@ -54,7 +54,6 @@ public class Zepr extends Game {
 
 	@Override
 	public void create() {
-		loadingScreen = new LoadingScreen(this);
-		setScreen(loadingScreen);
+		changeScreen(MENU);
 	}
 }
