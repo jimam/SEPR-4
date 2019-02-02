@@ -292,7 +292,7 @@ public class Level implements Screen {
 			// the level
 			//IN ASSESSMENT 3: Added functionality for 2 new powerups, changed to an easier to read switch.
 			if (zombiesRemaining == 0 && currentPowerUp == null) {
-				int random = (int) (Math.random() * 3 + 1);
+				int random = (int) (Math.random() * 5 + 1);
 				switch (random) {
 				case 1: currentPowerUp = new PowerUpHeal(this);
 						break;
