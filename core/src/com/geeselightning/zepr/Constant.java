@@ -9,21 +9,17 @@ import com.badlogic.gdx.math.Vector2;
     public static final int PLAYERDMG = 20;
     public static final int PLAYERRANGE = 50;
     public static final float PLAYERHITCOOLDOWN = 0.2f;
-    
     public static final float ZOMBIESPEED = 80;
     public static final int ZOMBIEMAXHP = 100;
     public static final int ZOMBIEDMG = 10;
     public static final int ZOMBIERANGE = 20;
     public static final float ZOMBIEHITCOOLDOWN = 1;
-    
     public static final float SLOWSPEEDMULT = 0.5f;
     public static final float SLOWHPMULT = 2f;
     public static final float SLOWDMGMULT = 1;
-    
     public static final float MEDSPEEDMULT = 1;
     public static final float MEDHPMULT = 1.5f;
     public static final float MEDDMGMULT = 2f;
-    
     public static final float FASTSPEEDMULT = 2f;
     public static final float FASTHPMULT = 1;
     public static final float FASTDMGMULT = 1;
@@ -42,4 +38,16 @@ import com.badlogic.gdx.math.Vector2;
     public static final float SPEEDUPTIME = 10;
     public static final float IMMUNITYTIME = 5;
     public static final float ATKUPTIME = 10;
+    
+    public static final float BOSSSPEED = 100;
+    public static final int BOSSMAXHP = 1000;
+    public static final int BOSSDMG = 20;
+    public static final int BOSSRANGE = 20;
+    public static final float BOSSHITCOOLDOWN = 3;
+    public static final float SMALLBOSSSPEEDMULT = 1;
+    public static final float SMALLBOSSHPMULT = 1;
+    public static final float SMALLBOSSDMGMULT = 1;
+    public static final float BIGBOSSSPEEDMULT = 1;
+    public static final float BIGBOSSHPMULT = 1.5f;
+    public static final float BIGBOSSDMGMULT = 2f;
 }

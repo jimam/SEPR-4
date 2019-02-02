@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.geeselightning.zepr.Zepr;
 import com.geeselightning.zepr.ZeprInputProcessor;
+import com.geeselightning.zepr.entities.Boss;
 import com.geeselightning.zepr.entities.Character;
 import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.PowerUp;
@@ -28,6 +29,7 @@ import com.geeselightning.zepr.entities.PowerUpRapidFire;
 import com.geeselightning.zepr.entities.PowerUpSpeed;
 import com.geeselightning.zepr.entities.PowerUpStrength;
 import com.geeselightning.zepr.entities.Zombie;
+
 import com.geeselightning.zepr.screens.TextScreen;
 
 import java.util.ArrayList;
@@ -128,6 +130,10 @@ public class Level implements Screen {
 	 *
 	 * @return the number of zombies that failed to spawn
 	 */
+	
+	//public int spawnBoss() {
+		
+	//}
 	public int spawnZombies(int amount, ArrayList<Vector2> spawnPoints) {
 		int notSpawned = 0;
 		int chooseType;
@@ -292,7 +298,7 @@ public class Level implements Screen {
 			// the level
 			//IN ASSESSMENT 3: Added functionality for 2 new powerups, changed to an easier to read switch.
 			if (zombiesRemaining == 0 && currentPowerUp == null) {
-				int random = (int) (Math.random() * 3 + 1);
+				int random = (int) (Math.random() * 5 + 1);
 				switch (random) {
 				case 1: currentPowerUp = new PowerUpHeal(this);
 						break;
@@ -309,6 +315,8 @@ public class Level implements Screen {
 
 			if (zombiesRemaining == 0) {
 				// Wave complete, increment wave number
+				Boss boss;
+				boss = (new Boss(new Sprite(new Texture("smallboss.png")), new Vector2(0,0) , this, Boss.Type.SMALLBOSS));
 				currentWave++;
 				if (currentWave > waves.length) {
 					// Level completed, back to select screen and complete stage.
