@@ -64,11 +64,11 @@ public class Boss extends Character{
 		// update direction to face the player
 		direction = getDirectionTo(player.getCenter());
 
-		if (health <= 0) {
-			currentLevel.zombiesRemaining--;
-			currentLevel.aliveZombies.remove(this);
-			this.getTexture().dispose();
-		}
+		//if (health <= 0) {
+			//currentLevel.zombiesRemaining--;
+			//currentLevel.aliveZombies.remove(this);
+			//this.getTexture().dispose();
+		//}
 	}
 }
 

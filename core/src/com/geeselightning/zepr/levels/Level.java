@@ -130,14 +130,12 @@ public class Level implements Screen {
 	 *
 	 * @return the number of zombies that failed to spawn
 	 */
-	
-	//public int spawnBoss() {
-		
-	//}
 	public int spawnZombies(int amount, ArrayList<Vector2> spawnPoints) {
 		int notSpawned = 0;
 		int chooseType;
 		Zombie zombie;
+		Boss boss;
+		boss = (new Boss(new Sprite(new Texture("smallboss.png")), new Vector2(300,300), this, Boss.Type.SMALLBOSS));
 		for (int i = 0; i < amount; i++) {
 			chooseType = i % 3;
 			switch (chooseType) {
@@ -236,7 +234,7 @@ public class Level implements Screen {
 
 		Gdx.input.setInputProcessor(inputProcessor);
 	}
-
+	
 	@Override
 	public void render(float delta) {
 		if (isPaused) {
@@ -315,8 +313,8 @@ public class Level implements Screen {
 
 			if (zombiesRemaining == 0) {
 				// Wave complete, increment wave number
-				Boss boss;
-				boss = (new Boss(new Sprite(new Texture("smallboss.png")), new Vector2(0,0) , this, Boss.Type.SMALLBOSS));
+				
+				
 				currentWave++;
 				if (currentWave > waves.length) {
 					// Level completed, back to select screen and complete stage.
