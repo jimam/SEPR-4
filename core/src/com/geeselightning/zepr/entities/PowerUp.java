@@ -7,6 +7,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.geeselightning.zepr.Constant;
 import com.geeselightning.zepr.levels.Level;
 
+/**
+ * 
+ *	CHANGE IN ASSESSMENT 3: changed powerups to work in one class rather than several.
+ *	Now uses Enums instead of integer types, and the effects are applied based on the Enum value.
+ */
 public class PowerUp extends Sprite {
 
     Player player = Player.getInstance();
@@ -16,24 +21,11 @@ public class PowerUp extends Sprite {
     public float timeRemaining;
     public Type type;
     public Texture texture;
+    //ASSESSMENT 3: Constructor now takes a type, texture, and the level to be initialised in.
     public PowerUp(Type type, Texture texture, Level currentLevel) {
     	
     	super(new Sprite(texture));
         this.type = type;
-    	switch (this.type) {
-    	case HEAL: this.texture = new Texture("heal.png");
-			break;
-    	case IMMUNE: this.texture = new Texture("immunity.png");
-			break;
-    	case SPEED: this.texture = new Texture("speed.png");
-			break;
-    	case ATTACK: this.texture = new Texture("strength.png");
-			break;
-    	case RAPIDFIRE: this.texture = new Texture("rapidfire.png");
-    		break;
-    	
-    	}
-    	
         this.currentLevel = currentLevel;
         if (currentLevel != null) {
             // Tests pass a null currentLevel
@@ -47,13 +39,14 @@ public class PowerUp extends Sprite {
 
     public void activate(){
         active = true;
+        //Applies an effect based on the powerup type.
         switch (this.type) {
         case HEAL: 
-        			if (this.player.health + Constant.HEALUP <= (int)(this.player.HPMult * Constant.PLAYERMAXHP)) {
-        				this.player.health += Constant.HEALUP;	
-        			} else {
-        				this.player.health = (int) this.player.HPMult * Constant.PLAYERMAXHP;
-        			}
+    			if (this.player.health + Constant.HEALUP <= (int)(this.player.HPMult * Constant.PLAYERMAXHP)) {
+    				this.player.health += Constant.HEALUP;	
+    			} else {
+    				this.player.health = (int) this.player.HPMult * Constant.PLAYERMAXHP;
+    			}
         			break;
         case IMMUNE: this.timeRemaining = Constant.IMMUNITYTIME;
         			this.player.isImmune = true;
@@ -73,9 +66,9 @@ public class PowerUp extends Sprite {
 
     public void deactivate(){
         active = false;
+        //Reverses the effects of powerups.
     	switch (this.type) {
-    	case HEAL: 
-			break;
+    	case HEAL: break; //HEAL applies its effect all at once and as such does not need to be reverted.
     	case IMMUNE: this.player.isImmune = false;
 			break;
     	case SPEED: this.player.speed -= Constant.SPEEDUP;
@@ -99,7 +92,7 @@ public class PowerUp extends Sprite {
     }
 
     public void update(float delta) {
-    	
+    	//HEAL is not time based so is deactivated as soon as it has applied its effect.
     	if (this.type == Type.HEAL) {
     		if (active) {
                 this.deactivate();
