@@ -6,10 +6,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.geeselightning.zepr.Constant;
 import com.geeselightning.zepr.levels.Level;
 
-public class Boss extends Character{
+public class Boss extends Zombie{
 	
 	private Player player = Player.getInstance();
-	int attackDamage = Constant.BOSSDMG;
+	int attackDamage;
 	public int hitRange = Constant.BOSSRANGE;
 	public final float hitCooldown = Constant.BOSSHITCOOLDOWN;
 	float HPMult;
@@ -24,16 +24,13 @@ public class Boss extends Character{
 			HPMult = Constant.SMALLBOSSHPMULT;
 			speedMult = Constant.SMALLBOSSSPEEDMULT;
 			dmgMult = Constant.SMALLBOSSDMGMULT;
-			mainTexture = new Texture("smallboss.png");
 			break;
 		case BIGBOSS :
 			HPMult = Constant.BIGBOSSHPMULT;
 			speedMult = Constant.BIGBOSSSPEEDMULT;
 			dmgMult = Constant.BIGBOSSDMGMULT;
-			mainTexture = new Texture("zombie01.png");
 			break;
 		}
-		this.setTexture(mainTexture);
 		this.speed = (int) (Constant.BOSSSPEED * speedMult);
 		this.health = (int) (Constant.BOSSMAXHP * HPMult);
 		this.attackDamage = (int) (Constant.BOSSDMG * dmgMult);
@@ -64,11 +61,11 @@ public class Boss extends Character{
 		// update direction to face the player
 		direction = getDirectionTo(player.getCenter());
 
-		//if (health <= 0) {
-			//currentLevel.zombiesRemaining--;
-			//currentLevel.aliveZombies.remove(this);
-			//this.getTexture().dispose();
-		//}
+		if (health <= 0) {
+			currentLevel.zombiesRemaining--;
+			currentLevel.aliveZombies.remove(this);
+			this.getTexture().dispose();
+		}
 	}
 }
 
