@@ -19,15 +19,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.geeselightning.zepr.Zepr;
 import com.geeselightning.zepr.ZeprInputProcessor;
-import com.geeselightning.zepr.entities.Boss;
 import com.geeselightning.zepr.entities.Character;
 import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.PowerUp;
-import com.geeselightning.zepr.entities.PowerUpHeal;
-import com.geeselightning.zepr.entities.PowerUpImmunity;
-import com.geeselightning.zepr.entities.PowerUpRapidFire;
-import com.geeselightning.zepr.entities.PowerUpSpeed;
-import com.geeselightning.zepr.entities.PowerUpStrength;
 import com.geeselightning.zepr.entities.Zombie;
 
 import com.geeselightning.zepr.screens.TextScreen;
@@ -134,8 +128,6 @@ public class Level implements Screen {
 		int notSpawned = 0;
 		int chooseType;
 		Zombie zombie;
-		Boss boss;
-		boss = (new Boss(new Sprite(new Texture("smallboss.png")), new Vector2(300,300), this, Boss.Type.SMALLBOSS));
 		for (int i = 0; i < amount; i++) {
 			chooseType = i % 3;
 			switch (chooseType) {
@@ -298,15 +290,15 @@ public class Level implements Screen {
 			if (zombiesRemaining == 0 && currentPowerUp == null) {
 				int random = (int) (Math.random() * 5 + 1);
 				switch (random) {
-				case 1: currentPowerUp = new PowerUpHeal(this);
+				case 1: currentPowerUp = new PowerUp(PowerUp.Type.HEAL,new Texture("heal.png"),this);
 						break;
-				case 2: currentPowerUp = new PowerUpSpeed(this);
+				case 2: currentPowerUp = new PowerUp(PowerUp.Type.SPEED, new Texture("speed.png"),this);
 						break;
-				case 3: currentPowerUp = new PowerUpImmunity(this);
+				case 3: currentPowerUp = new PowerUp(PowerUp.Type.IMMUNE, new Texture("immunity.png"),this);
 						break;
-				case 4: currentPowerUp = new PowerUpStrength(this);
+				case 4: currentPowerUp = new PowerUp(PowerUp.Type.ATTACK, new Texture("strength.png"),this);
 						break;
-				case 5: currentPowerUp = new PowerUpRapidFire(this);
+				case 5: currentPowerUp = new PowerUp(PowerUp.Type.RAPIDFIRE, new Texture("rapidfires.png"),this);
 						break;
 				}
 			}
