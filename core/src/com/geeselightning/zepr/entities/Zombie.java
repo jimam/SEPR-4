@@ -1,51 +1,76 @@
 package com.geeselightning.zepr.entities;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.geeselightning.zepr.Constant;
-import com.geeselightning.zepr.levels.Level;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.geeselightning.zepr.game.Zepr;
+import com.geeselightning.zepr.util.Constant;
+import com.geeselightning.zepr.world.FixtureType;
 
 public class Zombie extends Character {
-
-	private Player player = Player.getInstance();
-	int attackDamage = Constant.ZOMBIEDMG;
-	public int hitRange = Constant.ZOMBIERANGE;
-	public final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
-	float HPMult;
-	float speedMult;
-	float dmgMult;
-
-	public Zombie(Sprite sprite, Vector2 zombieSpawn, Level currentLevel, Type type) {
-		super(sprite, zombieSpawn, currentLevel);
-		switch (type) {
-		case SLOW:
-			HPMult = Constant.SLOWHPMULT;
-			speedMult = Constant.SLOWSPEEDMULT;
-			dmgMult = Constant.SLOWDMGMULT;
-			break;
-		case MEDIUM:
-			HPMult = Constant.MEDHPMULT;
-			speedMult = Constant.MEDSPEEDMULT;
-			dmgMult = Constant.MEDDMGMULT;
-			break;
-		case FAST:
-			HPMult = Constant.FASTHPMULT;
-			speedMult = Constant.FASTSPEEDMULT;
-			dmgMult = Constant.FASTDMGMULT;
-			break;
-		}
-		this.speed = (int) (Constant.ZOMBIESPEED * speedMult);
-		this.health = (int) (Constant.ZOMBIEMAXHP * HPMult);
-		this.attackDamage = (int) (Constant.ZOMBIEDMG * dmgMult);
-	}
-
+	
 	public enum Type {
 		SLOW, MEDIUM, FAST
 	}
 
-	public void attack(Player player, float delta) {
-		if (canHitGlobal(player, hitRange) && hitRefresh > hitCooldown) {
+	private int attackDamage = Constant.ZOMBIEDMG;
+	private int hitRange = Constant.ZOMBIERANGE;
+	private final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
+	private float healthMulti;
+	private float speedMulti;
+	private float damageMulti;
+
+	public Zombie(Zepr parent, Sprite sprite, float bRadius, Vector2 initialPos, float initialRot, Type type) {
+		super(parent, sprite, bRadius, initialPos, initialRot);
+		switch (type) {
+		case SLOW:
+			healthMulti = Constant.SLOWHPMULT;
+			speedMulti = Constant.SLOWSPEEDMULT;
+			damageMulti = Constant.SLOWDMGMULT;
+			break;
+		case MEDIUM:
+			healthMulti = Constant.MEDHPMULT;
+			speedMulti = Constant.MEDSPEEDMULT;
+			damageMulti = Constant.MEDDMGMULT;
+			break;
+		case FAST:
+			healthMulti = Constant.FASTHPMULT;
+			speedMulti = Constant.FASTSPEEDMULT;
+			damageMulti = Constant.FASTDMGMULT;
+			break;
+		}
+		this.speed = (int) (Constant.ZOMBIESPEED * speedMulti);
+		this.health = (int) (Constant.ZOMBIEMAXHP * healthMulti);
+		this.attackDamage = (int) (Constant.ZOMBIEDMG * damageMulti);
+	}
+	
+	/* Accessor methods */
+	
+	@Override
+	public void defineBody() {
+		BodyDef bDef = new BodyDef();
+		bDef.type = BodyDef.BodyType.DynamicBody;
+		bDef.position.set(initialPos);
+		
+		FixtureDef fBodyDef = new FixtureDef();
+		CircleShape shape = new CircleShape();
+		shape.setRadius(this.bRadius);
+		fBodyDef.shape = shape;
+		
+		b2body = world.createBody(bDef);
+		b2body.createFixture(fBodyDef).setUserData(FixtureType.ENEMY);
+		
+		b2body.setUserData(this);
+		shape.dispose();
+		
+		b2body.setLinearDamping(5.0f);
+	}
+
+	public void attack(float delta) {
+		Player player = gameManager.getPlayer();
+		if (this.distanceFrom(player) < hitRange && hitRefresh > hitCooldown) {
 			player.takeDamage(attackDamage);
 			hitRefresh = 0;
 		} else {
@@ -55,20 +80,7 @@ public class Zombie extends Character {
 
 	@Override
 	public void update(float delta) {
-		// move according to velocity
 		super.update(delta);
-
-		// update velocity to move towards player
-		// Vector2.scl scales the vector
-		velocity = getDirNormVector(player.getCenter()).scl(speed);
-
-		// update direction to face the player
-		direction = getDirectionTo(player.getCenter());
-
-		if (health <= 0) {
-			currentLevel.zombiesRemaining--;
-			currentLevel.aliveZombies.remove(this);
-			this.getTexture().dispose();
-		}
+		attack(delta);
 	}
 }

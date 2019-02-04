@@ -17,8 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.geeselightning.zepr.Zepr;
-import com.geeselightning.zepr.ZeprInputProcessor;
+import com.geeselightning.zepr.KeyboardController;
 import com.geeselightning.zepr.entities.Character;
 import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.PowerUp;
@@ -28,6 +27,7 @@ import com.geeselightning.zepr.entities.PowerUpRapidFire;
 import com.geeselightning.zepr.entities.PowerUpSpeed;
 import com.geeselightning.zepr.entities.PowerUpStrength;
 import com.geeselightning.zepr.entities.Zombie;
+import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.screens.TextScreen;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class Level implements Screen {
 	private String mapLocation;
 	private Vector2 playerSpawn;
 	public ArrayList<Vector2> zombieSpawnPoints;
-	private ZeprInputProcessor inputProcessor = new ZeprInputProcessor();
+	private KeyboardController inputProcessor = new KeyboardController();
 	public boolean isPaused;
 	private Stage stage;
 	private Table table;

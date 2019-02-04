@@ -5,6 +5,7 @@ import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.PowerUpHeal;
 import com.geeselightning.zepr.entities.PowerUpImmunity;
 import com.geeselightning.zepr.entities.PowerUpSpeed;
+import com.geeselightning.zepr.util.Constant;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
