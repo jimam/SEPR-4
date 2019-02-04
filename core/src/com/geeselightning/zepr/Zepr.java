@@ -15,6 +15,8 @@ public class Zepr extends Game {
 	private MenuScreen menuScreen;
 	private Level level;
 	private SelectLevelScreen selectLevelScreen;
+	
+	public static boolean devMode;
 
 	// The progress is the integer representing the last level completed. i.e. 3 for Town
 	public int progress = 3;
@@ -26,6 +28,9 @@ public class Zepr extends Game {
 	public final static int COURTYARD = 5;
 	public final static int COMPLETE = 6;
 
+	public Zepr(boolean devMode) {
+		Zepr.devMode = devMode;
+	}
 
 	public void changeScreen(int screen) {
 		switch(screen) {
@@ -57,4 +62,5 @@ public class Zepr extends Game {
 		loadingScreen = new LoadingScreen(this);
 		setScreen(loadingScreen);
 	}
+
 }

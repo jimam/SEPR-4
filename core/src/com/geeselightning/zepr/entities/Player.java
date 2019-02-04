@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.geeselightning.zepr.Constant;
+import com.geeselightning.zepr.Zepr;
 import com.geeselightning.zepr.levels.Level;
 
 public class Player extends Character {
@@ -117,7 +118,7 @@ public class Player extends Character {
 
     @Override
     public void takeDamage(int dmg){
-        if(!isImmune){
+        if(!isImmune && !Zepr.devMode) {
             //If powerUpImmunity is activated
             health -= dmg;
         }
