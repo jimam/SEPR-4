@@ -4,11 +4,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.levels.Level;
 
 public class PowerUp extends Sprite {
 
-    Player player = Player.getInstance();
+    Player player;
     public int type;
     Level currentLevel;
     public boolean active;

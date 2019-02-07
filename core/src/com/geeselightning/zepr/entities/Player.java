@@ -11,6 +11,12 @@ import com.geeselightning.zepr.levels.Level;
 import com.geeselightning.zepr.util.Constant;
 
 public class Player extends Character {
+	
+	public enum Type {
+		NERDY,
+		SPORTY,
+		HEAVY
+	}
 
 	// private static final Player instance = new Player(new Sprite(new Texture("player01.png")), new Vector2(0, 0));
 	int attackDamage = Constant.PLAYERDMG;
@@ -119,14 +125,9 @@ public class Player extends Character {
 	@Override
 	public void update(float delta) {
 		super.update(delta);
-		// When you die, end the level.
-		if (health <= 0) {
-			currentLevel.gameOver();
-			return;
-		}
 		// Gives the player the attack texture for 0.1s after an attack.
 		// if (hitRefresh <= 0.1 && getTexture() != attackTexture) {
-		if (attack) {
+		if (attacking) {
 			this.sprite.setTexture(attackTexture);
 		} else {
 			// Changes the texture back to the main one after 0.1s.

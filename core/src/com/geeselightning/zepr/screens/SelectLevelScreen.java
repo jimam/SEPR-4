@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.geeselightning.zepr.entities.Player;
+import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
 
 public class SelectLevelScreen extends DefaultScreen {
@@ -21,13 +22,16 @@ public class SelectLevelScreen extends DefaultScreen {
 	private Label characterDescription;
 	private int stageLink = -1;
 	private boolean playerSet = false;
-	Player player = Player.getInstance();
+	
+	private GameManager gameManager;
 
 	public SelectLevelScreen(Zepr parent) {
 		super(parent);
 
 		// The stage is the controller which will react to inputs from the user.
 		this.stage = new Stage(new ScreenViewport());
+		
+		gameManager = GameManager.getInstance(parent);
 	}
 
 	@Override
@@ -180,7 +184,7 @@ public class SelectLevelScreen extends DefaultScreen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				characterDescription.setText(nerdyDescription);
-				player.setType("nerdy");
+				gameManager.setPlayerType(Player.Type.NERDY);
 				playerSet = true;
 			}
 		});
@@ -188,7 +192,7 @@ public class SelectLevelScreen extends DefaultScreen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				characterDescription.setText(sportyDescripton);
-				player.setType("sporty");
+				gameManager.setPlayerType(Player.Type.SPORTY);
 				playerSet = true;
 			}
 		});
@@ -196,7 +200,7 @@ public class SelectLevelScreen extends DefaultScreen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				characterDescription.setText(heavyDescription);
-				player.setType("heavy");
+				gameManager.setPlayerType(Player.Type.HEAVY);
 				playerSet = true;
 			}
 		});

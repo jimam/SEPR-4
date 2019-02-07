@@ -4,11 +4,15 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.geeselightning.zepr.KeyboardController;
 import com.geeselightning.zepr.entities.Player;
+import com.geeselightning.zepr.util.Constant;
+import com.geeselightning.zepr.world.Level;
 
 import box2dLight.RayHandler;
 
@@ -33,6 +37,8 @@ public class GameManager implements Disposable {
 	private Box2DDebugRenderer debugRenderer;
 	private RayHandler rayHandler;
 	private Player player;
+	private Player.Type playerType;
+	private Level level;
 	
 	private GameManager(Zepr parent) {
 		this.parent = parent;
@@ -100,8 +106,40 @@ public class GameManager implements Disposable {
 		return player;
 	}
 	
-	public void setPlayer(Player player) {
-		this.player = player;
+//	public void setPlayer(Player player) {
+//		this.player = player;
+//	}
+	
+	public Player.Type getPlayerType() {
+		return playerType;
+	}
+	
+	public void setPlayerType(Player.Type playerType) {
+		this.playerType = playerType;
+	}
+	
+	public Level getLevel() {
+		return level;
+	}
+	
+	public void loadLevel() {
+		world = new World(Vector2.Zero, true);
+		world.setContactListener(null);
+		
+		debugRenderer = new Box2DDebugRenderer();
+		
+		rayHandler = new RayHandler(world);
+		rayHandler.setAmbientLight(0.9f);
+		
+		level = new Level(parent, "townmap");
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(level.load(), Constant.PPT);
+		tiledMapRenderer.setView(gameCamera);
+		
+		// Create player
+		
+		// Spawn entities
+		
+		// Set levelLoaded to true
 	}
 	
 	public void update(float delta) {

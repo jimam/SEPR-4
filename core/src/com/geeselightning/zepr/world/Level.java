@@ -20,8 +20,8 @@ public class Level {
 	
 	private String levelName;
 	private TiledMap tiledMap;
-	private int[] backgroundLayers = {};
-	private int[] foregroundLayers = {};
+	private int[] backgroundLayers = {0};
+	private int[] foregroundLayers = {1};
 	
 	private Vector2 playerSpawn;
 	private List<Vector2> zombieSpawnPoints;
@@ -33,7 +33,7 @@ public class Level {
 		zombieSpawnPoints = new ArrayList<>();
 	}
 	
-	public void parseMap() {
+	public TiledMap load() {
 		tiledMap = new TmxMapLoader().load("maps/" + levelName + ".tmx");
 		
 		MapLayer spawnLayer = tiledMap.getLayers().get("Spawns");
@@ -53,6 +53,20 @@ public class Level {
 		});
 		
 		MapBodyBuilder.buildBodies(tiledMap, gameManager.getWorld());
+		
+		return tiledMap;
+	}
+	
+	public TiledMap getTiledMap() {
+		return tiledMap;
+	}
+	
+	public int[] getBackgroundLayers() {
+		return backgroundLayers;
+	}
+	
+	public int[] getForegroundLayers() {
+		return foregroundLayers;
 	}
 
 }
