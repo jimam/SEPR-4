@@ -14,73 +14,64 @@ public class Player extends Character {
 	
 	public enum Type {
 		
-		NERDY(150, 20, 50, 0.2f, 120f),
-		SPORTY(100, 20, 50, 0.2f, 180f),
-		HEAVY(100, 30, 50, 0.2f, 120f);
+		NERDY(1.5f, 1.0f, 1.0f),
+		SPORTY(1.0f, 1.0f, 1.5f),
+		HEAVY(1.0f, 1.5f, 1.0f);
 		
-		int health;
-		int attackDamage;
-		int hitRange;
-		float hitCooldown;
-		float speed;
+		float healthMultiplier;
+		float damageMultiplier;
+		float speedMultiplier;
 		
-		Type(int health, int attackDamage, int hitRange, float hitCooldown, float speed) {
-			this.health = health;
-			this.attackDamage = attackDamage;
-			this.hitRange = hitRange;
-			this.hitCooldown = hitCooldown;
-			this.speed = speed;
-		}
-		
-		public int getHealth() {
-			return health;
-		}
-		
-		public int getAttackDamage() {
-			return attackDamage;
-		}
-		
-		public int getHitRange() {
-			return hitRange;
-		}
-		
-		public float getHitCooldown() {
-			return hitCooldown;
-		}
-		
-		public float getSpeed() {
-			return speed;
+		Type(float healthMultiplier, float damageMultiplier, float speedMultiplier) {
+			this.healthMultiplier = healthMultiplier;
+			this.damageMultiplier = damageMultiplier;
+			this.speedMultiplier = speedMultiplier;
 		}
 	}
 
-	// private static final Player instance = new Player(new Sprite(new Texture("player01.png")), new Vector2(0, 0));
-	int attackDamage = Constant.PLAYERDMG;
-	int hitRange = Constant.PLAYERRANGE;
-	float hitCooldown = Constant.PLAYERHITCOOLDOWN;
-	Texture mainTexture;
-	Texture attackTexture;
+	private Type type;
 	
 	private boolean attacking;
 	private boolean immune;
 	
-	float HPMult;
-	float dmgMult;
-	float speedMult;
-	String playertype;
-
-	public Player(Zepr parent, Sprite sprite, float bRadius, Vector2 initialPos, float initialRot) {
-		super(parent, sprite, bRadius, initialPos, initialRot);
-	}
-
-	public void setType(String playertype) {
-		this.playertype = playertype;
-	}
-
-	public String getType() {
-		return playertype;
+	private int attackDamage = Constant.PLAYERDMG;
+	private int hitRange = Constant.PLAYERRANGE;
+	private float hitCooldown = Constant.PLAYERHITCOOLDOWN;
+	private Texture mainTexture;
+	private Texture attackTexture;
+	
+	public Player(Zepr parent, float bRadius, Vector2 initialPos, float initialRot, Type type) {
+		super(parent, new Sprite(new Texture("player01.png")), bRadius, initialPos, initialRot);
+		this.type = type;
+		if (type == Type.NERDY) {
+			// Nerdy Texture
+			mainTexture = new Texture("player01.png");
+			attackTexture = new Texture("player01_attack.png");
+		} else if (type == Type.SPORTY) {
+			// Sporty Texture
+			mainTexture = new Texture("player02.png");
+			attackTexture = new Texture("player02_attack.png");
+		} else if (type == Type.HEAVY) {
+			// Test Texture
+			mainTexture = new Texture("player03.png");
+			attackTexture = new Texture("player03_attack.png");
+		} else {
+			// Default Nerdy playertype
+			mainTexture = new Texture("player01.png");
+			attackTexture = new Texture("player01_attack.png");
+		}
+		this.attackDamage = (int) (Constant.PLAYERDMG * type.damageMultiplier);
+		this.speed = (int) (Constant.PLAYERSPEED * type.speedMultiplier);
+		this.health = (int) (Constant.PLAYERMAXHP * type.healthMultiplier);
+		this.sprite.setTexture(mainTexture);
 	}
 	
 	/* Accessor methods */
+
+	public Player.Type getType() {
+		return type;
+	}
+	
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
 	}
@@ -119,42 +110,6 @@ public class Player extends Character {
 		} else {
 			hitRefresh += delta;
 		}
-	}
-
-	public void respawn() {
-		if (playertype == "nerdy") {
-			dmgMult = Constant.NERDYDMGMULT;
-			HPMult = Constant.NERDYHPMULT;
-			speedMult = Constant.NERDYSPEEDMULT;
-			// Nerdy Texture
-			mainTexture = new Texture("player01.png");
-			attackTexture = new Texture("player01_attack.png");
-		} else if (playertype == "sporty") {
-			dmgMult = Constant.SPORTYDMGMULT;
-			HPMult = Constant.SPORTYHPMULT;
-			speedMult = Constant.SPORTYSPEEDMULT;
-			// Sporty Texture
-			mainTexture = new Texture("player02.png");
-			attackTexture = new Texture("player02_attack.png");
-		} else if (playertype == "heavy") {
-			dmgMult = Constant.HEAVYDMGMULT;
-			HPMult = Constant.HEAVYHPMULT;
-			speedMult = Constant.HEAVYSPEEDMULT;
-			// Test Texture
-			mainTexture = new Texture("player03.png");
-			attackTexture = new Texture("player03_attack.png");
-		} else if (playertype == null) {
-			dmgMult = 1;
-			HPMult = 1;
-			speedMult = 1;
-			// Default Nerdy playertype
-			mainTexture = new Texture("player01.png");
-			attackTexture = new Texture("player01_attack.png");
-		}
-		this.attackDamage = (int) (Constant.PLAYERDMG * dmgMult);
-		this.speed = (int) (Constant.PLAYERSPEED * speedMult);
-		this.health = (int) (HPMult * Constant.PLAYERMAXHP);
-		this.sprite.setTexture(mainTexture);
 	}
 
 	@Override

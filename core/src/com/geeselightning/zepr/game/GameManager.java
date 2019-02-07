@@ -1,11 +1,13 @@
 package com.geeselightning.zepr.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
@@ -122,6 +124,24 @@ public class GameManager implements Disposable {
 		return level;
 	}
 	
+	/**
+	 * Gets the mouse position in screen coordinates (origin top-left).
+	 * @return	a {@link Vector2} representing the mouse's position on the screen
+	 */
+	public Vector2 getMouseScreenPos() {
+		return new Vector2(Gdx.input.getX(), Gdx.input.getY());
+	}
+	
+	/**
+	 * Gets the mouse position in world coordinates (origin center).
+	 * @return	a {@link Vector2} representing the mouse's position in the world
+	 */
+	public Vector2 getMouseWorldPos() {
+		Vector3 mousePos3D = gameCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+		Vector2 mousePos = new Vector2(mousePos3D.x, mousePos3D.y);
+		return mousePos;
+	}
+	
 	public void loadLevel() {
 		world = new World(Vector2.Zero, true);
 		world.setContactListener(null);
@@ -135,7 +155,7 @@ public class GameManager implements Disposable {
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(level.load(), Constant.PPT);
 		tiledMapRenderer.setView(gameCamera);
 		
-		// Create player
+		player = new Player(parent, 0.4f, level.getPlayerSpawn(), 0f, playerType);
 		
 		// Spawn entities
 		

@@ -68,5 +68,9 @@ public class Level {
 	public int[] getForegroundLayers() {
 		return foregroundLayers;
 	}
+	
+	public Vector2 getPlayerSpawn() {
+		return playerSpawn;
+	}
 
 }
