@@ -13,9 +13,44 @@ import com.geeselightning.zepr.util.Constant;
 public class Player extends Character {
 	
 	public enum Type {
-		NERDY,
-		SPORTY,
-		HEAVY
+		
+		NERDY(150, 20, 50, 0.2f, 120f),
+		SPORTY(100, 20, 50, 0.2f, 180f),
+		HEAVY(100, 30, 50, 0.2f, 120f);
+		
+		int health;
+		int attackDamage;
+		int hitRange;
+		float hitCooldown;
+		float speed;
+		
+		Type(int health, int attackDamage, int hitRange, float hitCooldown, float speed) {
+			this.health = health;
+			this.attackDamage = attackDamage;
+			this.hitRange = hitRange;
+			this.hitCooldown = hitCooldown;
+			this.speed = speed;
+		}
+		
+		public int getHealth() {
+			return health;
+		}
+		
+		public int getAttackDamage() {
+			return attackDamage;
+		}
+		
+		public int getHitRange() {
+			return hitRange;
+		}
+		
+		public float getHitCooldown() {
+			return hitCooldown;
+		}
+		
+		public float getSpeed() {
+			return speed;
+		}
 	}
 
 	// private static final Player instance = new Player(new Sprite(new Texture("player01.png")), new Vector2(0, 0));

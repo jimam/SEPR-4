@@ -31,15 +31,6 @@ public final class Constant {
 	public static final float FASTSPEEDMULT = 2f;
 	public static final float FASTHPMULT = 1;
 	public static final float FASTDMGMULT = 1;
-	public static final float NERDYHPMULT = 1.5f;
-	public static final float NERDYDMGMULT = 1;
-	public static final float NERDYSPEEDMULT = 1;
-	public static final float SPORTYHPMULT = 1;
-	public static final float SPORTYDMGMULT = 1;
-	public static final float SPORTYSPEEDMULT = 1.5f;
-	public static final float HEAVYDMGMULT = 1.5f;
-	public static final float HEAVYHPMULT = 1;
-	public static final float HEAVYSPEEDMULT = 1;
 
 	public static final int HEALUP = 30;
 	public static final int SPEEDUP = 50;
