@@ -32,7 +32,6 @@ public class GameManager implements Disposable {
 	private boolean levelLoaded = false;
 	
 	private int levelProgress = 0;
-	private String[] levels = {"townmap", "halifaxmap", "courtyard"};
 	
 	/* GameScreen display objects */
 	private OrthographicCamera gameCamera;
