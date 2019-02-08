@@ -186,7 +186,7 @@ public class GameManager implements Disposable {
 		rayHandler.setAmbientLight(0.9f);
 		
 		level = new Level(parent, location);
-		tiledMapRenderer = new OrthogonalTiledMapRenderer(level.load(), Constant.PPT);
+		tiledMapRenderer = new OrthogonalTiledMapRenderer(level.load(), 1 / (float)Constant.PPT);
 		tiledMapRenderer.setView(gameCamera);
 		
 		this.entities = new ArrayList<>();
@@ -265,14 +265,14 @@ public class GameManager implements Disposable {
 	}
 	
 	public void draw() {
-		tiledMapRenderer.render(level.getBackgroundLayers());
+		tiledMapRenderer.render();
 		batch.setProjectionMatrix(gameCamera.combined);
 		batch.begin();
 		entities.forEach(entity -> entity.draw(batch));
 		batch.end();
-		tiledMapRenderer.render(level.getForegroundLayers());
-		rayHandler.setCombinedMatrix(gameCamera);
-		rayHandler.updateAndRender();
+		//tiledMapRenderer.render(level.getForegroundLayers());
+		//rayHandler.setCombinedMatrix(gameCamera);
+		//rayHandler.updateAndRender();
 		// If dev mode is enabled, show the debug renderer for Box2D
 		if (Zepr.devMode) debugRenderer.render(world, gameCamera.combined);
 	}

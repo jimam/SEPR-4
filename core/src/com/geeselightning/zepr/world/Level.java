@@ -56,7 +56,7 @@ public class Level {
 		MapObjects spawnPoints = spawnLayer.getObjects();
 		spawnPoints.forEach(sp -> {
 			MapProperties props = sp.getProperties();
-			String type = props.get("spawnType", String.class);
+			String type = props.get("type", String.class);
 			float x = props.get("x", Float.class) / Constant.PPT;
 			float y = props.get("y", Float.class) / Constant.PPT;
 			if (type == null) {
