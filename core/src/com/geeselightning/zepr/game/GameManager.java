@@ -1,5 +1,7 @@
 package com.geeselightning.zepr.game;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,7 +14,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.geeselightning.zepr.KeyboardController;
+import com.geeselightning.zepr.entities.Entity;
 import com.geeselightning.zepr.entities.Player;
+import com.geeselightning.zepr.entities.PowerUp;
+import com.geeselightning.zepr.entities.Zombie;
 import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.Level;
 
@@ -26,6 +31,9 @@ public class GameManager implements Disposable {
 	private boolean gameRunning = false;
 	private boolean levelLoaded = false;
 	
+	private int levelProgress = 0;
+	private String[] levels = {"townmap", "halifaxmap", "courtyard"};
+	
 	/* GameScreen display objects */
 	private OrthographicCamera gameCamera;
 	private SpriteBatch batch;
@@ -33,7 +41,6 @@ public class GameManager implements Disposable {
 	private KeyboardController controller;
 	
 	/* Level specific fields */
-	private int levelProgress = 0;
 	private World world;
 	private TiledMapRenderer tiledMapRenderer;
 	private Box2DDebugRenderer debugRenderer;
@@ -41,6 +48,12 @@ public class GameManager implements Disposable {
 	private Player player;
 	private Player.Type playerType;
 	private Level level;
+	private Level.Location location;
+	private int waveProgress = 0;
+	
+	private ArrayList<Entity> entities;
+	private ArrayList<Zombie> zombies;
+	private ArrayList<PowerUp> powerUps;
 	
 	private GameManager(Zepr parent) {
 		this.parent = parent;
@@ -120,8 +133,29 @@ public class GameManager implements Disposable {
 		this.playerType = playerType;
 	}
 	
+	public Level.Location getLocation() {
+		return location;
+	}
+	
+	public void setLocation(Level.Location location) {
+		this.location = location;
+	}
+	
 	public Level getLevel() {
 		return level;
+	}
+	
+	public int getWaveProgress() {
+		return waveProgress;
+	}
+	
+	public void addEntity(Entity entity) {
+		this.entities.add(entity);
+	}
+	
+	public void addEnemy(Zombie zombie) {
+		this.zombies.add(zombie);
+		this.entities.add(zombie);
 	}
 	
 	/**
@@ -151,15 +185,24 @@ public class GameManager implements Disposable {
 		rayHandler = new RayHandler(world);
 		rayHandler.setAmbientLight(0.9f);
 		
-		level = new Level(parent, "townmap");
+		level = new Level(parent, location);
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(level.load(), Constant.PPT);
 		tiledMapRenderer.setView(gameCamera);
 		
+		this.entities = new ArrayList<>();
+		this.zombies = new ArrayList<>();
+		this.powerUps = new ArrayList<>();
+		
 		player = new Player(parent, 0.4f, level.getPlayerSpawn(), 0f, playerType);
+		player.defineBody();
+		
+		addEntity(player);
+		
+		waveProgress = 0;
 		
 		// Spawn entities
 		
-		// Set levelLoaded to true
+		levelLoaded = true;
 	}
 	
 	public void update(float delta) {
@@ -222,12 +265,12 @@ public class GameManager implements Disposable {
 	}
 	
 	public void draw() {
-		//TODO: allow rendering foreground/background objects seperately
-		tiledMapRenderer.render();
+		tiledMapRenderer.render(level.getBackgroundLayers());
 		batch.setProjectionMatrix(gameCamera.combined);
 		batch.begin();
-		//TODO: render entities
+		entities.forEach(entity -> entity.draw(batch));
 		batch.end();
+		tiledMapRenderer.render(level.getForegroundLayers());
 		rayHandler.setCombinedMatrix(gameCamera);
 		rayHandler.updateAndRender();
 		// If dev mode is enabled, show the debug renderer for Box2D
@@ -245,6 +288,7 @@ public class GameManager implements Disposable {
 	@Override
 	public void dispose() {
 		rayHandler.dispose();
+		debugRenderer.dispose();
 		world.dispose();
 	}
 

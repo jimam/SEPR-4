@@ -15,10 +15,26 @@ import com.geeselightning.zepr.util.Constant;
 
 public class Level {
 	
+	public enum Location {
+		TOWN("Town", "townmap", 0),
+		HALIFAX("Halifax College", "halifaxmap", 1),
+		COURTYARD("Courtyard", "courtyard", 2);
+		
+		String name;
+		String mapFileName;
+		int num;
+		
+		Location(String name, String mapFileName, int num) {
+			this.name= name;
+			this.mapFileName = mapFileName;
+			this.num = num;
+		}
+	}
+	
 	private Zepr parent;
 	private GameManager gameManager;
 	
-	private String levelName;
+	private Location location;
 	private TiledMap tiledMap;
 	private int[] backgroundLayers = {0};
 	private int[] foregroundLayers = {1};
@@ -26,15 +42,15 @@ public class Level {
 	private Vector2 playerSpawn;
 	private List<Vector2> zombieSpawnPoints;
 
-	public Level(Zepr parent, String levelName) {
+	public Level(Zepr parent, Location location) {
 		this.parent = parent;
-		this.levelName = levelName;
+		this.location = location;
 		this.gameManager = GameManager.getInstance(parent);
 		zombieSpawnPoints = new ArrayList<>();
 	}
 	
 	public TiledMap load() {
-		tiledMap = new TmxMapLoader().load("maps/" + levelName + ".tmx");
+		tiledMap = new TmxMapLoader().load("maps/" + location.mapFileName + ".tmx");
 		
 		MapLayer spawnLayer = tiledMap.getLayers().get("Spawns");
 		MapObjects spawnPoints = spawnLayer.getObjects();
@@ -43,6 +59,9 @@ public class Level {
 			String type = props.get("spawnType", String.class);
 			float x = props.get("x", Float.class) / Constant.PPT;
 			float y = props.get("y", Float.class) / Constant.PPT;
+			if (type == null) {
+				return;
+			}
 			if (type.equals("player")) {
 				playerSpawn = new Vector2(x,y);
 			} else if (type.equals("zombie")) {

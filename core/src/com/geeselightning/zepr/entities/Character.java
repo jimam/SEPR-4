@@ -1,15 +1,8 @@
 package com.geeselightning.zepr.entities;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.geeselightning.zepr.game.Zepr;
-import com.geeselightning.zepr.levels.Level;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import static java.lang.Math.abs;
 
 public abstract class Character extends Entity {
 

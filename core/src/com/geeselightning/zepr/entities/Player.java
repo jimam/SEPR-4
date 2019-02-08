@@ -5,10 +5,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.levels.Level;
 import com.geeselightning.zepr.util.Constant;
+import com.geeselightning.zepr.world.FixtureType;
 
 public class Player extends Character {
 	
@@ -147,8 +150,25 @@ public class Player extends Character {
 	public void defineBody() {
 		BodyDef bDef = new BodyDef();
 		bDef.type = BodyDef.BodyType.DynamicBody;
-		bDef.position.set(initialPos);
+		if (initialPos != null) {
+			bDef.position.set(initialPos);
+		} else {
+			bDef.position.set(Vector2.Zero);
+		}
 		bDef.angle = (float) Math.toRadians(initialRot);
+		
+		FixtureDef fBodyDef = new FixtureDef();
+		CircleShape shape = new CircleShape();
+		shape.setRadius(this.bRadius);
+		fBodyDef.shape = shape;
+		
+		b2body = world.createBody(bDef);
+		b2body.createFixture(fBodyDef).setUserData(FixtureType.PLAYER);
+		
+		b2body.setUserData(this);
+		b2body.setSleepingAllowed(false);
+		shape.dispose();
+		
 	}
 
 }

@@ -14,14 +14,15 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
+import com.geeselightning.zepr.world.Level;
 
 public class SelectLevelScreen extends DefaultScreen {
 
 	private Stage stage;
 	private Label stageDescription;
 	private Label characterDescription;
-	private int stageLink = -1;
-	private boolean playerSet = false;
+	private boolean levelSet;
+	private boolean playerSet;
 	
 	private GameManager gameManager;
 
@@ -146,11 +147,12 @@ public class SelectLevelScreen extends DefaultScreen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				stageDescription.setText(townDescription);
-				stageLink = Zepr.TOWN;
+				gameManager.setLocation(Level.Location.TOWN);
+				levelSet = true;
 			}
 		});
 
-		if (parent.progress <= parent.TOWN) {
+		if (gameManager.getLevelProgress() < 1) {
 			halifax.setColor(Color.DARK_GRAY);
 			halifax.getLabel().setColor(Color.DARK_GRAY);
 		} else {
@@ -159,12 +161,13 @@ public class SelectLevelScreen extends DefaultScreen {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
 					stageDescription.setText(halifaxDescription);
-					stageLink = Zepr.HALIFAX;
+					gameManager.setLocation(Level.Location.HALIFAX);
+					levelSet = true;
 				}
 			});
 		}
 
-		if (parent.progress <= parent.HALIFAX) {
+		if (gameManager.getLevelProgress() < 2) {
 			courtyard.setColor(Color.DARK_GRAY);
 			courtyard.getLabel().setColor(Color.DARK_GRAY);
 		} else {
@@ -173,7 +176,8 @@ public class SelectLevelScreen extends DefaultScreen {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
 					stageDescription.setText(courtyardDescription);
-					stageLink = Zepr.COURTYARD;
+					gameManager.setLocation(Level.Location.COURTYARD);
+					levelSet = true;
 				}
 			});
 		}
@@ -209,8 +213,8 @@ public class SelectLevelScreen extends DefaultScreen {
 		play.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if ((stageLink != -1) && (playerSet == true)) {
-					parent.changeScreen(stageLink);
+				if (levelSet && playerSet) {
+					parent.changeScreen(Zepr.GAME);
 				}
 			}
 		});
