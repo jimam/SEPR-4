@@ -2,9 +2,8 @@ package com.geeselightning.zepr.tests;
 
 import com.geeselightning.zepr.*;
 import com.geeselightning.zepr.entities.Player;
-import com.geeselightning.zepr.entities.PowerUpHeal;
-import com.geeselightning.zepr.entities.PowerUpImmunity;
-import com.geeselightning.zepr.entities.PowerUpSpeed;
+import com.geeselightning.zepr.entities.PowerUp;
+
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,7 @@ public class PowerUpTest {
     // Test 4.1
     public void powerUpHealthAddsHPToPlayer() {
         Player player = Player.getInstance();
-        PowerUpHeal heal = new PowerUpHeal(null);
+        PowerUp heal = new PowerUp(PowerUp.Type.HEAL,null,null);
         player.takeDamage(50);
         double originalHealth = player.getHealth();
         heal.activate();
@@ -31,7 +30,7 @@ public class PowerUpTest {
     // Test 4.2.1
     public void powerUpSpeedIncreasePlayersSpeed() {
         Player player = Player.getInstance();
-        PowerUpSpeed speed = new PowerUpSpeed(null);
+        PowerUp speed = new PowerUp(PowerUp.Type.SPEED,null,null);
         double originalSpeed = player.speed;
         speed.activate();
         assertEquals("Speed powerup should increase the Players speed.", originalSpeed + Constant.SPEEDUP,
@@ -42,7 +41,7 @@ public class PowerUpTest {
     // Test 4.2.2
     public void powerUpSpeedDeactivatesAfter10s() {
         Player player = Player.getInstance();
-        PowerUpSpeed speed = new PowerUpSpeed(null);
+        PowerUp speed = new PowerUp(PowerUp.Type.SPEED,null,null);
         double originalSpeed = player.speed;
         speed.activate();
         speed.update(11);
@@ -53,7 +52,7 @@ public class PowerUpTest {
     // Test 4.2.3
     public void powerUpSpeedDoesNotDeactiveBefore10s() {
         Player player = Player.getInstance();
-        PowerUpSpeed speed = new PowerUpSpeed(null);
+        PowerUp speed = new PowerUp(PowerUp.Type.SPEED,null,null);
         double originalSpeed = player.speed;
         speed.activate();
         speed.update(9);
@@ -65,7 +64,7 @@ public class PowerUpTest {
     // Test 4.2.3
     public void powerUpSpeedDeactivateMethodResetsPlayerSpeed() {
         Player player = Player.getInstance();
-        PowerUpSpeed speed = new PowerUpSpeed(null);
+        PowerUp speed = new PowerUp(PowerUp.Type.SPEED,null,null);
         double originalSpeed = player.speed;
         speed.activate();
         speed.update(5);
@@ -78,7 +77,7 @@ public class PowerUpTest {
     // Test 4.3.1
     public void playerCannotPickUpFarAwayPowerUp() {
         Player player = Player.getInstance();
-        PowerUpHeal powerup = new PowerUpHeal(null);
+        PowerUp powerup = new PowerUp(PowerUp.Type.IMMUNE,null,null);
         powerup.setPosition(0,0);
         player.setPosition(100,100);
         assertFalse("Player cannot pickup a power up if it is not touching it.", powerup.overlapsPlayer());
@@ -88,7 +87,7 @@ public class PowerUpTest {
     //Test 4.3.2
     public void playerCanPickUpClosePowerUp() {
         Player player = Player.getInstance();
-        PowerUpHeal powerup = new PowerUpHeal(null);
+        PowerUp powerup = new PowerUp(PowerUp.Type.IMMUNE,null,null);
         powerup.setPosition(0,0);
         player.setPosition(31,31);
         assertTrue("Player can pickup a power up if it is touching it.", powerup.overlapsPlayer());
@@ -98,7 +97,7 @@ public class PowerUpTest {
     // Test 4.4.1
     public void powerUpImmunityStopsThePlayerTakingDamge() {
         Player player = Player.getInstance();
-        PowerUpImmunity immunity = new PowerUpImmunity(null);
+        PowerUp immunity = new PowerUp(PowerUp.Type.IMMUNE,null,null);
         immunity.activate();
         double originalHealth = player.getHealth();
         player.takeDamage(30);
@@ -110,7 +109,7 @@ public class PowerUpTest {
     // Test 4.4.2
     public void powerUpImmunityDeactivatesAfter5s() {
         Player player = Player.getInstance();
-        PowerUpImmunity immunity = new PowerUpImmunity(null);
+        PowerUp immunity = new PowerUp(PowerUp.Type.IMMUNE,null,null);
         double originalHealth = player.getHealth();
         immunity.activate();
         player.takeDamage(40);
@@ -124,7 +123,7 @@ public class PowerUpTest {
     // Test 4.4.3
     public void powerUpImmunityDeactivateMethodCancelsImmunity() {
         Player player = Player.getInstance();
-        PowerUpImmunity immunity = new PowerUpImmunity(null);
+        PowerUp immunity = new PowerUp(PowerUp.Type.IMMUNE,null,null);
         double originalHealth = player.getHealth();
         immunity.activate();
         immunity.update(2);
