@@ -1,4 +1,4 @@
-package minigame;
+package com.geeselightning.zepr.minigame;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;

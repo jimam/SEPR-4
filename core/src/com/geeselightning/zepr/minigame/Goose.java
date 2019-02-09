@@ -1,4 +1,4 @@
-package minigame;
+package com.geeselightning.zepr.minigame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
