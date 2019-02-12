@@ -1,8 +1,8 @@
 package com.geeselightning.zepr.entities;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.geeselightning.zepr.Constant;
 import com.geeselightning.zepr.levels.Level;
+import com.geeselightning.zepr.util.Constant;
 
 public class PowerUpSpeed extends PowerUp {
 

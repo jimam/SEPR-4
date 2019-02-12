@@ -19,7 +19,6 @@ package com.geeselightning.zepr.tests;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.geeselightning.zepr.Zepr;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -28,6 +27,8 @@ import org.junit.runners.model.InitializationError;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.geeselightning.zepr.game.Zepr;
+
 import static org.mockito.Mockito.mock;
 
 import com.badlogic.gdx.ApplicationListener;
