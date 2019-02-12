@@ -1,5 +1,9 @@
 package com.geeselightning.zepr.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
-import com.geeselightning.zepr.levels.Level;
 import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.FixtureType;
 
@@ -43,6 +46,18 @@ public class Player extends Character {
 	private Texture mainTexture;
 	private Texture attackTexture;
 	
+	/**
+	 * Contains the zombies currently in range and in front of the player that will be damaged
+	 * when the attack ability is used.
+	 */
+	private Set<Zombie> zombiesInRange;
+	
+	/**
+	 * Contains the power-ups currently active on the player.
+	 * Float represents the seconds until the effect expires.
+	 */
+	private ConcurrentHashMap<PowerUp.Type, Float> activePowerUps;
+	
 	public Player(Zepr parent, float bRadius, Vector2 initialPos, float initialRot, Type type) {
 		super(parent, new Sprite(new Texture("player01.png")), bRadius, initialPos, initialRot);
 		this.type = type;
@@ -67,6 +82,9 @@ public class Player extends Character {
 		this.speed = (int) (Constant.PLAYERSPEED * type.speedMultiplier);
 		this.health = (int) (Constant.PLAYERMAXHP * type.healthMultiplier);
 		this.sprite.setTexture(mainTexture);
+		
+		this.zombiesInRange = new HashSet<>();
+		this.activePowerUps = new ConcurrentHashMap<>();
 	}
 	
 	/* Accessor methods */
@@ -104,12 +122,10 @@ public class Player extends Character {
 	public void update(float delta) {
 		super.update(delta);
 		// Gives the player the attack texture for 0.1s after an attack.
-		// if (hitRefresh <= 0.1 && getTexture() != attackTexture) {
-		if (attacking) {
+		if (attacking && hitRefresh > hitCooldown) {
 			this.sprite.setTexture(attackTexture);
 		} else {
 			// Changes the texture back to the main one after 0.1s.
-			// if (hitRefresh > 0.1 && getTexture() == attackTexture) {
 			this.sprite.setTexture(mainTexture);
 		}
 	}
@@ -153,7 +169,30 @@ public class Player extends Character {
 		b2body.setUserData(this);
 		b2body.setSleepingAllowed(false);
 		shape.dispose();
+	}
+	
+	/**
+	 * Called by {@link WorldContactListener} when the player touches a power-up.
+	 * @param powerUp
+	 */
+	public void onPickup(PowerUp powerUp) {
 		
+	}
+
+	/**
+	 * Called by {@link WorldContactListener} when a zombie enters the player's melee range.
+	 * @param zombie	the zombie that has entered range
+	 */
+	public void onMeleeRangeEntered(Zombie zombie) {
+		this.zombiesInRange.add(zombie);
+	}
+	
+	/**
+	 * Called by {@link WorldContactListener} when a zombie leaves the player's melee range
+	 * @param zombie	the zombie that has left range
+	 */
+	public void onMeleeRangeLeft(Zombie zombie) {
+		this.zombiesInRange.remove(zombie);
 	}
 
 }

@@ -3,7 +3,8 @@ package com.geeselightning.zepr.world;
 public enum FixtureType {
 	
 	PLAYER,
-	ENEMY,
-	POWERUP
+	ZOMBIE,
+	POWERUP,
+	MELEE_SENSOR
 
 }
