@@ -2,6 +2,13 @@ package com.geeselightning.zepr.util;
 
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * Defines constants used repeatedly in other classes in the program.
+ * @author Xzytl
+ * Changes:
+ * 	- added different multipliers for different zombie types
+ * 	- added definition of PPM (pixels-per-metre) and PPT (pixels-per-tile)
+ */
 public final class Constant {
 	
 	public static final int PPM = 50;

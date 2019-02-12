@@ -23,16 +23,24 @@ import com.geeselightning.zepr.entities.Entity;
 import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.PowerUp;
 import com.geeselightning.zepr.entities.Zombie;
+import com.geeselightning.zepr.stages.Hud;
 import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.Level;
 import com.geeselightning.zepr.world.Wave;
+import com.geeselightning.zepr.world.WorldContactListener;
 
 import box2dLight.RayHandler;
 
+/**
+ * Coordinator for the main game logic and rendering.
+ * @author Xzytl
+ * Changes:
+ * 	implemented
+ */
 public class GameManager implements Disposable {
 	
-	public static GameManager instance;
 	private final Zepr parent;
+	public static GameManager instance;
 	
 	private boolean gameRunning = false;
 	private boolean levelLoaded = false;
@@ -52,6 +60,7 @@ public class GameManager implements Disposable {
 	private TiledMapRenderer tiledMapRenderer;
 	private Box2DDebugRenderer debugRenderer;
 	private RayHandler rayHandler;
+	private Hud hud;
 	private Player player;
 	private Player.Type playerType;
 	private Level level;
@@ -142,10 +151,6 @@ public class GameManager implements Disposable {
 		return player;
 	}
 	
-//	public void setPlayer(Player player) {
-//		this.player = player;
-//	}
-	
 	public Player.Type getPlayerType() {
 		return playerType;
 	}
@@ -174,9 +179,18 @@ public class GameManager implements Disposable {
 		this.entities.add(entity);
 	}
 	
-	public void addEnemy(Zombie zombie) {
+	public void removeEntity(Entity entity) {
+		this.entities.remove(entity);
+	}
+	
+	public void addZombie(Zombie zombie) {
 		this.zombies.add(zombie);
 		this.entities.add(zombie);
+	}
+	
+	public void removeZombie(Zombie zombie) {
+		this.zombies.remove(zombie);
+		this.entities.remove(zombie);
 	}
 	
 	/**
@@ -199,7 +213,7 @@ public class GameManager implements Disposable {
 	
 	public void loadLevel() {
 		world = new World(Vector2.Zero, true);
-		world.setContactListener(null);
+		world.setContactListener(new WorldContactListener());
 		
 		debugRenderer = new Box2DDebugRenderer();
 		
@@ -210,6 +224,8 @@ public class GameManager implements Disposable {
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(level.load(), 1 / (float)Constant.PPT);
 		tiledMapRenderer.setView(gameCamera);
 		
+		hud = new Hud(parent);
+		
 		this.entities = new ArrayList<>();
 		this.zombies = new ArrayList<>();
 		this.powerUps = new ArrayList<>();
@@ -218,6 +234,7 @@ public class GameManager implements Disposable {
 		player.defineBody();
 		
 		addEntity(player);
+		hud.setHealthLabel(player.getHealth());
 		
 		waveProgress = 0;
 		
@@ -241,6 +258,7 @@ public class GameManager implements Disposable {
 		default:
 			break;
 		}
+		hud.setProgressLabel(waveProgress + 1, zombiesToSpawn);
 	}
 	
 	public void spawnZombies(float delta) {
@@ -249,7 +267,7 @@ public class GameManager implements Disposable {
 			zombieSpawns.forEach(sp -> {
 				Zombie zombie = new Zombie(parent, new Sprite(new Texture("zombie01.png")), 0.4f, sp, 0, Zombie.Type.MEDIUM);
 				zombie.defineBody();
-				addEnemy(zombie);
+				addZombie(zombie);
 				zombiesToSpawn -= 1;
 			});
 			spawnCooldown = 5f;
@@ -289,6 +307,9 @@ public class GameManager implements Disposable {
 		}
 		
 		entities.forEach(e -> e.update(delta));
+		// Remove killed enemies
+		
+		hud.setProgressLabel(waveProgress + 1, zombies.size() + zombiesToSpawn);
 		
 		draw();
 		
@@ -343,6 +364,7 @@ public class GameManager implements Disposable {
 		rayHandler.updateAndRender();
 		// If dev mode is enabled, show the debug renderer for Box2D
 		if (Zepr.devMode) debugRenderer.render(world, gameCamera.combined);
+		hud.stage.draw();
 	}
 	
 	@Override
