@@ -1,10 +1,15 @@
 package com.geeselightning.zepr.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -20,6 +25,7 @@ import com.geeselightning.zepr.entities.PowerUp;
 import com.geeselightning.zepr.entities.Zombie;
 import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.Level;
+import com.geeselightning.zepr.world.Wave;
 
 import box2dLight.RayHandler;
 
@@ -39,6 +45,8 @@ public class GameManager implements Disposable {
 	
 	private KeyboardController controller;
 	
+	private Map<Level.Location, Wave[]> waves = new HashMap<>();
+	
 	/* Level specific fields */
 	private World world;
 	private TiledMapRenderer tiledMapRenderer;
@@ -49,6 +57,8 @@ public class GameManager implements Disposable {
 	private Level level;
 	private Level.Location location;
 	private int waveProgress = 0;
+	private int zombiesToSpawn = 0;
+	private float spawnCooldown = 0;
 	
 	private ArrayList<Entity> entities;
 	private ArrayList<Zombie> zombies;
@@ -58,6 +68,10 @@ public class GameManager implements Disposable {
 		this.parent = parent;
 		
 		controller = new KeyboardController();
+		
+		waves.put(Level.Location.TOWN, new Wave[]{Wave.SMALL, Wave.MEDIUM});
+		waves.put(Level.Location.HALIFAX, new Wave[]{Wave.SMALL, Wave.MEDIUM});
+		waves.put(Level.Location.COURTYARD, new Wave[]{Wave.MEDIUM, Wave.LARGE, Wave.MINIBOSS});
 	}
 
 	public static GameManager getInstance(Zepr parent) {
@@ -110,6 +124,14 @@ public class GameManager implements Disposable {
 	
 	public void setLevelProgress(int levelProgress) {
 		this.levelProgress = levelProgress;
+	}
+	
+	public Wave getWave(Level.Location location, int wave) {
+		if (waves.containsKey(location)) {
+			return waves.get(location)[wave];
+		} else {
+			return Wave.SMALL;
+		}
 	}
 	
 	public World getWorld() {
@@ -199,9 +221,50 @@ public class GameManager implements Disposable {
 		
 		waveProgress = 0;
 		
-		// Spawn entities
-		
 		levelLoaded = true;
+		
+		loadWave();
+	}
+	
+	public void loadWave() {
+		List<Vector2> zombieSpawns = level.getZombieSpawns();
+		switch(getWave(this.location, waveProgress)) {
+		case LARGE:
+			zombiesToSpawn = 4 * zombieSpawns.size();
+			break;
+		case MEDIUM:
+			zombiesToSpawn = 3 * zombieSpawns.size();
+			break;
+		case SMALL:
+			zombiesToSpawn = 2 * zombieSpawns.size();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public void spawnZombies(float delta) {
+		if (spawnCooldown <= 0) {
+			List<Vector2> zombieSpawns = level.getZombieSpawns();
+			zombieSpawns.forEach(sp -> {
+				Zombie zombie = new Zombie(parent, new Sprite(new Texture("zombie01.png")), 0.4f, sp, 0, Zombie.Type.MEDIUM);
+				zombie.defineBody();
+				addEnemy(zombie);
+				zombiesToSpawn -= 1;
+			});
+			spawnCooldown = 5f;
+		} else {
+			spawnCooldown -= delta;
+		}
+	}
+	
+	public void waveComplete() {
+		this.waveProgress += 1;
+		// Spawn powerup
+	}
+	
+	public void levelComplete() {
+		
 	}
 	
 	public void update(float delta) {
@@ -220,6 +283,12 @@ public class GameManager implements Disposable {
 		
 		// Change the position of the map
 		tiledMapRenderer.setView(gameCamera);
+		
+		if (zombiesToSpawn > 0) {
+			spawnZombies(delta);
+		}
+		
+		entities.forEach(e -> e.update(delta));
 		
 		draw();
 		
@@ -274,14 +343,6 @@ public class GameManager implements Disposable {
 		rayHandler.updateAndRender();
 		// If dev mode is enabled, show the debug renderer for Box2D
 		if (Zepr.devMode) debugRenderer.render(world, gameCamera.combined);
-	}
-	
-	public void waveComplete() {
-		
-	}
-	
-	public void levelComplete() {
-		
 	}
 	
 	@Override

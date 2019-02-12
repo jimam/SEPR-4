@@ -91,5 +91,9 @@ public class Level {
 	public Vector2 getPlayerSpawn() {
 		return playerSpawn;
 	}
+	
+	public List<Vector2> getZombieSpawns() {
+		return zombieSpawnPoints;
+	}
 
 }
