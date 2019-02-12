@@ -192,7 +192,7 @@ public class GameManager implements Disposable {
 		this.zombies = new ArrayList<>();
 		this.powerUps = new ArrayList<>();
 		
-		player = new Player(parent, 0.4f, level.getPlayerSpawn(), 0f, playerType);
+		player = new Player(parent, 0.3f, level.getPlayerSpawn(), 0f, playerType);
 		player.defineBody();
 		
 		addEntity(player);
