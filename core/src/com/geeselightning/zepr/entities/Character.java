@@ -76,37 +76,48 @@ public abstract class Character extends Entity {
 //    }
 
     /**
-     * Finds the direction (in radians) that an object is in relative to the character.
+     * Finds the direction (in degrees) that an object is in relative to the character.
+     * Assessment 3: updated to use box2d world position rather than sprite position, and now returns degrees
      *
      * @param coordinate 2d vector representing the position of the object
-     * @return bearing   double in radians of the bearing from the character to the coordinate
+     * @return bearing   double in degrees of the bearing from the character to the coordinate
      */
-//    public double getDirectionTo(Vector2 coordinate) {
-//        Vector2 charCenter = new Vector2(this.getX() + (getWidth()/ 2),
-//                this.getY()+ (getHeight() / 2));
-//
-//        // atan2 is uses the signs of both variables the determine the correct quadrant (relative to the character) of the
-//        // result.
-//        // Modulus 2pi of the angle must be taken as the angle is negative for the -x quadrants.
-//        // The angle must first be displaced by 2pi because the Java modulus function can return a -ve value.
-//
-//        return(Math.atan2((coordinate.x - charCenter.x), (coordinate.y - charCenter.y)) + (2 * Math.PI))
-//                % (2 * Math.PI);
-//    }
+    public double getDirectionTo(Vector2 coordinate) {
+        Vector2 charCenter = this.b2body.getPosition();
+
+        return(Math.toDegrees(Math.atan2((coordinate.x - getX()), (coordinate.y - getY()))));
+    }
 
     /**
-     * Calculates a normailized vector that points torwards given coordinate.
+     * Calculates a normalised vector that points towards given coordinate.
+     * Assessment 3: updated to use box2d world position rather than sprite position;
      *
      * @param coordinate Vector2 representing the position of the object
      * @return normalised Vector2 that from this will point towards given coordinate
      */
-//    public Vector2 getDirNormVector(Vector2 coordinate) {
-//        Vector2 charCenter = new Vector2(this.getX() + (getWidth() / 2),
-//                this.getY() + (getHeight() / 2));
-//        // create vector that is the difference between character and the coordinate, and return it normalised
-//        Vector2 diffVector = new Vector2((coordinate.x - charCenter.x), (coordinate.y - charCenter.y));
-//        return diffVector.nor();
-//    }
+    public Vector2 getDirNormVector(Vector2 coordinate) {
+        Vector2 charCenter = this.b2body.getPosition();
+        // create vector that is the difference between character and the coordinate, and return it normalised
+        Vector2 diffVector = new Vector2((coordinate.x - charCenter.x), (coordinate.y - charCenter.y));
+        return diffVector.nor();
+    }
+    
+    /* Convenience methods for setting velocity */
+	public void setLinearVelocity(float vX, float vY) {
+		this.b2body.setLinearVelocity(vX, vY);
+	}
+	
+	public void setLinearVelocity(Vector2 velocity) {
+		setLinearVelocity(velocity.x, velocity.y);
+	}
+	
+	public void setLinearVelocityX(float vX) {
+		setLinearVelocity(vX, this.b2body.getLinearVelocity().y);
+	}
+	
+	public void setLinearVelocityY(float vY) {
+		setLinearVelocity(this.b2body.getLinearVelocity().x, vY);
+	}
 
     /**
      * This method updates all the characters properties.

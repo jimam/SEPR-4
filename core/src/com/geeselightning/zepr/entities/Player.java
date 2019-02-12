@@ -90,21 +90,6 @@ public class Player extends Character {
 	public boolean isImmune() {
 		return immune;
 	}
-	
-	
-	/* Convenience methods for setting velocity */
-	public void setLinearVelocity(float vX, float vY) {
-		this.b2body.setLinearVelocity(vX, vY);
-	}
-	
-	public void setLinearVelocityX(float vX) {
-		setLinearVelocity(vX, this.b2body.getLinearVelocity().y);
-	}
-	
-	public void setLinearVelocityY(float vY) {
-		setLinearVelocity(this.b2body.getLinearVelocity().x, vY);
-	}
-	
 
 	public void attack(Zombie zombie, float delta) {
 		if (canHitGlobal(zombie, hitRange) && hitRefresh > hitCooldown) {

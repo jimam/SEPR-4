@@ -81,6 +81,12 @@ public class Zombie extends Character {
 	@Override
 	public void update(float delta) {
 		super.update(delta);
+		this.setLinearVelocity(getDirNormVector(gameManager.getPlayer().getPos()).scl(this.speed));
+		
+		Vector2 playerLoc = gameManager.getPlayer().getPos();
+		double angle = Math.toDegrees(Math.atan2(playerLoc.y - b2body.getPosition().y, playerLoc.x - b2body.getPosition().x)) - 90;
+		this.setAngle(angle);
+		
 		attack(delta);
 	}
 }

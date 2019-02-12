@@ -77,6 +77,10 @@ public abstract class Entity {
 		b2body.setTransform(b2body.getPosition(), (float)Math.toRadians(angle));
 	}
 	
+	public void setAngle(double angle) {
+		b2body.setTransform(b2body.getPosition(), (float)Math.toRadians(angle));
+	}
+	
 	public abstract void defineBody();
 	
 	public void draw(SpriteBatch batch) {
