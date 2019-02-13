@@ -160,12 +160,6 @@ public abstract class Character extends Entity {
 //    }
 
     // Decreases health by value of dmg
-    public void takeDamage(int dmg) {
-    	if (health - dmg >= 0) {
-    		health -= dmg;
-    	} else {
-    		health = 0;
-    	}
-    }
+    public abstract void takeDamage(int dmg);
 
 }

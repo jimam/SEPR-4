@@ -29,6 +29,10 @@ public class Level {
 			this.mapFileName = mapFileName;
 			this.num = num;
 		}
+		
+		public int getNum() {
+			return num;
+		}
 	}
 	
 	private Zepr parent;

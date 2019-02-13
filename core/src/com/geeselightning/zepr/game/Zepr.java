@@ -16,6 +16,7 @@ public class Zepr extends Game {
 	public final static int LOADING = 1;
 	public final static int SELECT = 2;
 	public final static int GAME = 3;
+	public final static int LEVEL_COMPLETE = 4;
 	
 	public Zepr(boolean devMode) {
 		super();
@@ -40,6 +41,9 @@ public class Zepr extends Game {
 			case GAME:
 				if (gameScreen == null) gameScreen = new GameScreen(this);
 				this.setScreen(gameScreen);
+				break;
+			case LEVEL_COMPLETE:
+				this.setScreen(new TextScreen(this, "Level complete", "You have successfully completed the level"));
 				break;
 		}
 	}

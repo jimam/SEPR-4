@@ -214,6 +214,7 @@ public class GameManager implements Disposable {
 	}
 
 	public void loadLevel() {
+		System.out.println("Beginning level loading...");
 		world = new World(Vector2.Zero, true);
 		world.setContactListener(new WorldContactListener());
 
@@ -241,6 +242,8 @@ public class GameManager implements Disposable {
 		levelLoaded = true;
 
 		loadWave();
+		
+		System.out.println("Finished level loading");
 	}
 
 	public void spawnPlayer() {
@@ -250,6 +253,7 @@ public class GameManager implements Disposable {
 	}
 
 	public void loadWave() {
+		System.out.println("Beginning wave loading...");
 		List<Vector2> zombieSpawns = level.getZombieSpawns();
 		switch (getWave(this.location, waveProgress)) {
 		case LARGE:
@@ -266,6 +270,8 @@ public class GameManager implements Disposable {
 		}
 		hud.setProgressLabel(waveProgress + 1, zombiesToSpawn);
 		spawnCooldown = 0;
+		System.out.println("Zombies to spawn: " + zombiesToSpawn);
+		System.out.println("Finished wave loading");
 	}
 
 	public void spawnZombies(float delta) {
@@ -278,19 +284,31 @@ public class GameManager implements Disposable {
 				addZombie(zombie);
 				zombiesToSpawn -= 1;
 			});
-			spawnCooldown = 5f;
+			spawnCooldown = 3f;
 		} else {
 			spawnCooldown -= delta;
 		}
 	}
 
 	public void waveComplete() {
+		System.out.println("Wave complete!");
 		this.waveProgress += 1;
-		// Spawn powerup
+		//TODO: Spawn powerup
+		
+		if (waveProgress >= waves.get(location).length) {
+			levelComplete();
+		} else {
+			loadWave();
+		}
 	}
 
 	public void levelComplete() {
-
+		if (location.getNum() + 1 > levelProgress) {
+			levelProgress += 1;
+		}
+		levelLoaded = false;
+		gameRunning = false;
+		parent.changeScreen(Zepr.LEVEL_COMPLETE);
 	}
 
 	public void update(float delta) {
@@ -300,6 +318,8 @@ public class GameManager implements Disposable {
 			return;
 		if (gameCamera == null || batch == null)
 			return;
+		
+		// Check if the player has been killed
 		if (player.getHealth() <= 0) {
 			entities.forEach(e -> e.delete());
 			this.entities.clear();
@@ -308,6 +328,13 @@ public class GameManager implements Disposable {
 			spawnPlayer();
 			loadWave();
 		}
+		
+		// Check if the wave has been completed
+		if (zombies.size() + zombiesToSpawn == 0) {
+			waveComplete();
+		}
+		
+		// Resolve user input
 		handleInput();
 
 		// Re-centre the camera on the player after movement

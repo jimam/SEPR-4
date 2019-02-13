@@ -112,4 +112,14 @@ public class Zombie extends Character {
 	public void endContact() {
 		this.inMeleeRange = false;
 	}
+	
+	@Override
+	public void takeDamage(int damage) {
+		if (health - damage >= 0) {
+    		health -= damage;
+    	} else {
+    		health = 0;
+    		this.alive = false;
+    	}
+	}
 }
