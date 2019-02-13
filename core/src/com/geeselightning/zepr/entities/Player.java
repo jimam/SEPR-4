@@ -142,8 +142,11 @@ public class Player extends Character {
 	@Override
 	public void takeDamage(int dmg) {
 		if (!immune || !Zepr.devMode) {
-			// If powerUpImmunity is activated
-			health -= dmg;
+			if (health - dmg >= 0) {
+	    		health -= dmg;
+	    	} else {
+	    		health = 0;
+	    	}
 		}
 	}
 

@@ -83,6 +83,13 @@ public class Zombie extends Character {
 		Vector2 playerLoc = gameManager.getPlayer().getPos();
 		double angle = Math.toDegrees(Math.atan2(playerLoc.y - b2body.getPosition().y, playerLoc.x - b2body.getPosition().x)) - 90;
 		this.setAngle(angle);
+		
+		if (inMeleeRange && hitRefresh > hitCooldown) {
+			gameManager.getPlayer().takeDamage(this.attackDamage);
+			hitRefresh = 0;
+		} else {
+			hitRefresh += delta;
+		}
 	}
 	
 	/**
