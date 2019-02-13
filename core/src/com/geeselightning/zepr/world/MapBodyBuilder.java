@@ -37,8 +37,6 @@ public class MapBodyBuilder {
 
 	public static Array<Body> buildBodies(TiledMap map, World world) {
 		MapObjects objs = map.getLayers().get("Walls").getObjects();
-		
-		System.out.println("Wall objects: " + objs.getCount());
 
 		Array<Body> bodies = new Array<>();
 
@@ -61,7 +59,6 @@ public class MapBodyBuilder {
 			} else if (o instanceof EllipseMapObject) {
 				shape = getEllipse((EllipseMapObject) o);
 			} else {
-				System.out.println("Ignoring " + o.getClass());
 				return;
 			}
 
@@ -73,8 +70,6 @@ public class MapBodyBuilder {
 			bodies.add(body);
 			shape.dispose();
 		});
-
-		System.out.println("Bodies: " + bodies.size);
 		
 		return bodies;
 	}
@@ -127,15 +122,15 @@ public class MapBodyBuilder {
 	
 	private static ChainShape getEllipse(EllipseMapObject ellipseObject) {
 		Ellipse ellipse = ellipseObject.getEllipse();
-		float width = ellipse.width / Constant.PPT;
-		float height = ellipse.height / Constant.PPT;
-		float x = ellipse.x / Constant.PPT;
-		float y = ellipse.y / Constant.PPT;
+		float width = ellipse.width / (2 * Constant.PPT);
+		float height = ellipse.height / (2 * Constant.PPT);
+		float x = (ellipse.x / Constant.PPT) + width;
+		float y = (ellipse.y / Constant.PPT) + height;
 		ChainShape chainEllipse = new ChainShape();
 		Vector2[] vertices = new Vector2[64];
 		for (int i = 0; i < 64; i++) {
 			float t = (float)(i*2*Math.PI) / 64;
-			vertices[i] = new Vector2((width * (float)Math.cos(t)) + x, (height * (float)Math.sin(t)) + y);
+			vertices[i] = new Vector2((width * (float)Math.cos(t) + x), (height * (float)Math.sin(t) + y));
 		}
 		
 		chainEllipse.createLoop(vertices);
