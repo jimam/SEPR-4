@@ -293,7 +293,6 @@ public class GameManager implements Disposable {
 	public void waveComplete() {
 		System.out.println("Wave complete!");
 		this.waveProgress += 1;
-		//TODO: Spawn powerup
 		
 		if (waveProgress >= waves.get(location).length) {
 			levelComplete();
