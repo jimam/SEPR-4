@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.util.Constant;
+import com.geeselightning.zepr.world.BodyFactory;
 import com.geeselightning.zepr.world.FixtureType;
 
 public class Player extends Character {
@@ -109,21 +110,13 @@ public class Player extends Character {
 		return immune;
 	}
 
-	public void attack(Zombie zombie, float delta) {
-		if (canHitGlobal(zombie, hitRange) && hitRefresh > hitCooldown) {
-			zombie.takeDamage(attackDamage);
-			hitRefresh = 0;
-		} else {
-			hitRefresh += delta;
-		}
-	}
-
 	@Override
 	public void update(float delta) {
 		super.update(delta);
 		// Gives the player the attack texture for 0.1s after an attack.
 		if (attacking && hitRefresh > hitCooldown) {
 			this.sprite.setTexture(attackTexture);
+			zombiesInRange.forEach(z -> z.takeDamage(attackDamage));
 		} else {
 			// Changes the texture back to the main one after 0.1s.
 			this.sprite.setTexture(mainTexture);
@@ -140,10 +133,10 @@ public class Player extends Character {
 	}
 
 	@Override
-	public void takeDamage(int dmg) {
+	public void takeDamage(int damage) {
 		if (!immune || !Zepr.devMode) {
-			if (health - dmg >= 0) {
-	    		health -= dmg;
+			if (health - damage >= 0) {
+	    		health -= damage;
 	    	} else {
 	    		health = 0;
 	    	}
@@ -168,6 +161,8 @@ public class Player extends Character {
 		
 		b2body = world.createBody(bDef);
 		b2body.createFixture(fBodyDef).setUserData(FixtureType.PLAYER);
+		
+		BodyFactory.makeMeleeSensor(b2body, 7, Constant.PLAYERRANGE, 1f);
 		
 		b2body.setUserData(this);
 		b2body.setSleepingAllowed(false);
