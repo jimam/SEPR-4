@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -26,40 +27,42 @@ public class Goose {
 		
 		float startX;
 		float endX;
-		int speed;
+		float speed;
 		Vector2 velocity;
 		Vector2 direction;
 		Vector2 currentPos;
-		public ClickListener clicklistener;
 		boolean isDead;
 		boolean flapping;
 		//TODO: Feels like i should somehow use a sprite batch but i have no idea how to implement one.
 		Sprite sprite;
 		
 		protected Goose() {
-			this.sprite = new Sprite(new Texture("gooseflap1.png"));
+			this.sprite = new Sprite(new Texture("goose.png"));
+			this.sprite.setSize(0.7f,0.7f);
+			this.velocity = new Vector2();
+			this.direction = new Vector2();
+			this.currentPos = new Vector2();
+			this.isDead = false;
+			this.flapping = false;
+			
 			Random rand = new Random();
 			speed = rand.nextInt(5) + 1;
 			//Generates a random start location for the goose
-			startX = rand.nextInt(Gdx.graphics.getWidth()) + 1;
+			startX = rand.nextInt((Gdx.graphics.getWidth()/50 + 1) - Gdx.graphics.getWidth()/100);
 			//generates a random but appropriate end location for the goose
-			if (startX >= Gdx.graphics.getWidth()) {
-				
-				endX = rand.nextInt((Gdx.graphics.getWidth() /2) + 1);
-				
-			} else {
-				
-				endX = rand.nextInt((Gdx.graphics.getWidth() /2)) + Gdx.graphics.getWidth() /2;
-				
+			endX = rand.nextInt(Gdx.graphics.getWidth()/100);
+			if (startX >= 0) {
+				endX = endX * -1;
 				this.sprite.flip(true,false);
-				
 			}
 			
-			direction.x = endX - startX;
-			direction.y = Gdx.graphics.getHeight();
-			velocity.x = (float) (direction.x * speed / Math.sqrt((direction.x * direction.x) + (direction.y *direction.y)));
-			velocity.y = (float) (direction.y * speed / Math.sqrt((direction.x * direction.x) + (direction.y *direction.y)));
-			currentPos = new Vector2(startX,0);
+			direction.x = endX;
+			direction.y = 8;
+			velocity.x = (float) (endX * speed / Math.sqrt((direction.x * direction.x) + 1));
+			velocity.y = direction.y;
+			currentPos = new Vector2(startX,-1 * Gdx.graphics.getHeight()/100);
+			System.out.println("Goose Gen at: " + String.valueOf(startX) + " " + String.valueOf(currentPos.y));
+			System.out.println("Goose outs at: " + String.valueOf(endX));
 		}
 		
 		public boolean checkMouse(Vector2 mousePos) {
@@ -77,19 +80,30 @@ public class Goose {
 		//TODO: maybe add a proper dispose method.
 		public void update(float delta) {
 			this.currentPos.x = this.currentPos.x +  (this.velocity.x * delta);
-			this.currentPos.y = this.currentPos.y +  (this.velocity.y * delta);
-			if ((int)delta % 3 == 0) {
-				flap();
-			}
+			this.currentPos.y = this.currentPos.y + (this.velocity.y * delta);
+			
+//			if ((int)delta % 3 == 0) {
+//				flap();
+//			}
 		}
-		public void flap() {
-			if (flapping) {
-				this.sprite =  new Sprite(new Texture("gooseflap1.png"));
-				flapping = false;
-			} else {
-				this.sprite = new Sprite(new Texture("gooseflap2.png"));
-			}
+		public Sprite getSprite() {
+			return this.sprite;
 		}
+		public void draw(SpriteBatch batch) {
+			
+			sprite.setPosition(this.currentPos.x, this.currentPos.y);
+			sprite.draw(batch);
+		}
+		//animates the sprite.
+//		public void flap() {
+//			if (flapping) {
+//				this.sprite =  new Sprite(new Texture("gooseflap1.png"));
+//				flapping = false;
+//			} else {
+//				this.sprite = new Sprite(new Texture("gooseflap2.png"));
+//			}
+//		}
+//		
 		
 		
 

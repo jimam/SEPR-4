@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
-import com.geeselightning.zepr.levels.Level;
+import com.geeselightning.zepr.world.Level;
 import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.FixtureType;
 

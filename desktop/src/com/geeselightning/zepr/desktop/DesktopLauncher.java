@@ -8,13 +8,10 @@ public class DesktopLauncher {
 	public static void main (String[] args) {
 		boolean devMode = false;
 		for(String arg : args) {
-<<<<<<< HEAD
-			if (arg.equals("-dev")) devMode = true;
-=======
 			if (arg.equals("--dev")) {
 				devMode = true;
 			}
->>>>>>> 502d325b24df704ed61c510aa9901ffe96b61bf1
+
 		}
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.resizable = false;

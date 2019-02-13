@@ -2,6 +2,7 @@ package com.geeselightning.zepr.minigame;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -27,18 +28,20 @@ public class MiniGame {
 	protected int maxAmmo;
 	protected int numGeese;
 	protected int score;
-	protected ArrayList<Goose> geese;
+	public ArrayList<Goose> geese;
 	public KeyboardController miniGameController;
-	public SpriteBatch sprites;
 	public boolean active;
-	protected MiniGame() {
+	
+	public MiniGame() {
 		this.numGeese = 3;
 		this.maxAmmo = 5;
 		this.ammo = this.maxAmmo;
 		this.score = 0;
-		active = false;
+
+		this.miniGameController = new KeyboardController();
+		this.active = true;
 		start();
-		genGeese();
+		
 		
 	}
 	
@@ -52,14 +55,17 @@ public class MiniGame {
 		
 	}
 	protected void start() {
-		//DISPLAY STARTING MESSAGE
+		this.active = true;
+		genGeese();
 	}
 	protected void lose() {
-		//TODO: Implement lose message, switching back to main menu.
-		active = false;
+		//TODO: Implement lose message, switching back to main menu, clean up game.
+		System.out.println("Ammo : " + String.valueOf(ammo));
+		System.out.println("number of geese : " + String.valueOf(geese.size()));
+		this.active = false;
 	}
 	//doesnt actually implement time yet
-	protected void update(float delta) {
+	public void update(float delta) {
 		if (active == true){
 			if (!geese.isEmpty()) {
 				//if no remaining ammo and still geese to kill.
@@ -68,19 +74,20 @@ public class MiniGame {
 				}
 				
 				for(Goose goose : geese ) {
+					
 					//if any goose has 'escaped'
-					if ( goose.currentPos.y == Gdx.graphics.getHeight() ) {
+					if ( goose.currentPos.y > 8) {
 						lose();
 						break;
 						//shooting a goose
 					}else {
-						if ((miniGameController.isMouse1Down) 
+						if ((Gdx.input.isKeyJustPressed(Input.Buttons.LEFT)) 
 								&& (goose.checkMouse(miniGameController.mousePosition))){
-	
+							System.out.println("ammo: " + String.valueOf(this.ammo));
 							ammo = ammo - 1;
 							geese.remove(goose);
-	
-						}else {
+							score = score + 100;
+						}else if ((miniGameController.isMouse1Down)) {
 							ammo = ammo - 1;
 						}
 					}

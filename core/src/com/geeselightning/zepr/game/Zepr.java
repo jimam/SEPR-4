@@ -9,6 +9,7 @@ public class Zepr extends Game {
 	private LoadingScreen loadingScreen;
 	private SelectLevelScreen selectLevelScreen;
 	private GameScreen gameScreen;
+	private MiniGameScreen miniGameScreen;
 	
 	public static boolean devMode;
 
@@ -16,6 +17,7 @@ public class Zepr extends Game {
 	public final static int LOADING = 1;
 	public final static int SELECT = 2;
 	public final static int GAME = 3;
+	public final static int MINIGAME = 4;
 	
 	public Zepr(boolean devMode) {
 		super();
@@ -40,6 +42,11 @@ public class Zepr extends Game {
 			case GAME:
 				if (gameScreen == null) gameScreen = new GameScreen(this);
 				this.setScreen(gameScreen);
+				break;
+			case MINIGAME:
+				if (miniGameScreen == null) miniGameScreen = new MiniGameScreen(this);
+				this.setScreen(miniGameScreen);
+				
 				break;
 		}
 	}

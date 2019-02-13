@@ -27,7 +27,7 @@ import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.Level;
 import com.geeselightning.zepr.world.Wave;
 
-import box2dLight.RayHandler;
+//import box2dLights.RayHandler;
 
 public class GameManager implements Disposable {
 	
@@ -51,7 +51,7 @@ public class GameManager implements Disposable {
 	private World world;
 	private TiledMapRenderer tiledMapRenderer;
 	private Box2DDebugRenderer debugRenderer;
-	private RayHandler rayHandler;
+//	private RayHandler rayHandler;
 	private Player player;
 	private Player.Type playerType;
 	private Level level;
@@ -203,8 +203,8 @@ public class GameManager implements Disposable {
 		
 		debugRenderer = new Box2DDebugRenderer();
 		
-		rayHandler = new RayHandler(world);
-		rayHandler.setAmbientLight(0.7f);
+//		rayHandler = new RayHandler(world);
+//		rayHandler.setAmbientLight(0.7f);
 		
 		level = new Level(parent, location);
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(level.load(), 1 / (float)Constant.PPT);
@@ -339,15 +339,15 @@ public class GameManager implements Disposable {
 		entities.forEach(entity -> entity.draw(batch));
 		batch.end();
 		tiledMapRenderer.render(level.getForegroundLayers());
-		rayHandler.setCombinedMatrix(gameCamera);
-		rayHandler.updateAndRender();
+//		rayHandler.setCombinedMatrix(gameCamera);
+//		rayHandler.updateAndRender();
 		// If dev mode is enabled, show the debug renderer for Box2D
 		if (Zepr.devMode) debugRenderer.render(world, gameCamera.combined);
 	}
 	
 	@Override
 	public void dispose() {
-		rayHandler.dispose();
+//		rayHandler.dispose();
 		debugRenderer.dispose();
 		world.dispose();
 	}
