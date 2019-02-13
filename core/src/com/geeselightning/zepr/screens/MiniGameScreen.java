@@ -2,6 +2,8 @@ package com.geeselightning.zepr.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.geeselightning.zepr.KeyboardController;
@@ -16,16 +18,18 @@ public class MiniGameScreen extends DefaultScreen {
 		private ExtendViewport gamePort;
 		private SpriteBatch batch;
 		private MiniGame miniGame;
-		
+		private Sprite backgroundSprite;
 		public MiniGameScreen(Zepr parent){
 			super(parent);			
 			this.miniGame = new MiniGame();
 			float width = Gdx.graphics.getWidth() / Constant.PPM;
 			float height = Gdx.graphics.getHeight() / Constant.PPM;
-			
+			System.out.println(String.valueOf(Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight()));
 			this.camera = new OrthographicCamera(width, height);
 			this.gamePort = new ExtendViewport(width, height);
 			this.camera.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
+			this.backgroundSprite = new Sprite(new Texture("miniGameBG.png"));
+			this.backgroundSprite.setCenter(0, 0);
 			
 			this.batch = new SpriteBatch();
 			
@@ -44,6 +48,7 @@ public class MiniGameScreen extends DefaultScreen {
 			this.miniGame.update(delta);
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
+			backgroundSprite.draw(batch);
 			for(Goose goose : this.miniGame.geese) {
 				goose.draw(this.batch);
 			}

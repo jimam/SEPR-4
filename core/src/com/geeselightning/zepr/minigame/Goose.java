@@ -48,12 +48,13 @@ public class Goose {
 			Random rand = new Random();
 			speed = rand.nextInt(5) + 1;
 			//Generates a random start location for the goose
-			startX = rand.nextInt((Gdx.graphics.getWidth()/50 + 1) - Gdx.graphics.getWidth()/100);
+			startX = rand.nextInt((Gdx.graphics.getWidth()/50) + 1) - Gdx.graphics.getWidth()/100;
+			this.sprite.setFlip(true,false);
 			//generates a random but appropriate end location for the goose
 			endX = rand.nextInt(Gdx.graphics.getWidth()/100);
-			if (startX >= 0) {
+			if (startX > 0) {
 				endX = endX * -1;
-				this.sprite.flip(true,false);
+				this.sprite.setFlip(false,false);
 			}
 			
 			direction.x = endX;
@@ -82,28 +83,31 @@ public class Goose {
 			this.currentPos.x = this.currentPos.x +  (this.velocity.x * delta);
 			this.currentPos.y = this.currentPos.y + (this.velocity.y * delta);
 			
-//			if ((int)delta % 3 == 0) {
-//				flap();
-//			}
+			if ((int)this.currentPos.y % 4 == 0) {
+				flap();
+			}
 		}
 		public Sprite getSprite() {
 			return this.sprite;
 		}
 		public void draw(SpriteBatch batch) {
-			
+			if (flapping) {
+				this.sprite.setTexture(new Texture("gooseflap.png"));
+			} else {
+				this.sprite.setTexture(new Texture("goose.png"));
+			}
 			sprite.setPosition(this.currentPos.x, this.currentPos.y);
 			sprite.draw(batch);
 		}
 		//animates the sprite.
-//		public void flap() {
-//			if (flapping) {
-//				this.sprite =  new Sprite(new Texture("gooseflap1.png"));
-//				flapping = false;
-//			} else {
-//				this.sprite = new Sprite(new Texture("gooseflap2.png"));
-//			}
-//		}
-//		
+		public void flap() {
+			if (flapping) {	
+				flapping = false;
+			} else {
+				flapping = true;
+			}
+		}
+		
 		
 		
 
