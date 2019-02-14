@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.geeselightning.zepr.entities.PowerUp;
 import com.geeselightning.zepr.game.Zepr;
 
 /**
@@ -33,7 +34,7 @@ public class Hud implements Disposable {
 
 	private Label progressLabel;
 	private Label healthLabel;
-	private Label powerupLabel;
+	private Label powerUpLabel;
 
 	public Hud(Zepr parent) {
 		viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -45,12 +46,12 @@ public class Hud implements Disposable {
 		
 		progressLabel = new Label("Wave 1", skin);
 		healthLabel = new Label("Health: 100HP", skin);
-		powerupLabel = new Label("No powerup", skin);
+		powerUpLabel = new Label("No powerup", skin);
 
 		table.top().left();
 		table.add(progressLabel).pad(10).left().row();
 		table.add(healthLabel).pad(10).left().row();
-		table.add(powerupLabel).pad(10).left();
+		table.add(powerUpLabel).pad(10).left();
 
 		stage.addActor(table);
 	}
@@ -62,6 +63,14 @@ public class Hud implements Disposable {
 
 	public void setHealthLabel(int health) {
 		healthLabel.setText("Health: " + Integer.toString(health) + "HP");
+	}
+	
+	public void setPowerUpLabel(PowerUp.Type type) {
+		if (type != null) {
+			powerUpLabel.setText("Power up available: " + type);
+		} else {
+			powerUpLabel.setText("No powerup");
+		}
 	}
 
 	@Override
