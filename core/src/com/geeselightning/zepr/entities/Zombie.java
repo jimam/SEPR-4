@@ -81,9 +81,14 @@ public class Zombie extends Character {
 		super.update(delta);
 		this.setLinearVelocity(getDirNormVector(gameManager.getPlayer().getPos()).scl(this.speed));
 		
+		//b2body.applyLinearImpulse(getDirNormVector(gameManager.getPlayer().getPos().scl(this.speed)), b2body.getWorldCenter(), true);
+		
 		Vector2 playerLoc = gameManager.getPlayer().getPos();
-		double angle = Math.toDegrees(Math.atan2(playerLoc.y - b2body.getPosition().y, playerLoc.x - b2body.getPosition().x)) - 90;
-		this.setAngle(angle);
+		double angle = (Math.atan2(playerLoc.y - b2body.getPosition().y, playerLoc.x - b2body.getPosition().x)) - 90;
+		
+		//b2body.applyLinearImpulse(new Vector2((float)Math.cos(angle) * - speed, (float)Math.sin(angle) * - speed), b2body.getPosition(), true);
+		
+		this.setAngle(Math.toDegrees(angle));
 		
 		if (inMeleeRange && hitRefresh > hitCooldown) {
 			gameManager.getPlayer().takeDamage(this.attackDamage);
@@ -116,6 +121,10 @@ public class Zombie extends Character {
 	
 	@Override
 	public void takeDamage(int damage) {
+		Vector2 playerPos = gameManager.getPlayer().getPos();
+		Vector2 impulse = getDirNormVector(playerPos);
+		b2body.applyLinearImpulse(5 * b2body.getMass(), 5 * b2body.getMass(), getX(), getY(), true);
+		System.out.println("Take damage called");
 		if (health - damage >= 0) {
     		health -= damage;
     	} else {
