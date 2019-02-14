@@ -25,9 +25,9 @@ public class Zombie extends Character {
 	protected int attackDamage = Constant.ZOMBIEDMG;
 	private int hitRange = Constant.ZOMBIERANGE;
 	private final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
-	private float healthMulti;
-	private float speedMulti;
-	private float damageMulti;
+	private float healthMulti = 1f;
+	private float speedMulti = 1f;
+	private float damageMulti = 1f;
 	
 	public boolean inMeleeRange;
 
@@ -48,6 +48,8 @@ public class Zombie extends Character {
 			healthMulti = Constant.FASTHPMULT;
 			speedMulti = Constant.FASTSPEEDMULT;
 			damageMulti = Constant.FASTDMGMULT;
+			break;
+		default:
 			break;
 		}
 		this.speed = (int) (Constant.ZOMBIESPEED * speedMulti);
