@@ -22,7 +22,7 @@ public class Zombie extends Character {
 		SLOW, MEDIUM, FAST
 	}
 
-	private int attackDamage = Constant.ZOMBIEDMG;
+	protected int attackDamage = Constant.ZOMBIEDMG;
 	private int hitRange = Constant.ZOMBIERANGE;
 	private final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
 	private float healthMulti;
