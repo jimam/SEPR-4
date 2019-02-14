@@ -50,7 +50,11 @@ public class MiniGameScreen extends DefaultScreen {
 			batch.begin();
 			backgroundSprite.draw(batch);
 			for(Goose goose : this.miniGame.geese) {
-				goose.draw(this.batch);
+				if (!goose.isDead) {
+					goose.draw(this.batch);
+				}
+				
+				
 			}
 			batch.end();
 			

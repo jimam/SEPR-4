@@ -31,13 +31,13 @@ public class MiniGame {
 	public ArrayList<Goose> geese;
 	public KeyboardController miniGameController;
 	public boolean active;
-	
+	private float timeSinceLastClick;
 	public MiniGame() {
 		this.numGeese = 3;
 		this.maxAmmo = 5;
 		this.ammo = this.maxAmmo;
 		this.score = 0;
-
+		timeSinceLastClick = 0;
 		this.miniGameController = new KeyboardController();
 		this.active = true;
 		start();
@@ -60,12 +60,12 @@ public class MiniGame {
 	}
 	protected void lose() {
 		//TODO: Implement lose message, switching back to main menu, clean up game.
-		System.out.println("Ammo : " + String.valueOf(ammo));
 		System.out.println("number of geese : " + String.valueOf(geese.size()));
 		this.active = false;
 	}
-	//doesnt actually implement time yet
 	public void update(float delta) {
+		this.timeSinceLastClick = this.timeSinceLastClick + delta;
+		System.out.println(String.valueOf(timeSinceLastClick));
 		if (active == true){
 			if (!geese.isEmpty()) {
 				//if no remaining ammo and still geese to kill.
@@ -79,17 +79,18 @@ public class MiniGame {
 					if ( goose.currentPos.y > 8) {
 						lose();
 						break;
-						//shooting a goose
+					//shooting a goose
 					}else {
-						if ((Gdx.input.isKeyJustPressed(Input.Buttons.LEFT)) 
-								&& (goose.checkMouse(miniGameController.mousePosition))){
-							System.out.println("ammo: " + String.valueOf(this.ammo));
-							ammo = ammo - 1;
-							geese.remove(goose);
-							score = score + 100;
-						}else if ((miniGameController.isMouse1Down)) {
-							ammo = ammo - 1;
+						if (Gdx.input.justTouched() && timeSinceLastClick > 0.009) {
+							if (goose.checkMouse(miniGameController.mousePosition)){
+								goose.die();
+								geese.remove(goose);
+								score = score + 100;
+							}
+								ammo = ammo - 1;	
+								System.out.println("ammo: " + String.valueOf(this.ammo));
 						}
+						timeSinceLastClick = 0;
 					}
 					goose.update(delta);
 						
@@ -108,7 +109,7 @@ public class MiniGame {
 		}
 		ammo = maxAmmo;
 		numGeese = numGeese + 1;
-		
+		this.timeSinceLastClick = 0;
 		genGeese();
 		active = true;
 	}

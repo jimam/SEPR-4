@@ -31,14 +31,14 @@ public class Goose {
 		Vector2 velocity;
 		Vector2 direction;
 		Vector2 currentPos;
-		boolean isDead;
+		public boolean isDead;
 		boolean flapping;
 		//TODO: Feels like i should somehow use a sprite batch but i have no idea how to implement one.
 		Sprite sprite;
 		
 		protected Goose() {
 			this.sprite = new Sprite(new Texture("goose.png"));
-			this.sprite.setSize(0.7f,0.7f);
+			this.sprite.setSize(1f,1f);
 			this.velocity = new Vector2();
 			this.direction = new Vector2();
 			this.currentPos = new Vector2();
@@ -46,7 +46,7 @@ public class Goose {
 			this.flapping = false;
 			
 			Random rand = new Random();
-			speed = rand.nextInt(5) + 1;
+			speed = (rand.nextInt(5) + 1) / 2;
 			//Generates a random start location for the goose
 			startX = rand.nextInt((Gdx.graphics.getWidth()/50) + 1) - Gdx.graphics.getWidth()/100;
 			this.sprite.setFlip(true,false);
@@ -68,12 +68,8 @@ public class Goose {
 		
 		public boolean checkMouse(Vector2 mousePos) {
 			
-			if ((currentPos.x - 10 < mousePos.x) && (mousePos.x < currentPos.x + 10)) {
-				if ((currentPos.y - 10 < mousePos.y) && (mousePos.y < currentPos.y + 10)) {
-					
-					return true;
-				}
-				
+			if (this.sprite.getBoundingRectangle().contains(mousePos)) {
+				return true;
 			}
 			return false;
 		}
@@ -108,6 +104,9 @@ public class Goose {
 			}
 		}
 		
+		public void die() {
+			this.isDead = true;
+		}
 		
 		
 
