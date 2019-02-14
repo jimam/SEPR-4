@@ -26,6 +26,7 @@ import com.geeselightning.zepr.entities.PowerUp;
 import com.geeselightning.zepr.entities.Zombie;
 import com.geeselightning.zepr.stages.Hud;
 import com.geeselightning.zepr.util.Constant;
+import com.geeselightning.zepr.util.RandomEnum;
 import com.geeselightning.zepr.world.Level;
 import com.geeselightning.zepr.world.Wave;
 import com.geeselightning.zepr.world.WorldContactListener;
@@ -72,6 +73,9 @@ public class GameManager implements Disposable {
 	private ArrayList<Entity> entities;
 	private ArrayList<Zombie> zombies;
 	private ArrayList<PowerUp> powerUps;
+
+	private static RandomEnum<PowerUp.Type> randomPowerUpType = new RandomEnum<PowerUp.Type>(PowerUp.Type.class);
+	private static RandomEnum<Zombie.Type> randomZombieType = new RandomEnum<Zombie.Type>(Zombie.Type.class);
 
 	private GameManager(Zepr parent) {
 		this.parent = parent;
@@ -192,6 +196,16 @@ public class GameManager implements Disposable {
 		this.zombies.remove(zombie);
 		this.entities.remove(zombie);
 	}
+	
+	public void addPowerUp(PowerUp powerUp) {
+		this.powerUps.add(powerUp);
+		this.entities.add(powerUp);
+	}
+	
+	public void removePowerUp(PowerUp powerUp) {
+		this.powerUps.remove(powerUp);
+		this.entities.remove(powerUp);
+	}
 
 	/**
 	 * Gets the mouse position in screen coordinates (origin top-left).
@@ -242,7 +256,7 @@ public class GameManager implements Disposable {
 		levelLoaded = true;
 
 		loadWave();
-		
+
 		System.out.println("Finished level loading");
 	}
 
@@ -271,6 +285,13 @@ public class GameManager implements Disposable {
 		hud.setProgressLabel(waveProgress + 1, zombiesToSpawn);
 		spawnCooldown = 0;
 		System.out.println("Zombies to spawn: " + zombiesToSpawn);
+		
+		if (waveProgress > 0) {
+			PowerUp powerUp = new PowerUp(parent, 0.2f, level.getPlayerSpawn(), 0, randomPowerUpType.getRandom());
+			powerUp.defineBody();
+			addPowerUp(powerUp);
+		}
+		
 		System.out.println("Finished wave loading");
 	}
 
@@ -279,7 +300,7 @@ public class GameManager implements Disposable {
 			List<Vector2> zombieSpawns = level.getZombieSpawns();
 			zombieSpawns.forEach(sp -> {
 				Zombie zombie = new Zombie(parent, new Sprite(new Texture("zombie01.png")), 0.3f, sp, 0,
-						Zombie.Type.MEDIUM);
+						randomZombieType.getRandom());
 				zombie.defineBody();
 				addZombie(zombie);
 				zombiesToSpawn -= 1;
@@ -293,7 +314,7 @@ public class GameManager implements Disposable {
 	public void waveComplete() {
 		System.out.println("Wave complete!");
 		this.waveProgress += 1;
-		
+
 		if (waveProgress >= waves.get(location).length) {
 			levelComplete();
 		} else {
@@ -317,7 +338,7 @@ public class GameManager implements Disposable {
 			return;
 		if (gameCamera == null || batch == null)
 			return;
-		
+
 		// Check if the player has been killed
 		if (player.getHealth() <= 0) {
 			entities.forEach(e -> e.delete());
@@ -327,12 +348,12 @@ public class GameManager implements Disposable {
 			spawnPlayer();
 			loadWave();
 		}
-		
+
 		// Check if the wave has been completed
 		if (zombies.size() + zombiesToSpawn == 0) {
 			waveComplete();
 		}
-		
+
 		// Resolve user input
 		handleInput();
 
@@ -363,6 +384,12 @@ public class GameManager implements Disposable {
 
 		hud.setProgressLabel(waveProgress + 1, zombies.size() + zombiesToSpawn);
 		hud.setHealthLabel(player.getHealth());
+		
+		if (powerUps.size() > 0) {
+			hud.setPowerUpLabel(powerUps.get(0).getType());
+		} else {
+			hud.setPowerUpLabel(null);
+		}
 
 		draw();
 
@@ -376,7 +403,14 @@ public class GameManager implements Disposable {
 	 */
 	public void handleInput() {
 
+		float modifier = 1f;
 		float speed = player.getSpeed();
+
+		if (player.isPowerUpActive(PowerUp.Type.SPEED)) {
+			modifier = 2f;
+		}
+
+		speed *= modifier;
 
 		if (controller.left) {
 			player.setLinearVelocityX(-1 * speed);

@@ -40,9 +40,9 @@ public final class Constant {
 	public static final float FASTDMGMULT = 1;
 
 	public static final int HEALUP = 30;
-	public static final int SPEEDUP = 50;
 	public static final float SPEEDUPTIME = 10;
 	public static final float IMMUNITYTIME = 5;
 	public static final float ATKUPTIME = 10;
+	public static final float RPDFIRETIME = 10;
 	
 }
