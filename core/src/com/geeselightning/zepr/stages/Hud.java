@@ -21,8 +21,6 @@ import com.geeselightning.zepr.game.Zepr;
  */
 public class Hud implements Disposable {
 
-	private Zepr parent;
-
 	public Stage stage;
 	private ExtendViewport viewport;
 

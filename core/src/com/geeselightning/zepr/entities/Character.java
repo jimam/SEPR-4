@@ -41,8 +41,6 @@ public abstract class Character extends Entity {
      * @return bearing   double in degrees of the bearing from the character to the coordinate
      */
     public double getDirectionTo(Vector2 coordinate) {
-        Vector2 charCenter = this.b2body.getPosition();
-
         return(Math.toDegrees(Math.atan2((coordinate.x - getX()), (coordinate.y - getY()))));
     }
 

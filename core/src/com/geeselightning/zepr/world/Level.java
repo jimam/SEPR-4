@@ -35,7 +35,6 @@ public class Level {
 		}
 	}
 	
-	private Zepr parent;
 	private GameManager gameManager;
 	
 	private Location location;
@@ -47,7 +46,6 @@ public class Level {
 	private List<Vector2> zombieSpawnPoints;
 
 	public Level(Zepr parent, Location location) {
-		this.parent = parent;
 		this.location = location;
 		this.gameManager = GameManager.getInstance(parent);
 		zombieSpawnPoints = new ArrayList<>();

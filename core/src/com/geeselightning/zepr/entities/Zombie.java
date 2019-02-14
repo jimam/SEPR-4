@@ -2,13 +2,13 @@ package com.geeselightning.zepr.entities;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.FixtureType;
+import com.geeselightning.zepr.world.WorldContactListener;
 
 /**
  * A hostile computer-controlled character that will pursue and attempt to harm the player.
@@ -23,7 +23,6 @@ public class Zombie extends Character {
 	}
 
 	protected int attackDamage = Constant.ZOMBIEDMG;
-	private int hitRange = Constant.ZOMBIERANGE;
 	private final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
 	private float healthMulti = 1f;
 	private float speedMulti = 1f;
