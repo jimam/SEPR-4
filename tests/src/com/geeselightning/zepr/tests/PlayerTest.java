@@ -2,9 +2,9 @@ package com.geeselightning.zepr.tests;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.geeselightning.zepr.Constant;
 import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.Zombie;
+import com.geeselightning.zepr.util.Constant;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

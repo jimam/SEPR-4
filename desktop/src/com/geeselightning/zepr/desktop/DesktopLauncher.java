@@ -2,14 +2,20 @@ package com.geeselightning.zepr.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.geeselightning.zepr.Zepr;
+import com.geeselightning.zepr.game.Zepr;
 
 public class DesktopLauncher {
-	public static void main (String[] arg) {
+	public static void main (String[] args) {
+		boolean devMode = false;
+		for(String arg : args) {
+			if (arg.equals("--dev")) {
+				devMode = true;
+			}
+		}
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.resizable = false;
 		config.width = 1280;
 		config.height = 720;
-		new LwjglApplication(new Zepr(), config);
+		new LwjglApplication(new Zepr(devMode), config);
 	}
 }

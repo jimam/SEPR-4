@@ -1,118 +1,208 @@
 package com.geeselightning.zepr.entities;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.geeselightning.zepr.Constant;
-import com.geeselightning.zepr.levels.Level;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.geeselightning.zepr.game.Zepr;
+import com.geeselightning.zepr.util.Constant;
+import com.geeselightning.zepr.world.BodyFactory;
+import com.geeselightning.zepr.world.FixtureType;
+import com.geeselightning.zepr.world.WorldContactListener;
 
 public class Player extends Character {
 
-    private static final Player instance = new Player(new Sprite(new Texture("player01.png")), new Vector2(0, 0));
-    int attackDamage = Constant.PLAYERDMG;
-    int hitRange = Constant.PLAYERRANGE;
-    final float hitCooldown =  Constant.PLAYERHITCOOLDOWN;
-    Texture mainTexture;
-    Texture attackTexture;
-    public boolean attack = false;
-    float HPMult;
-    float dmgMult;
-    float speedMult;
-    String playertype;
-    public boolean isImmune;
+	public enum Type {
 
+		NERDY("player01.png", "player01_attack.png", 1.5f, 1.0f, 1.0f),
+		SPORTY("player02.png", "player02_attack.png", 1.0f, 1.0f, 1.5f),
+		HEAVY("player03.png", "player03_attack.png", 1.0f, 1.5f, 1.0f);
 
-    private Player(Sprite sprite, Vector2 playerSpawn) {
-        super(sprite, playerSpawn, null);
-    }
+		String normalTextureName;
+		String attackTextureName;
+		float healthMultiplier;
+		float damageMultiplier;
+		float speedMultiplier;
 
-    public static Player getInstance(){
-        return instance;
-    }
+		Type(String normalTextureName, String attackTextureName, float healthMultiplier, float damageMultiplier,
+				float speedMultiplier) {
+			this.normalTextureName = normalTextureName;
+			this.attackTextureName = attackTextureName;
+			this.healthMultiplier = healthMultiplier;
+			this.damageMultiplier = damageMultiplier;
+			this.speedMultiplier = speedMultiplier;
+		}
+	}
 
-    public void setType(String playertype){
-        this.playertype = playertype;
-    }
+	private Type type;
 
-    public String getType() {
-        return playertype;
-    }
+	private boolean attacking;
 
+	private int attackDamage = Constant.PLAYERDMG;
+	private int hitRange = Constant.PLAYERRANGE;
+	private float hitCooldown = Constant.PLAYERHITCOOLDOWN;
+	private Texture mainTexture;
+	private Texture attackTexture;
 
-    public void attack(Zombie zombie, float delta) {
-        if (canHitGlobal(zombie, hitRange) && hitRefresh > hitCooldown) {
-            zombie.takeDamage(attackDamage);
-            hitRefresh = 0;
-        } else {
-            hitRefresh += delta;
-        }
-    }
+	/**
+	 * Contains the zombies currently in range and in front of the player that will
+	 * be damaged when the attack ability is used.
+	 */
+	private Set<Zombie> zombiesInRange;
 
-    public void respawn(Vector2 playerSpawn, Level level){
-        setX(playerSpawn.x);
-        setY(playerSpawn.y);
-        if (playertype == "nerdy"){
-            dmgMult = Constant.NERDYDMGMULT;
-            HPMult = Constant.NERDYHPMULT;
-            speedMult = Constant.NERDYSPEEDMULT;
-        }
-        else if (playertype == "sporty"){
-            dmgMult = Constant.SPORTYDMGMULT;
-            HPMult = Constant.SPORTYHPMULT;
-            speedMult = Constant.SPORTYSPEEDMULT;
-        }
-        else if (playertype == null){
-            dmgMult =1;
-            HPMult = 1;
-            speedMult = 1;
-        }
-        this.attackDamage = (int)(Constant.PLAYERDMG * dmgMult);
-        this.speed = (int)(Constant.PLAYERSPEED * speedMult);
-        this.health = (int)(HPMult * Constant.PLAYERMAXHP);
-        this.currentLevel = level;
+	/**
+	 * Contains the power-ups currently active on the player. Float represents the
+	 * seconds until the effect expires.
+	 */
+	private ConcurrentHashMap<PowerUp.Type, Float> activePowerUps;
 
-        if (playertype == "nerdy") {
-            mainTexture = new Texture("player01.png");
-            attackTexture = new Texture("player01_attack.png");
-            this.setTexture(mainTexture);
-        } else {
-            // playertype == sporty
-            mainTexture = new Texture("player02.png");
-            attackTexture = new Texture("player02_attack.png");
-            this.setTexture(mainTexture);
-        }
-    }
+	public Player(Zepr parent, float bRadius, Vector2 initialPos, float initialRot, Type type) {
+		super(parent, new Sprite(new Texture(type.normalTextureName)), bRadius, initialPos, initialRot);
+		this.type = type;
+		this.attackDamage = (int) (Constant.PLAYERDMG * type.damageMultiplier);
+		this.speed = (int) (Constant.PLAYERSPEED * type.speedMultiplier);
+		this.health = (int) (Constant.PLAYERMAXHP * type.healthMultiplier);
 
-    @Override
-    public void update(float delta) {
-        super.update(delta);
+		mainTexture = new Texture(type.normalTextureName);
+		attackTexture = new Texture(type.attackTextureName);
+		this.sprite.setTexture(mainTexture);
 
-        // Update the direction the player is facing.
-        direction = getDirectionTo(currentLevel.getMouseWorldCoordinates());
+		this.zombiesInRange = new HashSet<>();
+		this.activePowerUps = new ConcurrentHashMap<>();
+	}
 
+	/* Accessor methods */
 
-        // When you die, end the level.
-        if (health <= 0) {
-            currentLevel.gameOver();
-        }
+	public Player.Type getType() {
+		return type;
+	}
 
-        // Gives the player the attack texture for 0.1s after an attack.
-        //if (hitRefresh <= 0.1 && getTexture() != attackTexture) {
-        if (attack) {
-            this.setTexture(attackTexture);
-        } else {
-        // Changes the texture back to the main one after 0.1s.
-        //if (hitRefresh > 0.1 && getTexture() == attackTexture) {
-            this.setTexture(mainTexture);
-        }
-    }
+	public void setAttacking(boolean attacking) {
+		this.attacking = attacking;
+	}
 
-    @Override
-    public void takeDamage(int dmg){
-        if(!isImmune){
-            //If powerUpImmunity is activated
-            health -= dmg;
-        }
-    }
+	public boolean isAttacking() {
+		return attacking;
+	}
+
+	public boolean isPowerUpActive(PowerUp.Type type) {
+		return activePowerUps.containsKey(type);
+	}
+
+	@Override
+	public void update(float delta) {
+		super.update(delta);
+
+		if (isPowerUpActive(PowerUp.Type.HEAL)) {
+			if (getHealth() + Constant.HEALUP < type.healthMultiplier * Constant.PLAYERMAXHP) {
+				this.health += Constant.HEALUP;
+			} else {
+				this.health += type.healthMultiplier * Constant.PLAYERMAXHP;
+			}
+		}
+
+		for (Map.Entry<PowerUp.Type, Float> entry : activePowerUps.entrySet()) {
+			if (entry.getValue() > 0) {
+				activePowerUps.put(entry.getKey(), entry.getValue() - delta);
+			} else {
+				activePowerUps.remove(entry.getKey());
+			}
+		}
+
+		if (attacking && hitRefresh > hitCooldown) {
+			this.sprite.setTexture(attackTexture);
+			final int damage = isPowerUpActive(PowerUp.Type.STRENGTH) ? attackDamage * 2 : attackDamage;
+			zombiesInRange.forEach(z -> z.takeDamage(damage));
+			hitRefresh = (isPowerUpActive(PowerUp.Type.RAPID_FIRE)) ? hitCooldown / 2 : 0;
+		} else {
+			this.sprite.setTexture(mainTexture);
+			hitRefresh += delta;
+		}
+	}
+
+	@Override
+	public void draw(SpriteBatch batch) {
+		Vector2 mousePos = gameManager.getMouseWorldPos();
+		double angle = Math
+				.toDegrees(Math.atan2(mousePos.y - b2body.getPosition().y, mousePos.x - b2body.getPosition().x));
+		this.setAngle((float) (angle - 90));
+		super.draw(batch);
+	}
+
+	@Override
+	public void takeDamage(int damage) {
+		if (isPowerUpActive(PowerUp.Type.IMMUNITY) || Zepr.devMode) {
+			return;
+		} else {
+			if (health - damage >= 0) {
+				health -= damage;
+			} else {
+				health = 0;
+			}
+		}
+	}
+
+	@Override
+	public void defineBody() {
+		BodyDef bDef = new BodyDef();
+		bDef.type = BodyDef.BodyType.DynamicBody;
+		if (initialPos != null) {
+			bDef.position.set(initialPos);
+		} else {
+			bDef.position.set(Vector2.Zero);
+		}
+		bDef.angle = (float) Math.toRadians(initialRot);
+
+		FixtureDef fBodyDef = new FixtureDef();
+		CircleShape shape = new CircleShape();
+		shape.setRadius(this.bRadius);
+		fBodyDef.shape = shape;
+
+		b2body = world.createBody(bDef);
+		b2body.createFixture(fBodyDef).setUserData(FixtureType.PLAYER);
+
+		BodyFactory.makeMeleeSensor(b2body, 7, hitRange, 1f);
+
+		b2body.setUserData(this);
+		b2body.setSleepingAllowed(false);
+		shape.dispose();
+	}
+
+	/**
+	 * Called by {@link WorldContactListener} when the player touches a power-up.
+	 * 
+	 * @param powerUp
+	 */
+	public void onPickup(PowerUp powerUp) {
+		activePowerUps.put(powerUp.getType(), powerUp.getDuration());
+	}
+
+	/**
+	 * Called by {@link WorldContactListener} when a zombie enters the player's
+	 * melee range.
+	 * 
+	 * @param zombie the zombie that has entered range
+	 */
+	public void onMeleeRangeEntered(Zombie zombie) {
+		this.zombiesInRange.add(zombie);
+	}
+
+	/**
+	 * Called by {@link WorldContactListener} when a zombie leaves the player's
+	 * melee range
+	 * 
+	 * @param zombie the zombie that has left range
+	 */
+	public void onMeleeRangeLeft(Zombie zombie) {
+		this.zombiesInRange.remove(zombie);
+	}
 
 }

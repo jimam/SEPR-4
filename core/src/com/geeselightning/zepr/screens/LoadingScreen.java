@@ -1,28 +1,16 @@
 package com.geeselightning.zepr.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.geeselightning.zepr.Zepr;
+import com.geeselightning.zepr.game.Zepr;
 
-public class LoadingScreen implements Screen {
+public class LoadingScreen extends DefaultScreen {
 
-    private Zepr parent;
-
-    public LoadingScreen(Zepr zepr) {
-        parent = zepr;
+    public LoadingScreen(Zepr parent) {
+        super(parent);
     }
 
     @Override
     public void show() {
         // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void render(float delta) {
-        // Clears the screen to black.
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
-        // Changes to the menu screen.
-        parent.changeScreen(Zepr.MENU);
     }
 
     @Override
