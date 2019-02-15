@@ -1,15 +1,19 @@
 package com.geeselightning.zepr.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.geeselightning.zepr.KeyboardController;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.minigame.Goose;
 import com.geeselightning.zepr.minigame.MiniGame;
+//import com.geeselightning.zepr.minigame.ShapeRenderer;
 import com.geeselightning.zepr.util.Constant;
 
 public class MiniGameScreen extends DefaultScreen {
@@ -19,6 +23,10 @@ public class MiniGameScreen extends DefaultScreen {
 		private SpriteBatch batch;
 		private MiniGame miniGame;
 		private Sprite backgroundSprite;
+		
+		//DEBUG
+		private com.badlogic.gdx.graphics.glutils.ShapeRenderer shapeRenderer;
+		
 		public MiniGameScreen(Zepr parent){
 			super(parent);			
 			this.miniGame = new MiniGame();
@@ -30,7 +38,7 @@ public class MiniGameScreen extends DefaultScreen {
 			this.camera.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 			this.backgroundSprite = new Sprite(new Texture("miniGameBG.png"));
 			this.backgroundSprite.setCenter(0, 0);
-			
+			shapeRenderer = new com.badlogic.gdx.graphics.glutils.ShapeRenderer();
 			this.batch = new SpriteBatch();
 			
 		}
@@ -57,6 +65,22 @@ public class MiniGameScreen extends DefaultScreen {
 				
 			}
 			batch.end();
+			//DEBUG BEGINS
+			shapeRenderer.setProjectionMatrix(camera.combined);
+			shapeRenderer.begin(ShapeType.Line);
+			
+		       shapeRenderer.setColor(Color.RED);
+		       for (Goose goose : this.miniGame.geese) {
+		    	   shapeRenderer.rect(goose.currentPos.x - 0.5f , goose.currentPos.y - 0.5f, 2, 2);
+		       }
+		       shapeRenderer.end();
+		       shapeRenderer.begin(ShapeType.Line);
+		       shapeRenderer.setColor(Color.RED);
+		       for (Goose goose : this.miniGame.geese) {
+		    	   shapeRenderer.line(new Vector2(0,0),goose.currentPos);
+		       }
+		       shapeRenderer.end();
+		    //DEBUG ENDS
 			
 		}
 		

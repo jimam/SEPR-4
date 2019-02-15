@@ -11,6 +11,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -30,9 +31,10 @@ public class Goose {
 		float speed;
 		Vector2 velocity;
 		Vector2 direction;
-		Vector2 currentPos;
+		public Vector2 currentPos;
 		public boolean isDead;
 		boolean flapping;
+		public Rectangle bounds;
 		//TODO: Feels like i should somehow use a sprite batch but i have no idea how to implement one.
 		Sprite sprite;
 		
@@ -45,12 +47,15 @@ public class Goose {
 			this.isDead = false;
 			this.flapping = false;
 			
-			Random rand = new Random();
-			speed = (rand.nextInt(5) + 1) / 2;
+			
+			//TODO: Changing speed changes trajectory of the geese.
+			speed = 1;
 			//Generates a random start location for the goose
+			Random rand = new Random();
 			startX = rand.nextInt((Gdx.graphics.getWidth()/50) + 1) - Gdx.graphics.getWidth()/100;
 			this.sprite.setFlip(true,false);
 			//generates a random but appropriate end location for the goose
+			
 			endX = rand.nextInt(Gdx.graphics.getWidth()/100);
 			if (startX > 0) {
 				endX = endX * -1;
@@ -62,15 +67,17 @@ public class Goose {
 			velocity.x = (float) (endX * speed / Math.sqrt((direction.x * direction.x) + 1));
 			velocity.y = direction.y;
 			currentPos = new Vector2(startX,-1 * Gdx.graphics.getHeight()/100);
-			System.out.println("Goose Gen at: " + String.valueOf(startX) + " " + String.valueOf(currentPos.y));
+			this.bounds = new Rectangle(currentPos.x - 0.5f ,currentPos.y - 0.5f, 2, 2);
 			System.out.println("Goose outs at: " + String.valueOf(endX));
 		}
 		
 		public boolean checkMouse(Vector2 mousePos) {
 			
-			if (this.sprite.getBoundingRectangle().contains(mousePos)) {
+			
+			if (bounds.contains(mousePos)) {
 				return true;
 			}
+			
 			return false;
 		}
 		
@@ -78,7 +85,7 @@ public class Goose {
 		public void update(float delta) {
 			this.currentPos.x = this.currentPos.x +  (this.velocity.x * delta);
 			this.currentPos.y = this.currentPos.y + (this.velocity.y * delta);
-			
+			this.bounds = new Rectangle(currentPos.x - 0.5f ,currentPos.y - 0.5f, 2, 2);
 			if ((int)this.currentPos.y % 4 == 0) {
 				flap();
 			}

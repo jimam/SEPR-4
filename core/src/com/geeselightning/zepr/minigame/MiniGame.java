@@ -32,6 +32,10 @@ public class MiniGame {
 	public KeyboardController miniGameController;
 	public boolean active;
 	private float timeSinceLastClick;
+	
+	
+	
+	
 	public MiniGame() {
 		this.numGeese = 3;
 		this.maxAmmo = 5;
@@ -62,11 +66,13 @@ public class MiniGame {
 		//TODO: Implement lose message, switching back to main menu, clean up game.
 		System.out.println("number of geese : " + String.valueOf(geese.size()));
 		this.active = false;
+
 	}
 	public void update(float delta) {
+		
 		this.timeSinceLastClick = this.timeSinceLastClick + delta;
 		System.out.println(String.valueOf(timeSinceLastClick));
-		if (active == true){
+		if (active){
 			if (!geese.isEmpty()) {
 				//if no remaining ammo and still geese to kill.
 				if (ammo < 1) {
@@ -82,10 +88,11 @@ public class MiniGame {
 					//shooting a goose
 					}else {
 						if (Gdx.input.justTouched() && timeSinceLastClick > 0.009) {
-							if (goose.checkMouse(miniGameController.mousePosition)){
+							if (goose.checkMouse(goose.currentPos) && !goose.isDead){
 								goose.die();
-								geese.remove(goose);
+//								geese.remove(goose);
 								score = score + 100;
+								System.out.println("HIT");
 							}
 								ammo = ammo - 1;	
 								System.out.println("ammo: " + String.valueOf(this.ammo));
@@ -93,7 +100,7 @@ public class MiniGame {
 						timeSinceLastClick = 0;
 					}
 					goose.update(delta);
-						
+					
 				}
 			}else {
 				nextWave();
