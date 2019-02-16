@@ -1,5 +1,8 @@
 package com.geeselightning.zepr.minigame;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Random;
+import java.util.Timer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -25,43 +28,32 @@ import com.geeselightning.zepr.screens.TextScreen;
 public class MiniGame {
 		
 	public int ammo;
-	protected int maxAmmo;
-	protected int numGeese;
 	public int score;
-	public  ArrayList<Goose> geese;
 	public KeyboardController miniGameController;
+	public int wave;
 	public boolean active;
 	private float timeSinceLastClick;
 	public int waveNumber;
-	
+	public Calendar timeGetter;
+	public Goose[] geese;
+	public Goose goose;
+	public Random rand;
 	public MiniGame() {
-		this.numGeese = 3;
-		this.maxAmmo = 5;
-		this.ammo = this.maxAmmo;
+
+		this.ammo = 3;
 		this.score = 0;
-		timeSinceLastClick = 0;
+		this.wave = 1;
 		this.miniGameController = new KeyboardController();
+		this.timeSinceLastClick = 0;
+		this.timeGetter = Calendar.getInstance();
+		this.goose = new Goose(1/10);
+		this.rand = new Random();
 		start();
 		
 		
 	}
 	
-	protected void genGeese() {
-
-		geese.clear();
-		geese = new ArrayList<Goose>();
-		for (int i = 0; i < this.numGeese; i++ ) {
-			geese.add(new Goose());
-			
-		}
-		
-	}
 	protected void start() {
-		geese = new ArrayList<Goose>();
-		for (int i = 0; i < this.numGeese; i++ ) {
-			geese.add(new Goose());
-			
-		}
 		this.active = true;
 	}
 	protected void lose() {
@@ -76,55 +68,50 @@ public class MiniGame {
 		this.timeSinceLastClick = this.timeSinceLastClick + delta;
 		
 		if (active){
-			if (!geese.isEmpty()) {
-				//if no remaining ammo and still geese to kill.
-				if (ammo < 1) {
-					lose();
-				}
+			
+			if (ammo > 0) {
+				this.goose.update(delta);
 				
-				for(Goose goose : geese ) {
-					goose.update(delta);
-					//if any goose has 'escaped'
-					if ( goose.currentPos.y > 360) {
-						lose();
-						break;
-					
-					}else {
-						//On Click
-						if (Gdx.input.justTouched() && timeSinceLastClick > 0.009) {
-							if (goose.checkMouse() && !goose.isDead){
-								goose.die();
-								score = score + 100;
-								System.out.println("HIT");
-								System.out.println("number of geese : " + String.valueOf(geese.size()));
-//								geese.remove(goose);
-							}
-								ammo = ammo - 1;	
-								System.out.println("ammo: " + String.valueOf(this.ammo));
-						}
-						timeSinceLastClick = 0;
-						
-					}			
-				}
 			}else {
-				nextWave();
-				
+				lose();
 			}
-		}
+			if (rand.nextInt(100) > 85) {
+				goose.changeDirection();
+			}
+			//if any goose has 'escaped'
+			goose.update(delta);
+			if ( goose.currentPos.y > 360) {
+				lose();
+			}else {
+				//On Click
+				if (Gdx.input.justTouched() && timeSinceLastClick > 0.009) {
+					if (goose.checkMouse() && !goose.isDead){
+						goose.die();
+						score = score + 100;
+						System.out.println("HIT");
+						nextWave();
+					}
+					ammo = ammo - 1;	
+					System.out.println("ammo: " + String.valueOf(this.ammo));
+				}
+				timeSinceLastClick = 0;
+			}	
+		}						
+					
+		
 	}
 	private void nextWave() {
 		//TODO: Add text for next wave, wait in between waves
 		active = false;
-		if (maxAmmo < 10) {
-			maxAmmo = maxAmmo + 1;
-		}
-		ammo = maxAmmo;
-		if (numGeese < 14) {
-			numGeese = numGeese + 1;
-		}
+		ammo = 3;
+		wave = wave + 1;
 		this.timeSinceLastClick = 0;
-		genGeese();
 		active = true;
+		if (wave < 10) {
+			this.goose = new Goose(wave/10);
+		} else {
+			this.goose = new Goose(0.5f);
+		}
 	}
 	
 }

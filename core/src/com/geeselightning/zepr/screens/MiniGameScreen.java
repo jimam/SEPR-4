@@ -1,6 +1,7 @@
 package com.geeselightning.zepr.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,6 +30,7 @@ public class MiniGameScreen extends DefaultScreen {
 		private Sprite backgroundSprite;
 		private Label scoreLabel;
 		private Label ammoLabel;
+		private Label waveLabel;
 		//DEBUG
 		private com.badlogic.gdx.graphics.glutils.ShapeRenderer shapeRenderer;
 		
@@ -37,14 +39,17 @@ public class MiniGameScreen extends DefaultScreen {
 			this.miniGame = new MiniGame();
 			float width = Gdx.graphics.getWidth();
 			float height = Gdx.graphics.getHeight();
-			System.out.println(String.valueOf(Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight()));
+
 			this.camera = new OrthographicCamera(width, height);
 			this.gamePort = new ExtendViewport(width, height);
 			this.camera.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
+			
 			this.backgroundSprite = new Sprite(new Texture("miniGameBG.png"));
 			this.backgroundSprite.setCenter(0, 0);
-			shapeRenderer = new com.badlogic.gdx.graphics.glutils.ShapeRenderer();
 			this.batch = new SpriteBatch();
+			
+			shapeRenderer = new com.badlogic.gdx.graphics.glutils.ShapeRenderer();
+			
 			
 			
 		}
@@ -58,49 +63,49 @@ public class MiniGameScreen extends DefaultScreen {
 			ammoLabel = new Label("Ammo : ", skin);
 			ammoLabel.setPosition(-600, 250);
 			ammoLabel.toFront();
+			waveLabel = new Label("Round : ",skin);
+			waveLabel.setPosition(-600, 200);
+			waveLabel.toFront();
 		}
 
 		@Override
 		public void render(float delta) {
 			super.render(delta);
 			if (this.miniGame.active == false) {
-				parent.changeScreen(Zepr.SELECT);
+				quit();
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+				quit();
 			}
 			this.miniGame.update(delta);
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
 			backgroundSprite.draw(batch);
-			for(Goose goose : this.miniGame.geese) {
-				if (!goose.isDead) {
-					goose.draw(this.batch);
-				}
-				
-				
+			if (!miniGame.goose.isDead) {
+				miniGame.goose.draw(this.batch);
 			}
+			this.scoreLabel.setText("Score:   " + String.valueOf(miniGame.score));
+			this.ammoLabel.setText("Ammo: " + String.valueOf(miniGame.ammo));
+			this.waveLabel.setText("Round: " + String.valueOf(miniGame.wave));
 			this.scoreLabel.draw(batch, 1f);
 			this.ammoLabel.draw(batch, 1f);
+			this.waveLabel.draw(batch, 1f);
 			batch.end();
 			//DEBUG BEGINS
 			shapeRenderer.setProjectionMatrix(camera.combined);
 			shapeRenderer.begin(ShapeType.Line);
-			
-		       shapeRenderer.setColor(Color.RED);
-
-		       for (Goose goose : this.miniGame.geese) {
-		    	   shapeRenderer.rect(goose.getSprite().getX(),goose.getSprite().getY(),goose.getSprite().getWidth(),goose.getSprite().getHeight());
-		    	   
-		       }
-		       shapeRenderer.end();
-		       shapeRenderer.begin(ShapeType.Line);
-		       shapeRenderer.setColor(Color.RED);
-		       for (Goose goose : this.miniGame.geese) {
-		    	   shapeRenderer.line(new Vector2(0,0),goose.currentPos);
-		       }
-		       
-		       shapeRenderer.end();
+		    shapeRenderer.setColor(Color.RED);  
+		    //BOX AROUND GOOSE
+		    shapeRenderer.rect(miniGame.goose.getSprite().getX(),miniGame.goose.getSprite().getY(),
+		    miniGame.goose.getSprite().getWidth(),miniGame.goose.getSprite().getHeight());   
+		    shapeRenderer.end();
+		    //LINE TO GOOSE
+		    shapeRenderer.begin(ShapeType.Line);
+		    shapeRenderer.setColor(Color.RED);   
+		    shapeRenderer.line(new Vector2(0,0),miniGame.goose.currentPos);
+		    shapeRenderer.end();
 		    //DEBUG ENDS
-			this.scoreLabel.setText("Score:   " + String.valueOf(miniGame.score));
-			this.ammoLabel.setText("Ammo: " + String.valueOf(miniGame.ammo));
+			
 		}
 		
 		@Override
@@ -129,6 +134,11 @@ public class MiniGameScreen extends DefaultScreen {
 		@Override
 		public void dispose() {
 			batch.dispose();
+		}
+		public void quit() {
+			this.dispose();
+			parent.changeScreen(Zepr.SELECT);
+			
 		}
 }
 

@@ -28,27 +28,28 @@ public class Goose {
 		
 		float startX;
 		float endX;
-		float speed;
+		public float speed;
 		Vector2 velocity;
 
 		public Vector2 currentPos;
 		public boolean isDead;
 		boolean flapping;
 		public Rectangle bounds;
+		
 		//TODO: Feels like i should somehow use a sprite batch but i have no idea how to implement one.
 		Sprite sprite;
-		protected Goose() {
+		protected Goose(float speed) {
 			this.sprite = new Sprite(new Texture("goose.png"));
 			this.velocity = new Vector2();
 			this.currentPos = new Vector2();
 			this.isDead = false;
 			this.flapping = false;
-			
+			this.speed = speed + 0.1f;
 			
 			
 			Random rand = new Random();
 			//Generates a random start location for the goose
-			startX = rand.nextInt((Gdx.graphics.getWidth() + 1) - Gdx.graphics.getWidth()/2);
+			startX = rand.nextInt((Gdx.graphics.getWidth() + 1)) - Gdx.graphics.getWidth() /2;
 			this.sprite.setFlip(true,false);
 			//generates a random but appropriate end location for the goose
 			
@@ -76,8 +77,8 @@ public class Goose {
 		}
 		
 		public void update(float delta) {
-			this.currentPos.x = this.currentPos.x +  (this.velocity.x * delta * 0.3f);
-			this.currentPos.y = this.currentPos.y + (this.velocity.y * delta * 0.3f);
+			this.currentPos.x = this.currentPos.x +  (this.velocity.x * delta * speed);
+			this.currentPos.y = this.currentPos.y + (this.velocity.y * delta * speed);
 			if ((int)this.currentPos.y % 4 == 0) {
 				flap();
 			}
@@ -107,6 +108,18 @@ public class Goose {
 				this.isDead = true;
 				System.out.println("Goose has died");
 			
+		}
+		
+		public void changeDirection() {
+			System.out.println("Changed Direction");
+			Random rand = new Random();
+			endX = rand.nextInt((Gdx.graphics.getWidth() + 1) - Gdx.graphics.getWidth()/2);
+			this.sprite.setFlip(true, false);
+			if (currentPos.x > 0) {
+				endX = endX * -1;
+				this.sprite.setFlip(false,false);
+			}
+			velocity.x = endX - currentPos.x;
 		}
 		
 		
