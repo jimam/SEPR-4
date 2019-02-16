@@ -25,6 +25,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.geeselightning.zepr.KeyboardController;
 import com.geeselightning.zepr.screens.TextScreen;
+
+/**
+ * 
+ * @author ljd546
+ *
+ */
 public class MiniGame {
 		
 	public int ammo;
@@ -34,36 +40,37 @@ public class MiniGame {
 	public boolean active;
 	private float timeSinceLastClick;
 	public int waveNumber;
+	public long startTime;
 
-	public Goose[] geese;
 	public Goose goose;
 	public Random rand;
+	
 	public MiniGame() {
-
+		
+		this.miniGameController = new KeyboardController();
+		//initialises game variables
 		this.ammo = 3;
 		this.score = 0;
 		this.wave = 1;
-		this.miniGameController = new KeyboardController();
-		this.timeSinceLastClick = 0;
 		this.goose = new Goose(1/10);
+		//initialises other necessary variables
+		this.timeSinceLastClick = 0;
 		this.rand = new Random();
+		this.startTime = System.currentTimeMillis();
 		start();
 		
 		
 	}
-	
+	/*
+	 * Activates the game
+	 */
 	protected void start() {
 		this.active = true;
 	}
-	protected void lose() {
-		//TODO: Implement lose message, clean up game.
-		nextWave();
-		//this.active = false;
-
-	}
+	
 	public void update(float delta) {
 		
-		//adds a delay on the click
+		//implements a delay on click
 		this.timeSinceLastClick = this.timeSinceLastClick + delta;
 		
 		if (active){
@@ -72,7 +79,7 @@ public class MiniGame {
 				this.goose.update(delta);
 				
 			}else {
-				lose();
+				nextWave();
 			}
 			if (rand.nextInt(100) > 90) {
 				goose.changeDirection();
@@ -80,13 +87,15 @@ public class MiniGame {
 			//if any goose has 'escaped'
 			goose.update(delta);
 			if ( goose.currentPos.y > 360) {
-				lose();
+				nextWave();
 			}else {
 				//On Click
 				if (Gdx.input.justTouched() && timeSinceLastClick > 0.009) {
 					if (goose.checkMouse() && !goose.isDead){
 						goose.die();
-						score = score + 100;
+						
+						//Score is added based on the time it took to click the goose.
+						score = score +(100 - (int)(System.currentTimeMillis()- this.startTime)/100);
 						System.out.println("HIT");
 						nextWave();
 					}
@@ -99,8 +108,11 @@ public class MiniGame {
 					
 		
 	}
+	/*
+	 * updates the wave to make the geese move faster. Changes all other values to their initial states.
+	 */
 	private void nextWave() {
-		//TODO: Add text for next wave, wait in between waves
+		this.startTime = System.currentTimeMillis();
 		active = false;
 		ammo = 3;
 		wave = wave + 1;
