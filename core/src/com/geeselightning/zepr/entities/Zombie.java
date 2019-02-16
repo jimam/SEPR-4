@@ -24,11 +24,17 @@ public class Zombie extends Character {
 
 	protected int attackDamage = Constant.ZOMBIEDMG;
 	private final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
-	private float healthMulti = 1f;
-	private float speedMulti = 1f;
-	private float damageMulti = 1f;
+	private float healthMulti;
+	private float speedMulti;
+	private float damageMulti;
 	
+	/**
+	 * Whether or not the zombie is in range of the player - used to determine whether the zombie
+	 * should attack the player.
+	 */
 	public boolean inMeleeRange;
+	
+	public float stunTimer;
 
 	public Zombie(Zepr parent, Sprite sprite, float bRadius, Vector2 initialPos, float initialRot, Type type) {
 		super(parent, sprite, bRadius, initialPos, initialRot);
@@ -66,6 +72,7 @@ public class Zombie extends Character {
 		CircleShape shape = new CircleShape();
 		shape.setRadius(this.bRadius);
 		fBodyDef.shape = shape;
+		fBodyDef.density = 9;
 		
 		b2body = world.createBody(bDef);
 		b2body.createFixture(fBodyDef).setUserData(FixtureType.ZOMBIE);
@@ -73,22 +80,35 @@ public class Zombie extends Character {
 		b2body.setUserData(this);
 		shape.dispose();
 		
-		b2body.setLinearDamping(5.0f);
+		b2body.setLinearDamping(5f);
+		b2body.setAngularDamping(5f);
 	}
 
+	/**
+	 * The original attack function checked for the distance to the player each update cycle and,
+	 * if the cooldown for attacking was finished and the player was within range, would apply 
+	 * damage. Using box2d, an event will be generated whenever the zombie collides with a player, 
+	 * making the job easier. The zombie now attacks when in enters melee range of the player.
+	 */
+	
 	@Override
 	public void update(float delta) {
 		super.update(delta);
-		this.setLinearVelocity(getDirNormVector(gameManager.getPlayer().getPos()).scl(this.speed));
 		
-		//b2body.applyLinearImpulse(getDirNormVector(gameManager.getPlayer().getPos().scl(this.speed)), b2body.getWorldCenter(), true);
+		if (stunTimer > 0) {
+			stunTimer -= delta;
+			return;
+		}
 		
-		Vector2 playerLoc = gameManager.getPlayer().getPos();
-		double angle = (Math.atan2(playerLoc.y - b2body.getPosition().y, playerLoc.x - b2body.getPosition().x)) - 90;
+		Player player = gameManager.getPlayer();
 		
-		//b2body.applyLinearImpulse(new Vector2((float)Math.cos(angle) * - speed, (float)Math.sin(angle) * - speed), b2body.getPosition(), true);
+		Vector2 playerVector = getVectorTo(player);
 		
-		this.setAngle(Math.toDegrees(angle));
+		b2body.applyLinearImpulse(playerVector.nor(), getPos(), true);
+		
+		double angle = Math.toDegrees(Math.atan2(playerVector.y, playerVector.x)) - 90;
+		
+		this.setAngle(angle);
 		
 		if (inMeleeRange && hitRefresh > hitCooldown) {
 			gameManager.getPlayer().takeDamage(this.attackDamage);
@@ -97,13 +117,6 @@ public class Zombie extends Character {
 			hitRefresh += delta;
 		}
 	}
-	
-	/**
-	 * The original attack function checked for the distance to the player each update cycle and,
-	 * if the cooldown for attacking was finished, would apply damage. Using box2d, an event will
-	 * be generated whenever the zombie collides with a player, making the job easier. The zombie
-	 * now attacks when in enters melee range of the player.
-	 */
 	
 	/**
 	 * Called by {@link WorldContactListener} when the player is in contact.
@@ -121,10 +134,13 @@ public class Zombie extends Character {
 	
 	@Override
 	public void takeDamage(int damage) {
-		Vector2 playerPos = gameManager.getPlayer().getPos();
-		Vector2 impulse = getDirNormVector(playerPos);
-		b2body.applyLinearImpulse(5 * b2body.getMass(), 5 * b2body.getMass(), getX(), getY(), true);
-		System.out.println("Take damage called");
+		Player player = gameManager.getPlayer();
+		Vector2 impulse = getVectorTo(player);
+
+		b2body.applyLinearImpulse(impulse.scl(-10f), getPos(), true);
+		
+		stunTimer = 0.5f;
+		
 		if (health - damage >= 0) {
     		health -= damage;
     	} else {

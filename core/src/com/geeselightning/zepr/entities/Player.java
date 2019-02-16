@@ -105,7 +105,7 @@ public class Player extends Character {
 			if (getHealth() + Constant.HEALUP < type.healthMultiplier * Constant.PLAYERMAXHP) {
 				this.health += Constant.HEALUP;
 			} else {
-				this.health += type.healthMultiplier * Constant.PLAYERMAXHP;
+				this.health = (int) (type.healthMultiplier * Constant.PLAYERMAXHP);
 			}
 		}
 
@@ -139,6 +139,7 @@ public class Player extends Character {
 
 	@Override
 	public void takeDamage(int damage) {
+		// If dev mode is active or the player has the immunity power-up, don't apply damage.
 		if (isPowerUpActive(PowerUp.Type.IMMUNITY) || Zepr.devMode) {
 			return;
 		} else {
@@ -165,6 +166,7 @@ public class Player extends Character {
 		CircleShape shape = new CircleShape();
 		shape.setRadius(this.bRadius);
 		fBodyDef.shape = shape;
+		fBodyDef.density = 9;
 
 		b2body = world.createBody(bDef);
 		b2body.createFixture(fBodyDef).setUserData(FixtureType.PLAYER);
