@@ -4,10 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.geeselightning.zepr.KeyboardController;
 import com.geeselightning.zepr.game.Zepr;
@@ -23,7 +27,8 @@ public class MiniGameScreen extends DefaultScreen {
 		private SpriteBatch batch;
 		private MiniGame miniGame;
 		private Sprite backgroundSprite;
-		
+		private Label scoreLabel;
+		private Label ammoLabel;
 		//DEBUG
 		private com.badlogic.gdx.graphics.glutils.ShapeRenderer shapeRenderer;
 		
@@ -41,10 +46,18 @@ public class MiniGameScreen extends DefaultScreen {
 			shapeRenderer = new com.badlogic.gdx.graphics.glutils.ShapeRenderer();
 			this.batch = new SpriteBatch();
 			
+			
 		}
 		
 		public void show() {
+			Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
 			Gdx.input.setInputProcessor(this.miniGame.miniGameController);
+			scoreLabel = new Label("Score : ", skin);
+			scoreLabel.setPosition(-600, 300);
+			scoreLabel.toFront();
+			ammoLabel = new Label("Ammo : ", skin);
+			ammoLabel.setPosition(-600, 250);
+			ammoLabel.toFront();
 		}
 
 		@Override
@@ -64,6 +77,8 @@ public class MiniGameScreen extends DefaultScreen {
 				
 				
 			}
+			this.scoreLabel.draw(batch, 1f);
+			this.ammoLabel.draw(batch, 1f);
 			batch.end();
 			//DEBUG BEGINS
 			shapeRenderer.setProjectionMatrix(camera.combined);
@@ -84,7 +99,8 @@ public class MiniGameScreen extends DefaultScreen {
 		       
 		       shapeRenderer.end();
 		    //DEBUG ENDS
-			
+			this.scoreLabel.setText("Score:   " + String.valueOf(miniGame.score));
+			this.ammoLabel.setText("Ammo: " + String.valueOf(miniGame.ammo));
 		}
 		
 		@Override

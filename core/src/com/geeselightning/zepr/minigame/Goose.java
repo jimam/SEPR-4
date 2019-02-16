@@ -37,7 +37,6 @@ public class Goose {
 		public Rectangle bounds;
 		//TODO: Feels like i should somehow use a sprite batch but i have no idea how to implement one.
 		Sprite sprite;
-		
 		protected Goose() {
 			this.sprite = new Sprite(new Texture("goose.png"));
 			this.velocity = new Vector2();
@@ -46,21 +45,21 @@ public class Goose {
 			this.flapping = false;
 			
 			
-			//Generates a random start location for the goose
+			
 			Random rand = new Random();
-			speed = rand.nextInt(10) + 1;
-			startX = rand.nextInt((Gdx.graphics.getWidth()/2 + 1) - Gdx.graphics.getWidth()/2);
+			//Generates a random start location for the goose
+			startX = rand.nextInt((Gdx.graphics.getWidth() + 1) - Gdx.graphics.getWidth()/2);
 			this.sprite.setFlip(true,false);
 			//generates a random but appropriate end location for the goose
 			
-			endX = rand.nextInt(Gdx.graphics.getWidth()/2);
+			endX = rand.nextInt((Gdx.graphics.getWidth() + 1) - Gdx.graphics.getWidth()/2);
 			if (startX > 0) {
 				endX = endX * -1;
 				this.sprite.setFlip(false,false);
 			}
-			
-			velocity.x = endX - startX;
-			velocity.y = 360;
+			//Definining initial velocity, initial goose positions
+			velocity.x = (endX - startX);
+			velocity.y = 720;
 			currentPos = new Vector2(startX,-1 * Gdx.graphics.getHeight() /2 );
 			System.out.println("Goose outs at: " + String.valueOf(endX));
 		}
@@ -76,11 +75,9 @@ public class Goose {
 			return false;
 		}
 		
-		
-		//TODO: maybe add a proper dispose method.
 		public void update(float delta) {
-			this.currentPos.x = this.currentPos.x +  (this.velocity.x * delta);
-			this.currentPos.y = this.currentPos.y + (this.velocity.y * delta);
+			this.currentPos.x = this.currentPos.x +  (this.velocity.x * delta * 0.3f);
+			this.currentPos.y = this.currentPos.y + (this.velocity.y * delta * 0.3f);
 			if ((int)this.currentPos.y % 4 == 0) {
 				flap();
 			}
@@ -107,8 +104,9 @@ public class Goose {
 		}
 		
 		public void die() {
-			this.isDead = true;
-			System.out.println("Goose has died");
+				this.isDead = true;
+				System.out.println("Goose has died");
+			
 		}
 		
 		

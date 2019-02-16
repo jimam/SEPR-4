@@ -24,17 +24,15 @@ import com.geeselightning.zepr.KeyboardController;
 import com.geeselightning.zepr.screens.TextScreen;
 public class MiniGame {
 		
-	protected int ammo;
+	public int ammo;
 	protected int maxAmmo;
 	protected int numGeese;
-	protected int score;
-	public ArrayList<Goose> geese;
+	public int score;
+	public  ArrayList<Goose> geese;
 	public KeyboardController miniGameController;
 	public boolean active;
 	private float timeSinceLastClick;
-	
-	
-	
+	public int waveNumber;
 	
 	public MiniGame() {
 		this.numGeese = 3;
@@ -43,14 +41,14 @@ public class MiniGame {
 		this.score = 0;
 		timeSinceLastClick = 0;
 		this.miniGameController = new KeyboardController();
-		this.active = true;
 		start();
 		
 		
 	}
 	
 	protected void genGeese() {
-		
+
+		geese.clear();
 		geese = new ArrayList<Goose>();
 		for (int i = 0; i < this.numGeese; i++ ) {
 			geese.add(new Goose());
@@ -59,30 +57,36 @@ public class MiniGame {
 		
 	}
 	protected void start() {
+		geese = new ArrayList<Goose>();
+		for (int i = 0; i < this.numGeese; i++ ) {
+			geese.add(new Goose());
+			
+		}
 		this.active = true;
-		genGeese();
 	}
-//	protected void lose() {
-//		//TODO: Implement lose message, clean up game.
-//		this.active = false;
-//
-//	}
+	protected void lose() {
+		//TODO: Implement lose message, clean up game.
+		nextWave();
+		//this.active = false;
+
+	}
 	public void update(float delta) {
 		
+		//adds a delay on the click
 		this.timeSinceLastClick = this.timeSinceLastClick + delta;
 		
 		if (active){
 			if (!geese.isEmpty()) {
 				//if no remaining ammo and still geese to kill.
 				if (ammo < 1) {
-//					lose();
+					lose();
 				}
 				
 				for(Goose goose : geese ) {
 					goose.update(delta);
 					//if any goose has 'escaped'
-					if ( goose.currentPos.y > 640) {
-//						lose();
+					if ( goose.currentPos.y > 360) {
+						lose();
 						break;
 					
 					}else {
@@ -99,6 +103,7 @@ public class MiniGame {
 								System.out.println("ammo: " + String.valueOf(this.ammo));
 						}
 						timeSinceLastClick = 0;
+						
 					}			
 				}
 			}else {
@@ -114,7 +119,9 @@ public class MiniGame {
 			maxAmmo = maxAmmo + 1;
 		}
 		ammo = maxAmmo;
-		numGeese = numGeese + 1;
+		if (numGeese < 14) {
+			numGeese = numGeese + 1;
+		}
 		this.timeSinceLastClick = 0;
 		genGeese();
 		active = true;
