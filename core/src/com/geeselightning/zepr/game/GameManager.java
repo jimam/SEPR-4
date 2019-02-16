@@ -93,7 +93,10 @@ public class GameManager implements Disposable {
 
 		waves.put(Level.Location.TOWN, new Wave[] { Wave.SMALL, Wave.MEDIUM });
 		waves.put(Level.Location.HALIFAX, new Wave[] { Wave.SMALL, Wave.MEDIUM });
-		waves.put(Level.Location.COURTYARD, new Wave[] { Wave.MEDIUM, Wave.LARGE, Wave.MINIBOSS });
+		waves.put(Level.Location.CENTRALHALL, new Wave[] { Wave.MEDIUM, Wave.LARGE, Wave.MINIBOSS });
+		waves.put(Level.Location.COURTYARD, new Wave[] { Wave.MEDIUM, Wave.LARGE, Wave.MEDIUM });
+		waves.put(Level.Location.LIBRARY, new Wave[] { Wave.SMALL, Wave.MEDIUM, Wave.MEDIUM });
+		waves.put(Level.Location.RONCOOKE, new Wave[] { Wave.LARGE, Wave.LARGE, Wave.BOSS });
 	}
 
 	public static GameManager getInstance(Zepr parent) {

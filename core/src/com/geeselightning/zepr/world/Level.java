@@ -18,7 +18,10 @@ public class Level {
 	public enum Location {
 		TOWN("Town", "townmap", 0),
 		HALIFAX("Halifax College", "halifaxmap", 1),
-		COURTYARD("Courtyard", "courtyard", 2);
+		CENTRALHALL("Central Hall", "centralhallmap", 2),
+		COURTYARD("Courtyard", "courtyard", 3),
+		LIBRARY("Library", "library", 4),
+		RONCOOKE("Ron Cooke Hub", "roncooke", 5);
 		
 		String name;
 		String mapFileName;

@@ -27,11 +27,18 @@ public class SelectLevelScreen extends DefaultScreen {
 	
 	private TextButton town;
 	private TextButton halifax;
+	private TextButton centralHall;
 	private TextButton courtyard;
+	private TextButton library;
+	private TextButton ronCooke;
+	
 	
 	private final String townDescription = "You wake up hungover in town to discover there is a zombie apocalypse.";
-	private final String halifaxDescription = "You need to get your laptop with the work on it from your accomodation.";
+	private final String halifaxDescription = "You need to get your laptop with the work on it from your accommodation.";
+	private final String centralHallDescription = "For no readily apparent reason, you decide central hall would be a nice place to relax.";
 	private final String courtyardDescription = "You should go to Courtyard and get some breakfast.";
+	private final String libraryDescription = "Surely no zombie would dare defile the sacred silent space of the library? Yeah, right.";
+	private final String ronCookeDescription = "Are you going to allow a little zombie plague to stop you getting all 9250 pounds worth of your education? Time for lectures.";
 	
 	private GameManager gameManager;
 
@@ -60,7 +67,10 @@ public class SelectLevelScreen extends DefaultScreen {
 		/* Level selection buttons */
 		town = new TextButton("Town", skin);
 		halifax = new TextButton("Halifax", skin);
+		centralHall = new TextButton("Central Hall", skin);
 		courtyard = new TextButton("Courtyard", skin);
+		library = new TextButton("Library", skin);
+		ronCooke = new TextButton("Ron Cooke", skin);
 
 		/* Character selection buttons */
 		TextButton nerdy = new TextButton("Nerdy", skin);
@@ -115,7 +125,10 @@ public class SelectLevelScreen extends DefaultScreen {
 		stageSelect.row().pad(50, 0, 100, 0);
 		stageSelect.add(town).pad(10);
 		stageSelect.add(halifax).pad(10);
+		stageSelect.add(centralHall).pad(10).row();
 		stageSelect.add(courtyard).pad(10);
+		stageSelect.add(library).pad(10);
+		stageSelect.add(ronCooke).pad(10);
 
 		stageSelect.row();
 		stageSelect.add(stageDescription).width(1000f).colspan(3);
@@ -267,9 +280,26 @@ public class SelectLevelScreen extends DefaultScreen {
 		}
 
 		/**
-		 * Defines action for the courtyard level selection button.
+		 * Defines action for the central hall level selection button.
 		 */
 		if (gameManager.getLevelProgress() < 2) {
+			disabledButtonStyle(centralHall);
+		} else {
+			enabledButtonStyle(centralHall);
+			centralHall.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					stageDescription.setText(centralHallDescription);
+					gameManager.setLocation(Level.Location.CENTRALHALL);
+					levelSet = true;
+				}
+			});
+		}
+		
+		/**
+		 * Defines action for the courtyard level selection button.
+		 */
+		if (gameManager.getLevelProgress() < 3) {
 			disabledButtonStyle(courtyard);
 		} else {
 			enabledButtonStyle(courtyard);
@@ -283,6 +313,41 @@ public class SelectLevelScreen extends DefaultScreen {
 				}
 			});
 		}
+		
+		/**
+		 * Defines action for the library level selection button.
+		 */
+		if (gameManager.getLevelProgress() < 4) {
+			disabledButtonStyle(library);
+		} else {
+			enabledButtonStyle(library);
+			library.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					stageDescription.setText(libraryDescription);
+					gameManager.setLocation(Level.Location.LIBRARY);
+					levelSet = true;
+				}
+			});
+		}
+		
+		/**
+		 * Defines action for the Ron Cooke level selection button.
+		 */
+		if (gameManager.getLevelProgress() < 5) {
+			disabledButtonStyle(ronCooke);
+		} else {
+			enabledButtonStyle(ronCooke);
+			ronCooke.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					stageDescription.setText(ronCookeDescription);
+					gameManager.setLocation(Level.Location.RONCOOKE);
+					levelSet = true;
+				}
+			});
+		}
+		
 	}
 	
 	private void disabledButtonStyle(TextButton button) {
