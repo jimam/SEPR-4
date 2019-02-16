@@ -30,8 +30,8 @@ public class MiniGameScreen extends DefaultScreen {
 		public MiniGameScreen(Zepr parent){
 			super(parent);			
 			this.miniGame = new MiniGame();
-			float width = Gdx.graphics.getWidth() / Constant.PPM;
-			float height = Gdx.graphics.getHeight() / Constant.PPM;
+			float width = Gdx.graphics.getWidth();
+			float height = Gdx.graphics.getHeight();
 			System.out.println(String.valueOf(Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight()));
 			this.camera = new OrthographicCamera(width, height);
 			this.gamePort = new ExtendViewport(width, height);
@@ -70,8 +70,10 @@ public class MiniGameScreen extends DefaultScreen {
 			shapeRenderer.begin(ShapeType.Line);
 			
 		       shapeRenderer.setColor(Color.RED);
+
 		       for (Goose goose : this.miniGame.geese) {
-		    	   shapeRenderer.rect(goose.currentPos.x - 0.5f , goose.currentPos.y - 0.5f, 2, 2);
+		    	   shapeRenderer.rect(goose.getSprite().getX(),goose.getSprite().getY(),goose.getSprite().getWidth(),goose.getSprite().getHeight());
+		    	   
 		       }
 		       shapeRenderer.end();
 		       shapeRenderer.begin(ShapeType.Line);
@@ -79,6 +81,7 @@ public class MiniGameScreen extends DefaultScreen {
 		       for (Goose goose : this.miniGame.geese) {
 		    	   shapeRenderer.line(new Vector2(0,0),goose.currentPos);
 		       }
+		       
 		       shapeRenderer.end();
 		    //DEBUG ENDS
 			

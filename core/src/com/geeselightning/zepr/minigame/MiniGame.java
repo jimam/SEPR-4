@@ -62,45 +62,44 @@ public class MiniGame {
 		this.active = true;
 		genGeese();
 	}
-	protected void lose() {
-		//TODO: Implement lose message, switching back to main menu, clean up game.
-		System.out.println("number of geese : " + String.valueOf(geese.size()));
-		this.active = false;
-
-	}
+//	protected void lose() {
+//		//TODO: Implement lose message, clean up game.
+//		this.active = false;
+//
+//	}
 	public void update(float delta) {
 		
 		this.timeSinceLastClick = this.timeSinceLastClick + delta;
-		System.out.println(String.valueOf(timeSinceLastClick));
+		
 		if (active){
 			if (!geese.isEmpty()) {
 				//if no remaining ammo and still geese to kill.
 				if (ammo < 1) {
-					lose();
+//					lose();
 				}
 				
 				for(Goose goose : geese ) {
-					
+					goose.update(delta);
 					//if any goose has 'escaped'
-					if ( goose.currentPos.y > 8) {
-						lose();
+					if ( goose.currentPos.y > 640) {
+//						lose();
 						break;
-					//shooting a goose
+					
 					}else {
+						//On Click
 						if (Gdx.input.justTouched() && timeSinceLastClick > 0.009) {
-							if (goose.checkMouse(goose.currentPos) && !goose.isDead){
+							if (goose.checkMouse() && !goose.isDead){
 								goose.die();
-//								geese.remove(goose);
 								score = score + 100;
 								System.out.println("HIT");
+								System.out.println("number of geese : " + String.valueOf(geese.size()));
+//								geese.remove(goose);
 							}
 								ammo = ammo - 1;	
 								System.out.println("ammo: " + String.valueOf(this.ammo));
 						}
 						timeSinceLastClick = 0;
-					}
-					goose.update(delta);
-					
+					}			
 				}
 			}else {
 				nextWave();

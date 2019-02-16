@@ -30,7 +30,7 @@ public class Goose {
 		float endX;
 		float speed;
 		Vector2 velocity;
-		Vector2 direction;
+
 		public Vector2 currentPos;
 		public boolean isDead;
 		boolean flapping;
@@ -40,52 +40,47 @@ public class Goose {
 		
 		protected Goose() {
 			this.sprite = new Sprite(new Texture("goose.png"));
-			this.sprite.setSize(1f,1f);
 			this.velocity = new Vector2();
-			this.direction = new Vector2();
 			this.currentPos = new Vector2();
 			this.isDead = false;
 			this.flapping = false;
 			
 			
-			//TODO: Changing speed changes trajectory of the geese.
-			speed = 1;
 			//Generates a random start location for the goose
 			Random rand = new Random();
-			startX = rand.nextInt((Gdx.graphics.getWidth()/50) + 1) - Gdx.graphics.getWidth()/100;
+			speed = rand.nextInt(10) + 1;
+			startX = rand.nextInt((Gdx.graphics.getWidth()/2 + 1) - Gdx.graphics.getWidth()/2);
 			this.sprite.setFlip(true,false);
 			//generates a random but appropriate end location for the goose
 			
-			endX = rand.nextInt(Gdx.graphics.getWidth()/100);
+			endX = rand.nextInt(Gdx.graphics.getWidth()/2);
 			if (startX > 0) {
 				endX = endX * -1;
 				this.sprite.setFlip(false,false);
 			}
 			
-			direction.x = endX;
-			direction.y = 8;
-			velocity.x = (float) (endX * speed / Math.sqrt((direction.x * direction.x) + 1));
-			velocity.y = direction.y;
-			currentPos = new Vector2(startX,-1 * Gdx.graphics.getHeight()/100);
-			this.bounds = new Rectangle(currentPos.x - 0.5f ,currentPos.y - 0.5f, 2, 2);
+			velocity.x = endX - startX;
+			velocity.y = 360;
+			currentPos = new Vector2(startX,-1 * Gdx.graphics.getHeight() /2 );
 			System.out.println("Goose outs at: " + String.valueOf(endX));
 		}
 		
-		public boolean checkMouse(Vector2 mousePos) {
+		public boolean checkMouse() {
 			
-			
-			if (bounds.contains(mousePos)) {
+			Rectangle bounds = new Rectangle(this.getSprite().getX(),this.getSprite().getY(),this.getSprite().getWidth(),this.getSprite().getHeight());
+			if (bounds.contains(new Vector2(Gdx.input.getX() - 640,-1 * Gdx.input.getY() + 350))) {
+				System.out.println("True");
 				return true;
 			}
 			
 			return false;
 		}
 		
+		
 		//TODO: maybe add a proper dispose method.
 		public void update(float delta) {
 			this.currentPos.x = this.currentPos.x +  (this.velocity.x * delta);
 			this.currentPos.y = this.currentPos.y + (this.velocity.y * delta);
-			this.bounds = new Rectangle(currentPos.x - 0.5f ,currentPos.y - 0.5f, 2, 2);
 			if ((int)this.currentPos.y % 4 == 0) {
 				flap();
 			}
@@ -113,6 +108,7 @@ public class Goose {
 		
 		public void die() {
 			this.isDead = true;
+			System.out.println("Goose has died");
 		}
 		
 		
