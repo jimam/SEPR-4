@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -34,14 +35,20 @@ import com.geeselightning.zepr.world.WorldContactListener;
 import box2dLight.RayHandler;
 
 /**
- * Coordinator for the main game logic and rendering.
+ * Coordinator for the main game logic and rendering. <br/>
+ * Changes:
+ * <ul>
+ * <li>implemented class for game coordination</li>
+ * </ul>
  * 
- * @author Xzytl Changes: implemented
+ * @author Xzytl
  */
 public class GameManager implements Disposable {
 
 	private final Zepr parent;
 	public static GameManager instance;
+
+	private Preferences prefs;
 
 	private boolean gameRunning = false;
 	private boolean levelLoaded = false;
@@ -81,6 +88,8 @@ public class GameManager implements Disposable {
 		this.parent = parent;
 
 		controller = new KeyboardController();
+		
+		prefs = Gdx.app.getPreferences("ZEPR Preferences");
 
 		waves.put(Level.Location.TOWN, new Wave[] { Wave.SMALL, Wave.MEDIUM });
 		waves.put(Level.Location.HALIFAX, new Wave[] { Wave.SMALL, Wave.MEDIUM });
@@ -95,6 +104,10 @@ public class GameManager implements Disposable {
 	}
 
 	/* Accessor methods */
+	public Preferences getPrefs() {
+		return prefs;
+	}
+	
 	public boolean isGameRunning() {
 		return gameRunning;
 	}
@@ -196,12 +209,12 @@ public class GameManager implements Disposable {
 		this.zombies.remove(zombie);
 		this.entities.remove(zombie);
 	}
-	
+
 	public void addPowerUp(PowerUp powerUp) {
 		this.powerUps.add(powerUp);
 		this.entities.add(powerUp);
 	}
-	
+
 	public void removePowerUp(PowerUp powerUp) {
 		this.powerUps.remove(powerUp);
 		this.entities.remove(powerUp);
@@ -285,13 +298,13 @@ public class GameManager implements Disposable {
 		hud.setProgressLabel(waveProgress + 1, zombiesToSpawn);
 		spawnCooldown = 0;
 		System.out.println("Zombies to spawn: " + zombiesToSpawn);
-		
+
 		if (waveProgress > 0) {
 			PowerUp powerUp = new PowerUp(parent, 0.2f, level.getPlayerSpawn(), 0, randomPowerUpType.getRandom());
 			powerUp.defineBody();
 			addPowerUp(powerUp);
 		}
-		
+
 		System.out.println("Finished wave loading");
 	}
 
@@ -384,7 +397,7 @@ public class GameManager implements Disposable {
 
 		hud.setProgressLabel(waveProgress + 1, zombies.size() + zombiesToSpawn);
 		hud.setHealthLabel(player.getHealth());
-		
+
 		if (powerUps.size() > 0) {
 			hud.setPowerUpLabel(powerUps.get(0).getType());
 		} else {
