@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
+import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -25,6 +28,8 @@ import com.geeselightning.zepr.entities.Entity;
 import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.PowerUp;
 import com.geeselightning.zepr.entities.Zombie;
+import com.geeselightning.zepr.pathfinding.ManhattanDistanceHeuristic;
+import com.geeselightning.zepr.pathfinding.TileNode;
 import com.geeselightning.zepr.stages.Hud;
 import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.util.RandomEnum;
@@ -73,6 +78,7 @@ public class GameManager implements Disposable {
 	private Player.Type playerType;
 	private Level level;
 	private Level.Location location;
+	private IndexedAStarPathFinder<TileNode> pathFinder;
 	private int waveProgress = 0;
 	private int zombiesToSpawn = 0;
 	private float spawnCooldown = 0;
@@ -240,6 +246,9 @@ public class GameManager implements Disposable {
 		return mousePos;
 	}
 
+	/**
+	 * Loads a level from a Tiled map. The level loaded is dependent on the location variable.
+	 */
 	public void loadLevel() {
 		System.out.println("Beginning level loading...");
 		world = new World(Vector2.Zero, true);
@@ -253,6 +262,8 @@ public class GameManager implements Disposable {
 		level = new Level(parent, location);
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(level.load(), 1 / (float) Constant.PPT);
 		tiledMapRenderer.setView(gameCamera);
+		
+		pathFinder = new IndexedAStarPathFinder<TileNode>(level, true);
 
 		hud = new Hud(parent);
 
@@ -273,14 +284,20 @@ public class GameManager implements Disposable {
 		System.out.println("Finished level loading");
 	}
 
+	/**
+	 * Creates the player instance, creates the body, and adds it to the entity list.
+	 */
 	public void spawnPlayer() {
 		player = new Player(parent, 0.3f, level.getPlayerSpawn(), 0f, playerType);
 		player.defineBody();
 		addEntity(player);
 	}
 
+	/**
+	 * Loads wave-specific variables, primarily the number of zombies to spawn per spawn location,
+	 * and handles spawning of power-ups.
+	 */
 	public void loadWave() {
-		System.out.println("Beginning wave loading...");
 		List<Vector2> zombieSpawns = level.getZombieSpawns();
 		switch (getWave(this.location, waveProgress)) {
 		case LARGE:
@@ -297,7 +314,6 @@ public class GameManager implements Disposable {
 		}
 		hud.setProgressLabel(waveProgress + 1, zombiesToSpawn);
 		spawnCooldown = 0;
-		System.out.println("Zombies to spawn: " + zombiesToSpawn);
 
 		if (waveProgress > 0) {
 			PowerUp powerUp = new PowerUp(parent, 0.2f, level.getPlayerSpawn(), 0, randomPowerUpType.getRandom());
@@ -305,9 +321,12 @@ public class GameManager implements Disposable {
 			addPowerUp(powerUp);
 		}
 
-		System.out.println("Finished wave loading");
 	}
 
+	/**
+	 * Spawns a zombie at each spawn point on a cooldown.
+	 * @param delta
+	 */
 	public void spawnZombies(float delta) {
 		if (spawnCooldown <= 0) {
 			List<Vector2> zombieSpawns = level.getZombieSpawns();
@@ -451,6 +470,14 @@ public class GameManager implements Disposable {
 		if ((!controller.left && !controller.right) || (controller.left && controller.right)) {
 			player.setLinearVelocityX(0);
 		}
+		
+		if (Gdx.input.isKeyJustPressed(Keys.X)) {
+			Vector2 tileCoords = level.getTileCoordinates(player.getPos());
+			System.out.println("World position: " + player.getPos());
+			System.out.println("Tile: " + tileCoords);
+			DefaultGraphPath<TileNode> path = findPath(level.getTileNode(tileCoords), level.getTileNode(new Vector2(0,0)));
+			path.forEach(tileNode -> System.out.println(tileNode.getX() + "," + tileNode.getY()));
+		}
 
 	}
 
@@ -474,6 +501,33 @@ public class GameManager implements Disposable {
 		rayHandler.dispose();
 		debugRenderer.dispose();
 		world.dispose();
+	}
+	
+	public DefaultGraphPath<TileNode> findPath(Vector2 start, Vector2 end) {
+		System.out.println("Entity requesting path from " + start + " to " + end);
+		TileNode startNode = level.getTileNode(getTileCoordinates(start));
+		TileNode endNode = level.getTileNode(getTileCoordinates(end));
+		if (startNode == null) {
+			System.out.println("Warning: startNode is null");
+			return null;
+		}
+		if (endNode == null) {
+			System.out.println("Warning: endNode is null");
+			return null;
+		}
+		return findPath(level.getTileNode(getTileCoordinates(start)), level.getTileNode(getTileCoordinates(end)));
+	}
+	
+	public DefaultGraphPath<TileNode> findPath(TileNode start, TileNode end) {
+		if (pathFinder == null) return null;
+		DefaultGraphPath<TileNode> path = new DefaultGraphPath<TileNode>();
+		if(pathFinder.searchNodePath(start, end, ManhattanDistanceHeuristic.instance, path))
+			return path;
+		return null;
+	}
+	
+	public Vector2 getTileCoordinates(Vector2 position) {
+		return level.getTileCoordinates(position);
 	}
 
 }

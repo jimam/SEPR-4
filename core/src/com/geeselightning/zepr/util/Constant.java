@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 public final class Constant {
 	
 	public static final int PPM = 50;
-	public static final int PPT = 25;
+	public static final int PPT = 16;
 	
 	public static final Vector2 ORIGIN = new Vector2(0, 0);
 	public static final float PLAYERSPEED = 6;

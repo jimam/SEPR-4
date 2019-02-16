@@ -1,11 +1,13 @@
 package com.geeselightning.zepr.entities;
 
+import com.badlogic.gdx.ai.pfa.DefaultGraphPath;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.geeselightning.zepr.game.Zepr;
+import com.geeselightning.zepr.pathfinding.TileNode;
 import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.FixtureType;
 import com.geeselightning.zepr.world.WorldContactListener;
@@ -29,13 +31,25 @@ public class Zombie extends Character {
 	private float damageMulti;
 	
 	/**
-	 * Whether or not the zombie is in range of the player - used to determine whether the zombie
+	 * Whether or not the zombie is in range of the player - used to determine whether the zombie.
 	 * should attack the player.
 	 */
-	public boolean inMeleeRange;
+	private boolean inMeleeRange;
 	
-	public float stunTimer;
-
+	/**
+	 * The amount of time the zombie has been stunned as a result of being hit by the player.
+	 */
+	private float stunTimer;
+	
+	private DefaultGraphPath<TileNode> path;
+	private int pathStep;
+	/**
+	 * The amount of time since the zombie last requested a path (avoiding requesting A* run every
+	 * 1/30th 1/60th of a second per zombie).
+	 */
+	private float pathTimer = 3f;
+	
+	
 	public Zombie(Zepr parent, Sprite sprite, float bRadius, Vector2 initialPos, float initialRot, Type type) {
 		super(parent, sprite, bRadius, initialPos, initialRot);
 		switch (type) {
@@ -72,7 +86,7 @@ public class Zombie extends Character {
 		CircleShape shape = new CircleShape();
 		shape.setRadius(this.bRadius);
 		fBodyDef.shape = shape;
-		fBodyDef.density = 10;
+		fBodyDef.density = 20;
 		
 		b2body = world.createBody(bDef);
 		b2body.createFixture(fBodyDef).setUserData(FixtureType.ZOMBIE);
@@ -102,14 +116,41 @@ public class Zombie extends Character {
 		
 		Player player = gameManager.getPlayer();
 		
-		Vector2 playerVector = getVectorTo(player);
+		Vector2 targetVector;
 		
-		b2body.applyLinearImpulse(playerVector.nor(), getPos(), true);
-		
-		double angle = Math.toDegrees(Math.atan2(playerVector.y, playerVector.x)) - 90;
-		
+		// If distant from player, use A* to track them down. If close, go straight for them.
+		if (distanceFrom(player) > 5) {
+			if (path == null) {
+				System.out.println("Path is null!");
+			}
+			if (pathTimer >= 1 || pathStep + 1 == path.getCount()) {
+				System.out.println(this.toString() + " requesting path");
+				path = gameManager.findPath(getPos(), player.getPos());
+				pathStep = 0;
+				pathTimer = 0;
+			}
+			
+			if (path == null) return;
+			
+			if (gameManager.getTileCoordinates(getPos()).equals(path.get(pathStep).getPosition())) {
+				pathStep += 1;
+			}
+			
+			targetVector = new Vector2(path.get(pathStep).getX() - this.getX(), path.get(pathStep).getY() - this.getY());
+			
+		} else {
+			targetVector = getVectorTo(player);
+			
+		}
+			
+		double angle = Math.toDegrees(Math.atan2(targetVector.y, targetVector.x)) - 90;
+			
+		b2body.applyLinearImpulse(targetVector.nor(), getPos(), true);	
+			
 		this.setAngle(angle);
 		
+		pathTimer += delta;
+
 		if (inMeleeRange && hitRefresh > hitCooldown) {
 			gameManager.getPlayer().takeDamage(this.attackDamage);
 			hitRefresh = 0;

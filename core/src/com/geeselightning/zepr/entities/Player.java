@@ -166,7 +166,7 @@ public class Player extends Character {
 		CircleShape shape = new CircleShape();
 		shape.setRadius(this.bRadius);
 		fBodyDef.shape = shape;
-		fBodyDef.density = 10;
+		fBodyDef.density = 20;
 
 		b2body = world.createBody(bDef);
 		b2body.createFixture(fBodyDef).setUserData(FixtureType.PLAYER);
