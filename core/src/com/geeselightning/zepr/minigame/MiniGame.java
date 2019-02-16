@@ -34,7 +34,7 @@ public class MiniGame {
 	public boolean active;
 	private float timeSinceLastClick;
 	public int waveNumber;
-	public Calendar timeGetter;
+
 	public Goose[] geese;
 	public Goose goose;
 	public Random rand;
@@ -45,7 +45,6 @@ public class MiniGame {
 		this.wave = 1;
 		this.miniGameController = new KeyboardController();
 		this.timeSinceLastClick = 0;
-		this.timeGetter = Calendar.getInstance();
 		this.goose = new Goose(1/10);
 		this.rand = new Random();
 		start();
@@ -75,7 +74,7 @@ public class MiniGame {
 			}else {
 				lose();
 			}
-			if (rand.nextInt(100) > 85) {
+			if (rand.nextInt(100) > 90) {
 				goose.changeDirection();
 			}
 			//if any goose has 'escaped'
@@ -107,10 +106,10 @@ public class MiniGame {
 		wave = wave + 1;
 		this.timeSinceLastClick = 0;
 		active = true;
-		if (wave < 10) {
+		if (wave < 8) {
 			this.goose = new Goose(wave/10);
 		} else {
-			this.goose = new Goose(0.5f);
+			this.goose = new Goose(0.8f);
 		}
 	}
 	
