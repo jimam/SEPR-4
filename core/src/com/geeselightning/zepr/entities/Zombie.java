@@ -147,9 +147,9 @@ public class Zombie extends Character {
 	@Override
 	public void takeDamage(int damage) {
 		Player player = gameManager.getPlayer();
-		Vector2 impulse = getVectorTo(player);
+		Vector2 impulse = getVectorTo(player).nor();
 		
-		b2body.applyLinearImpulse(impulse.scl(-1f), getPos(), true);
+		b2body.applyLinearImpulse(impulse.scl(-8f * b2body.getMass()), getPos(), true);
 		
 		stunTimer = 0.5f;
 		
