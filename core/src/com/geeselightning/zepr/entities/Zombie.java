@@ -116,7 +116,7 @@ public class Zombie extends Character {
 		
 		Vector2 playerVector = getVectorTo(player);
 		
-		b2body.applyLinearImpulse(playerVector.nor(), getPos(), true);
+		b2body.applyLinearImpulse(playerVector.nor().scl(speedMulti), getPos(), true);
 		
 		double angle = Math.toDegrees(Math.atan2(playerVector.y, playerVector.x)) - 90;
 		
@@ -148,8 +148,8 @@ public class Zombie extends Character {
 	public void takeDamage(int damage) {
 		Player player = gameManager.getPlayer();
 		Vector2 impulse = getVectorTo(player);
-
-		b2body.applyLinearImpulse(impulse.scl(-1f * density * speedMulti), getPos(), true);
+		
+		b2body.applyLinearImpulse(impulse.scl(-1f), getPos(), true);
 		
 		stunTimer = 0.5f;
 		
