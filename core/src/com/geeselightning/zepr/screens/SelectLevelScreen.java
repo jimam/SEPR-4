@@ -95,7 +95,7 @@ public class SelectLevelScreen extends DefaultScreen {
 
 		/* Level descriptions */
 		Label title = new Label("Choose a stage and character.", skin, "subtitle");
-		final String lockedDescription = "This stage is locked until you complete the previous one.";
+		//final String lockedDescription = "This stage is locked until you complete the previous one.";
 		final String defaultDescription = "Select a stage from the buttons above.";
 		stageDescription = new Label(defaultDescription, skin);
 		stageDescription.setWrap(true);

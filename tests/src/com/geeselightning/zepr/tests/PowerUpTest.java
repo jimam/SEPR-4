@@ -1,14 +1,15 @@
 package com.geeselightning.zepr.tests;
 
-import com.badlogic.gdx.math.Vector2;
-import com.geeselightning.zepr.*;
-import com.geeselightning.zepr.entities.Player;
-import com.geeselightning.zepr.entities.PowerUp;
-import com.geeselightning.zepr.util.Constant;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.*;
+
+import com.badlogic.gdx.math.Vector2;
+import com.geeselightning.zepr.entities.Player;
+import com.geeselightning.zepr.entities.PowerUp;
+import com.geeselightning.zepr.util.Constant;
 
 @RunWith(GdxTestRunner.class)
 public class PowerUpTest {
