@@ -13,6 +13,19 @@ import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.util.Constant;
 
+/**
+ * Represents a distinct game level, with a related TiledMap. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>level is no longer responsible for rendering (screen-related items moved to GameScreen)</li>
+ * <li>level is no longer responsible for game logic (logic-related items moved to GameManager)</li>
+ * <li>wave design moved to Wave class</li>
+ * <li>level is no longer responsible for HUD (moved to Hud class)</li>
+ * <li>all level code is now contained in one class, instead of each level possessing its own child class</li>
+ * </ul>
+ * @author Xzytl
+ *
+ */
 public class Level {
 	
 	public enum Location {
@@ -23,8 +36,11 @@ public class Level {
 		LIBRARY("Library", "library", 4),
 		RONCOOKE("Ron Cooke Hub", "roncooke", 5);
 		
+		// Human-readable level name
 		String name;
+		// File name of the TiledMap for the level
 		String mapFileName;
+		// The order of the levels
 		int num;
 		
 		Location(String name, String mapFileName, int num) {
@@ -38,14 +54,19 @@ public class Level {
 		}
 	}
 	
+	/** The active {@link GameManager} instance. **/
 	private GameManager gameManager;
 	
 	private Location location;
 	private TiledMap tiledMap;
+	// The background layers of the TiledMap.
 	private int[] backgroundLayers = {0};
+	// The foreground levels of the TiledMap.
 	private int[] foregroundLayers = {1};
 	
+	// The position of the player spawn point.
 	private Vector2 playerSpawn;
+	// The positions of the zombie spawn points.
 	private List<Vector2> zombieSpawnPoints;
 
 	public Level(Zepr parent, Location location) {
@@ -54,11 +75,17 @@ public class Level {
 		zombieSpawnPoints = new ArrayList<>();
 	}
 	
+	/**
+	 * Loads the TiledMap from file, retrieves spawn point objects and builds collision walls.
+	 * @return	the TiledMap for the level location
+	 */
 	public TiledMap load() {
 		tiledMap = new TmxMapLoader().load("maps/" + location.mapFileName + ".tmx");
 		
 		MapLayer spawnLayer = tiledMap.getLayers().get("Spawns");
+		// Fetch spawn points from the spawn object layer.
 		MapObjects spawnPoints = spawnLayer.getObjects();
+		// Parse the spawn points into world coordinates and retrieve the type
 		spawnPoints.forEach(sp -> {
 			MapProperties props = sp.getProperties();
 			String type = props.get("type", String.class);
@@ -76,6 +103,7 @@ public class Level {
 			}
 		});
 		
+		// Use the MapBodyBuilder utility class to build walls from the TiledMap
 		MapBodyBuilder.buildBodies(tiledMap, gameManager.getWorld());
 		
 		return tiledMap;

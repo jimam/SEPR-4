@@ -12,9 +12,9 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.minigame.MiniGame;
 /**
- * 
+ * The screen used to render the minigame. Implemented in assessment 3.
  * @author ljd546
- *
+ * @author Xzytl
  */
 public class MiniGameScreen extends DefaultScreen {
 		
@@ -42,8 +42,8 @@ public class MiniGameScreen extends DefaultScreen {
 			this.batch = new SpriteBatch();	
 		}
 		
+		@Override
 		public void show() {
-			
 			Gdx.input.setInputProcessor(this.miniGame.miniGameController);
 			//Positions UI
 			Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
@@ -64,7 +64,7 @@ public class MiniGameScreen extends DefaultScreen {
 			if (this.miniGame.active == false) {
 				quit();
 			}
-			//Player can quit by pressing escape.
+			// Player can quit by pressing escape.
 			if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
 				quit();
 			}
@@ -72,11 +72,11 @@ public class MiniGameScreen extends DefaultScreen {
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
 			backgroundSprite.draw(batch);
-			//Renders goose
+			// Renders goose
 			if (!miniGame.goose.isDead) {
 				miniGame.goose.draw(this.batch);
 			}
-			//Renders labels
+			// Renders labels
 			this.scoreLabel.setText("Score:   " + String.valueOf(miniGame.score));
 			this.ammoLabel.setText("Ammo: " + String.valueOf(miniGame.ammo));
 			this.waveLabel.setText("Round: " + String.valueOf(miniGame.wave));
@@ -115,7 +115,7 @@ public class MiniGameScreen extends DefaultScreen {
 		}
 		
 		public void quit() {
-			parent.changeScreen(Zepr.SELECT);
+			parent.changeScreen(Zepr.MENU);
 		}
 }
 

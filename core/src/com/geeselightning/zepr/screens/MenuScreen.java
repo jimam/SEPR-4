@@ -11,6 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.geeselightning.zepr.game.Zepr;
 
+/**
+ * Main menu screen. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>now extends DefaultScreen</li>
+ * <li>added menu button for the minigame</li>
+ * </ul>
+ * @author Xzytl
+ * 
+ */
 public class MenuScreen extends DefaultScreen {
 	private Stage stage;
 	private Label titleLabel;
@@ -64,6 +74,7 @@ public class MenuScreen extends DefaultScreen {
 			}
 		});
 		
+		// Defining actions for the minigame button
 		miniGame.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {

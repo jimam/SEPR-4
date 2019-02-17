@@ -3,11 +3,15 @@ package com.geeselightning.zepr.util;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Defines constants used repeatedly in other classes in the program.
+ * Defines constants used in other classes in the program. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>added different multipliers for different zombie types</li>
+ * <li>added definition of PPM (pixels-per-metre) and PPT (pixels-per-tile)</li>
+ * <li>tweaked speed to fit impulse-based movement</li>
+ * </ul>
  * @author Xzytl
- * Changes:
- * 	- added different multipliers for different zombie types
- * 	- added definition of PPM (pixels-per-metre) and PPT (pixels-per-tile)
+ * 
  */
 public final class Constant {
 	

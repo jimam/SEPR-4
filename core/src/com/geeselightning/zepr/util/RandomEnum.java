@@ -7,7 +7,7 @@ import java.util.Random;
  * Intended primarily for use with PowerUp.Type and Zombie.Type.
  * @author Xzytl
  * 
- * @param <E>
+ * @param <E> the enum to return random results for
  */
 public class RandomEnum<E extends Enum<?>> {
 	

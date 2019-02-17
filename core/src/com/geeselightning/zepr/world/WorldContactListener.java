@@ -12,9 +12,10 @@ import com.geeselightning.zepr.entities.Zombie;
 
 /**
  * Creates events when contact between bodies in a {@link World} occurs.
+ * Provides a (relatively) easy and convenient way to detect collisions.
+ * Implemented in assessment 3.
  * @author Xzytl
- * Changes:
- * 	implemented - provides an easy and convenient way to detect collisions
+ * 
  */
 public class WorldContactListener implements ContactListener {
 
@@ -50,8 +51,8 @@ public class WorldContactListener implements ContactListener {
 	}
 	
 	/**
-	 * Called when an zombie comes into contact with a second fixture.
-	 * @param fA		the enemy body fixture
+	 * Called when a zombie comes into contact with a second fixture.
+	 * @param fA		the zombie body fixture
 	 * @param fBType	the type of the second fixture
 	 * @param fB		the second fixture
 	 */
@@ -69,6 +70,12 @@ public class WorldContactListener implements ContactListener {
 		}
 	}
 	
+	/**
+	 * Called when a boss comes into contact with a second fixture.
+	 * @param fA		the boss body fixture
+	 * @param fBType	the type of the second fixture
+	 * @param fB		the second fixture
+	 */
 	public void bossZombieContactBegun(Fixture fA, FixtureType fBType, Fixture fB) {
 		BossZombie boss = (BossZombie) fA.getBody().getUserData();
 		switch(fBType) {
@@ -127,7 +134,7 @@ public class WorldContactListener implements ContactListener {
 	
 	/**
 	 * Called when the player's melee sensor comes into contact with a second fixture.
-	 * @param fA		the power-up body fixture
+	 * @param fA		the sensor body fixture
 	 * @param fBType	the type of the second fixture
 	 * @param fB		the second fixture
 	 */
@@ -174,7 +181,7 @@ public class WorldContactListener implements ContactListener {
 	
 	/**
 	 * Called when a zombie leaves contact with a second fixture.
-	 * @param fA		the power-up body fixture
+	 * @param fA		the zombie body fixture
 	 * @param fBType	the type of the second fixture
 	 * @param fB		the second fixture
 	 */
@@ -214,7 +221,7 @@ public class WorldContactListener implements ContactListener {
 	
 	/**
 	 * Called when a player leaves contact with a second fixture.
-	 * @param fA		the power-up body fixture
+	 * @param fA		the player body fixture
 	 * @param fBType	the type of the second fixture
 	 * @param fB		the second fixture
 	 */
@@ -233,7 +240,7 @@ public class WorldContactListener implements ContactListener {
 	
 	/**
 	 * Called when the player's melee sensor leaves contact with a second fixture.
-	 * @param fA		the power-up body fixture
+	 * @param fA		the sensor body fixture
 	 * @param fBType	the type of the second fixture
 	 * @param fB		the second fixture
 	 */

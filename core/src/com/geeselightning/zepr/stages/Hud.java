@@ -14,10 +14,9 @@ import com.geeselightning.zepr.game.Zepr;
 /**
  * Game overlay stage that relays important information such as health and
  * progress. This class replaces the code in the original Level class that
- * performed the same function.
+ * performed the same function. Implemented in assessment 3.
  * @author Xzytl
- * Changes:
- * 	implemented - separation of data and view
+ * 
  */
 public class Hud implements Disposable {
 

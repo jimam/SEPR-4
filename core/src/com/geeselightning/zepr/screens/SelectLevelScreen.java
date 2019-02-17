@@ -16,12 +16,27 @@ import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.world.Level;
 
+/**
+ * Screen that displays level and player class options. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>class now extends DefaultScreen</li>
+ * <li>save/load functionality fully implemented</li>
+ * <li>three additional levels added</li>
+ * <li>level selection is now passed to GameManager for loading, rather than each level being a 
+ * 		different screen to switch to.</li>
+ * </ul>
+ * @author Xzytl
+ *
+ */
 public class SelectLevelScreen extends DefaultScreen {
 
 	private Stage stage;
 	private Label stageDescription;
 	private Label characterDescription;
+	// Defines whether a level has been selected
 	private boolean levelSet;
+	// Defines whether a player class has been selected
 	private boolean playerSet;
 	
 	private TextButton town;
@@ -30,7 +45,6 @@ public class SelectLevelScreen extends DefaultScreen {
 	private TextButton courtyard;
 	private TextButton library;
 	private TextButton ronCooke;
-	
 	
 	private final String townDescription = "You wake up hungover in town to discover there is a zombie apocalypse.";
 	private final String halifaxDescription = "You need to get your laptop with the work on it from your accommodation.";
@@ -242,7 +256,7 @@ public class SelectLevelScreen extends DefaultScreen {
 	
 	/**
 	 * Enables/disables level selection buttons depending on whether the user has unlocked it.
-	 * Changes in assessment 3: moved the following code from the show method so that it can
+	 * Assessment 3: moved the following code from the show method so that it can
 	 * be called independently to allow dynamic button enabling/disabling (mainly for loading
 	 * functionality).
 	 */
@@ -348,11 +362,13 @@ public class SelectLevelScreen extends DefaultScreen {
 		
 	}
 	
+	// Assessment 3: convenience method to set a button to the disabled style.
 	private void disabledButtonStyle(TextButton button) {
 		button.setColor(Color.DARK_GRAY);
 		button.getLabel().setColor(Color.DARK_GRAY);
 	}
 	
+	// Assessment 3: convenience method to set a button to the enabled style.
 	private void enabledButtonStyle(TextButton button) {
 		button.setColor(Color.WHITE);
 		button.getLabel().setColor(Color.WHITE);

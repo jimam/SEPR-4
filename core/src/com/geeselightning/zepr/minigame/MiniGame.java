@@ -5,9 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.geeselightning.zepr.KeyboardController;
 
 /**
- * 
+ * Logic for minigame. Implemented in assessment 3.
  * @author ljd546
- *
+ * @Xzytl
  */
 public class MiniGame {
 		
@@ -37,7 +37,6 @@ public class MiniGame {
 		this.startTime = System.currentTimeMillis();
 		start();
 		
-		
 	}
 	/*
 	 * Activates the game
@@ -56,13 +55,13 @@ public class MiniGame {
 			if (ammo > 0) {
 				this.goose.update(delta);
 				
-			}else {
+			} else {
 				nextWave();
 			}
 			if (rand.nextInt(100) > 90) {
 				goose.changeDirection();
 			}
-			//if any goose has 'escaped'
+			// if any goose has 'escaped'
 			goose.update(delta);
 			if ( goose.currentPos.y > 360) {
 				nextWave();
@@ -86,8 +85,10 @@ public class MiniGame {
 					
 		
 	}
+	
 	/*
-	 * updates the wave to make the geese move faster. Changes all other values to their initial states.
+	 * Updates the wave to make the geese move faster. Changes all other values to their initial 
+	 * states.
 	 */
 	private void nextWave() {
 		this.startTime = System.currentTimeMillis();

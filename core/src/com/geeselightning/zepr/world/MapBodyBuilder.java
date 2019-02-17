@@ -27,7 +27,9 @@ import com.geeselightning.zepr.util.Constant;
  * Converts map objects into Box2d objects.
  * Inspiration from
  * https://gamedev.stackexchange.com/questions/66924/how-can-i-convert-a-tilemap-to-a-box2d-world
- * with small modifications
+ * with small modifications.
+ * 
+ * Implemented in assessment 3.
  * 
  * @author daemonaka (https://gamedev.stackexchange.com/users/41604/daemonaka)
  * @author Xzytl

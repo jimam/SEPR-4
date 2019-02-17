@@ -11,6 +11,13 @@ import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.FixtureType;
 import com.geeselightning.zepr.world.WorldContactListener;
 
+/**
+ * A more powerful hostile computer-controlled character that will pursue and attempt to harm the 
+ * player. <br/>
+ * Implemented in assessment 3.
+ * @author Xzytl
+ *
+ */
 public class BossZombie extends Character {
 	
 	public enum Type {
@@ -26,9 +33,11 @@ public class BossZombie extends Character {
 		}
 	}
 	
+	// Determines the density of the zombie's box2d body.
 	private int density;
 	private float hitCooldown;
 	
+	// Determines whether the boss is able to attack the player
 	private boolean inMeleeRange;
 	
 	private float stunTimer;
@@ -129,7 +138,7 @@ public class BossZombie extends Character {
 		Player player = gameManager.getPlayer();
 		Vector2 impulse = getVectorTo(player);
 
-		b2body.applyLinearImpulse(impulse.scl(-1f * density), getPos(), true);
+		b2body.applyLinearImpulse(impulse.scl(-3f * b2body.getMass()), getPos(), true);
 		
 		stunTimer = 0.5f;
 		

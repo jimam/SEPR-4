@@ -8,11 +8,19 @@ import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.util.Constant;
 
+/**
+ * The screen used to render the main game, instead of using multiple different level classes.
+ * Implemented in assessment 3.
+ * @author Xzytl
+ *
+ */
 public class GameScreen extends DefaultScreen {
 	
+	// The OrthographicCamera to display the game.
 	private OrthographicCamera camera;
 	private ExtendViewport gamePort;
 	
+	// The SpriteBatch to render sprites.
 	private SpriteBatch batch;
 	
 	private GameManager gameManager = GameManager.getInstance(this.parent);
@@ -27,10 +35,12 @@ public class GameScreen extends DefaultScreen {
 		camera = new OrthographicCamera(width, height);
 		gamePort = new ExtendViewport(width, height);
 		
+		// Initially set the camera position to the center of the viewport.
 		camera.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 		
 		batch = new SpriteBatch();
 		
+		// Pass the SpriteBatch and Camera to GameManager.
 		gameManager.setGameCamera(camera);
 		gameManager.setSpriteBatch(batch);
 		

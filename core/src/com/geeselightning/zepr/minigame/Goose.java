@@ -8,8 +8,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+
 /**
- * 
+ * The goose entity for the minigame. Implemented in assessment 3.
  * @author ljd546
  *
  */
