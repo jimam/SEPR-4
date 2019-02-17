@@ -2,19 +2,27 @@ package com.geeselightning.zepr.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.minigame.MiniGame;
 /**
+ * Renderer for the MiniGame<br/>
+ * Changes:
+ * <ul>
+ * <li>rendering component of the minigame</li>
+ * </ul>
  * 
  * @author ljd546
- *
  */
 public class MiniGameScreen extends DefaultScreen {
 		
@@ -26,6 +34,10 @@ public class MiniGameScreen extends DefaultScreen {
 		private Label scoreLabel;
 		private Label ammoLabel;
 		private Label waveLabel;
+
+//		Uncomment below for debug
+//		public ShapeRenderer shapeRenderer;
+		
 		
 		public MiniGameScreen(Zepr parent){
 			super(parent);			
@@ -40,8 +52,11 @@ public class MiniGameScreen extends DefaultScreen {
 			this.backgroundSprite = new Sprite(new Texture("miniGameBG.png"));
 			this.backgroundSprite.setCenter(0, 0);
 			this.batch = new SpriteBatch();	
+			
+//			shapeRenderer = new ShapeRenderer();
 		}
 		
+		@Override
 		public void show() {
 			
 			Gdx.input.setInputProcessor(this.miniGame.miniGameController);
@@ -69,21 +84,32 @@ public class MiniGameScreen extends DefaultScreen {
 				quit();
 			}
 			this.miniGame.update(delta);
+			//Rendering the background
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
 			backgroundSprite.draw(batch);
-			//Renders goose
+			//Rendering the goose
 			if (!miniGame.goose.isDead) {
 				miniGame.goose.draw(this.batch);
 			}
-			//Renders labels
+			//Renders labels for score, ammo, wave number
 			this.scoreLabel.setText("Score:   " + String.valueOf(miniGame.score));
 			this.ammoLabel.setText("Ammo: " + String.valueOf(miniGame.ammo));
 			this.waveLabel.setText("Round: " + String.valueOf(miniGame.wave));
 			this.scoreLabel.draw(batch, 1f);
 			this.ammoLabel.draw(batch, 1f);
 			this.waveLabel.draw(batch, 1f);
-			batch.end();	
+			batch.end();
+			
+//			shapeRenderer.setProjectionMatrix(camera.combined);
+//			shapeRenderer.begin(ShapeType.Line);
+//			shapeRenderer.setColor(Color.RED);
+//			//BOX AROUND GOOSE 
+//		    shapeRenderer.rect(Gdx.input.getX() - Gdx.graphics.getWidth()/2,-1 * Gdx.input.getY() + Gdx.graphics.getHeight()/2, 20, 20);
+//		    shapeRenderer.end();
+		    
+		    //DEBUG ENDS
+		    
 		}
 		
 		@Override
