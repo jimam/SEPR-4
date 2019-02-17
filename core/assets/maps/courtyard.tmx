@@ -155,19 +155,19 @@
    </properties>
    <point/>
   </object>
-  <object id="53" name="EnemySpawn1" x="221.333" y="326.667">
+  <object id="53" name="ZombieSpawn1" x="221.333" y="326.667">
    <properties>
     <property name="type" value="zombie"/>
    </properties>
    <point/>
   </object>
-  <object id="54" name="EnemySpawn2" x="754.667" y="924">
+  <object id="54" name="ZombieSpawn2" x="754.667" y="924">
    <properties>
     <property name="type" value="zombie"/>
    </properties>
    <point/>
   </object>
-  <object id="55" name="EnemySpawn3" x="240" y="936">
+  <object id="55" name="ZombieSpawn3" x="240" y="936">
    <properties>
     <property name="type" value="zombie"/>
    </properties>

@@ -11,6 +11,18 @@ import com.geeselightning.zepr.world.FixtureType;
 
 import com.geeselightning.zepr.util.Constant;
 
+/**
+ * Represents a power-up item that have effects on the player. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>class now extends {@link Entity} instead of {@link Sprite}</li>
+ * <li>different power-up classes consolidated into one, with a Type sub-enum</li>
+ * <li>removed overlapsPlayer() method (collision handled by box2d)</li>
+ * <li>power-up effect handled by player class</li>
+ * </ul>
+ * @author Xzytl
+ *
+ */
 public class PowerUp extends Entity {
 	
 	public enum Type {
@@ -44,6 +56,7 @@ public class PowerUp extends Entity {
 		return type.duration;
 	}
 	
+	// Assessment 3: added defineBody() method required for box2d integration.
 	@Override
 	public void defineBody() {
 		BodyDef bDef = new BodyDef();
@@ -64,9 +77,6 @@ public class PowerUp extends Entity {
 	}
 
 	@Override
-	public void update(float delta) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void update(float delta) {}
 
 }

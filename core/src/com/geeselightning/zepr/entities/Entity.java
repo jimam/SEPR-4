@@ -8,23 +8,31 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
 
+/**
+ * Abstract class that represents an object in the {@link World}. <br/>
+ * Implemented in assessment 3.
+ * @author Xzytl
+ *
+ */
 public abstract class Entity {
 	
 	protected Zepr parent;
+	// The active GameManager instance.
 	protected GameManager gameManager;
-	
+	// The world the body exists in.
 	protected World world;
-	
+	// The radius of the body's collision shape.
 	protected float bRadius;
-	
+	// The entity's box2d body.
 	protected Body b2body;
-	
+	// The entity's visual sprite.
 	protected Sprite sprite;
-	
+	// The initial spawn location the entity appears at.
 	protected Vector2 initialPos;
-	
+	// The initial rotation the entity has upon spawning.
 	protected float initialRot;
-	
+	// Flag representing whether the entity is still 'alive'.
+	// Dead entities are removed from the world.
 	protected boolean alive = true;
 
 	public Entity(Zepr parent, Sprite sprite, float bRadius, Vector2 initialPos, float initialRot) {
@@ -81,8 +89,15 @@ public abstract class Entity {
 		b2body.setTransform(b2body.getPosition(), (float)Math.toRadians(angle));
 	}
 	
+	/**
+	 * Defines the {@link Fixture}'s that comprise the body of the entity.
+	 */
 	public abstract void defineBody();
 	
+	/**
+	 * Draws the entity on the screen.
+	 * @param batch	the {@link SpriteBatch} to use for rendering.
+	 */
 	public void draw(SpriteBatch batch) {
 		float posX = b2body.getPosition().x - bRadius;
 		float posY = b2body.getPosition().y - bRadius;
@@ -92,8 +107,17 @@ public abstract class Entity {
 		sprite.draw(batch);
 	}
 	
+	/**
+	 * Defines the entity's activity every update cycle
+	 * @param delta	the seconds since the last update
+	 */
 	public abstract void update(float delta);
 	
+	/**
+	 * Removes the entity from the box2d world.
+	 * Warning: it is best not to manually call this method; calling it while the world simulation
+	 * step is occuring is likely to cause errors.
+	 */
 	public void delete() {
 		world.destroyBody(b2body);
 		b2body.setUserData(null);
@@ -102,6 +126,13 @@ public abstract class Entity {
 	
 	public double distanceFrom(Entity entity) {
 		return Math.sqrt(Math.pow(getX() - entity.getX(), 2) + Math.pow(getY() - entity.getY() ,2));
+	}
+	
+	public Vector2 getVectorTo(Entity entity) {
+		float dx = entity.getX() - getX();
+		float dy = entity.getY() - getY();
+		
+		return new Vector2(dx, dy);
 	}
 
 }

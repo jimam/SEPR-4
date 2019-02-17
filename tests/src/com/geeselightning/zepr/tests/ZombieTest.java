@@ -1,89 +1,43 @@
 package com.geeselightning.zepr.tests;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.Zombie;
-import com.geeselightning.zepr.util.Constant;
-
-import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 
 @RunWith(GdxTestRunner.class)
 public class ZombieTest {
 
-    Player player = Player.getInstance();
+	Zombie fast, medium, slow;
 
-    @Test
-    // Test 3.1.1
-    public void zombieDoesNoDamageToPlayerWhenAtMaxRange() {
-        player.respawn(Constant.ORIGIN, null);
-
-        Zombie zombie = new Zombie(new Sprite(), new Vector2(player.getCenter().x, player.getCenter().y - Constant.ZOMBIERANGE), null);
-        double originalHealth = player.getHealth();
-        zombie.attack(player, 0);
-
-        assertEquals("Player on the edge of range should not take damage when the zombie attacks.",
-                player.getHealth(), originalHealth, 0.1);
-    }
-
-    @Test
-    // Test 3.1.2
-    public void zombieDoesDamageToPlayerWhenInRange() {
-        player.respawn(Constant.ORIGIN, null);
-
-        Zombie zombie = new Zombie(new Sprite(), new Vector2(player.getCenter().x, player.getCenter().y - Constant.ZOMBIERANGE + 5), null);
-        double originalHealth = player.getHealth();
-        zombie.attack(player, 0);
-
-        assertNotEquals("Player within range should take damage when the zombie attacks.",
-                player.getHealth(), originalHealth, 0.1);
-    }
-
-
-    @Test
-    // Test 3.1.3
-    public void zombieDoesNoDamageToPlayerOutOfRange() {
-        player.respawn(Constant.ORIGIN, null);
-
-        Zombie zombie = new Zombie(new Sprite(), new Vector2(player.getCenter().x, player.getCenter().y - 100), null);
-        double originalHealth = player.getHealth();
-        zombie.attack(player, 0);
-
-        assertEquals("Player outside of range should not take damage when the zombie attacks.",
-                player.getHealth(), originalHealth, 0.1);
-    }
-
-    @Test
-    // Test 3.2.1
-    public void zombieCannotAttackBeforeCooldownComplete() {
-        player.respawn(Constant.ORIGIN, null);
-
-        Zombie zombie = new Zombie(new Sprite(), new Vector2(player.getCenter().x, player.getCenter().y ), null);
-        double originalHealth = player.getHealth();
-        zombie.attack(player, 0);
-        zombie.attack(player, 0);
-
-        assertEquals("Player should only have taken one hit if attacked again before cooldown complete.",
-                originalHealth - Constant.ZOMBIEDMG, player.getHealth(), 0.1);
-    }
-
-    @Test
-    // Test 3.2.2
-    public void zombieCanAttackAfterCooldownComplete() {
-        player.respawn(Constant.ORIGIN, null);
-
-        Zombie zombie = new Zombie(new Sprite(), new Vector2(player.getCenter().x, player.getCenter().y ), null);
-        double originalHealth = player.getHealth();
-        zombie.attack(player, 0);
-        // zombie will not attack this go so has to be called a third time
-        zombie.attack(player, Constant.ZOMBIEHITCOOLDOWN + 1);
-        zombie.attack(player, 0);
-
-        assertEquals("Player should have taken two hits if attacked again after cooldown complete.",
-                originalHealth - (2 * Constant.ZOMBIEDMG), player.getHealth(), 0.1);
-    }
+	@Before
+	public void init() {
+		fast = new Zombie(null, 0.3f, new Vector2(7,7), 0, Zombie.Type.FAST);
+		medium = new Zombie(null, 0.3f, new Vector2(7,7), 0, Zombie.Type.MEDIUM);
+		slow = new Zombie(null, 0.3f, new Vector2(7,7), 0, Zombie.Type.SLOW);
+	}
+	
+	@Test
+	public void zombieSpeedHierarchy() {
+		assertTrue("Slow zombie should be slower than medium, and medium should be slower than fast.",
+				(fast.getSpeed() > medium.getSpeed() && (medium.getSpeed() ) > slow.getSpeed()));
+	}
+	
+	@Test
+	public void zombieHealthHierarchy() {
+		assertTrue("Slow zombie should have more health than medium, who should have more than fast.",
+				(slow.getHealth() > medium.getHealth()) && (medium.getHealth() > fast.getHealth()));
+	}
+	
+	@Test
+	public void zombieDamageHierarchy() {
+		assertTrue("Medium zombie should deal more damage than fast and slow zombies",
+				(medium.getAttackDamage() > slow.getAttackDamage()) 
+				&& (slow.getAttackDamage() == fast.getAttackDamage()));
+	}
 
 }

@@ -4,6 +4,16 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * InputProcessor that handles basic input events. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>no longer directly references player - allows generic use</li>
+ * <li>allows use of arrow keys in addition to WASD</li>
+ * </ul>
+ * @author Xzytl
+ *
+ */
 public class KeyboardController implements InputProcessor {
 
 	public boolean left, right, up, down;

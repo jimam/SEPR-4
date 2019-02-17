@@ -4,11 +4,28 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.geeselightning.zepr.game.Zepr;
 
+/**
+ * Represents a 'living', moving character. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>class is now abstract</li>
+ * <li>class now extends {@link Entity} instead of {@link Sprite}</li>
+ * <li>removed velocity and direction fields, as that is handled by box2d</li>
+ * <li>removed collision detection method, as that is handled by box2d (WorldContactListener)</li>
+ * <li>determination of ability to hit a target (canHitGlobal() handled by child classes.</li>
+ * </ul>
+ * @author Xzytl
+ *
+ */
 public abstract class Character extends Entity {
 
+	/* The speed of the character */
     protected float speed;
+    /* The health of the character */
     protected int health;
-    // All characters start ready to hit.
+    /* The attack damage of the character */
+    protected int attackDamage;
+    /* The cooldown for attacking */
     float hitRefresh = 2;
 
     public Character(Zepr parent, Sprite sprite, float bRadius, Vector2 initialPos, float initialRot) {
@@ -25,6 +42,11 @@ public abstract class Character extends Entity {
     	return speed;
     }
     
+    public int getAttackDamage() {
+    	return attackDamage;
+    }
+    
+    /* Assessment 3: main implementation handled by child classes */
     @Override
     public void update(float delta) {
     	if (health <= 0) {
@@ -41,8 +63,6 @@ public abstract class Character extends Entity {
      * @return bearing   double in degrees of the bearing from the character to the coordinate
      */
     public double getDirectionTo(Vector2 coordinate) {
-        Vector2 charCenter = this.b2body.getPosition();
-
         return(Math.toDegrees(Math.atan2((coordinate.x - getX()), (coordinate.y - getY()))));
     }
 

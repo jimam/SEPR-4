@@ -2,6 +2,14 @@ package com.geeselightning.zepr.screens;
 
 import com.geeselightning.zepr.game.Zepr;
 
+/**
+ * Screen displayed during loading process. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>now extends DefaultScreen</li>
+ * </ul>
+ * @author Xzytl
+ */
 public class LoadingScreen extends DefaultScreen {
 
     public LoadingScreen(Zepr parent) {

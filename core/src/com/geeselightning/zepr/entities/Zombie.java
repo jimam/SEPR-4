@@ -1,38 +1,62 @@
 package com.geeselightning.zepr.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.FixtureType;
+import com.geeselightning.zepr.world.WorldContactListener;
 
 /**
- * A hostile computer-controlled character that will pursue and attempt to harm the player.
+ * A hostile computer-controlled character that will pursue and attempt to harm the player. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>integrated box2d</li>
+ * <li>added distinct zombie types, controlled by Type sub-enum</li>
+ * <li>zombies now set a flag upon death, rather than removing themselves from the tracking list</li>
+ * </ul>
  * @author Xzytl
- * Changes:
- * 	integrated box2d - position now revolves around world location rather than screen position
+ * 
  */
 public class Zombie extends Character {
 	
 	public enum Type {
-		SLOW, MEDIUM, FAST
+		SLOW("zombie01.png"),
+		MEDIUM("zombie02.png"),
+		FAST("zombie03.png");
+		
+		// The filename of the image to use as a texture
+		String textureName;
+		
+		Type(String textureName) {
+			this.textureName = textureName;
+		}
+		
 	}
 
-	protected int attackDamage = Constant.ZOMBIEDMG;
-	private int hitRange = Constant.ZOMBIERANGE;
 	private final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
-	private float healthMulti = 1f;
-	private float speedMulti = 1f;
-	private float damageMulti = 1f;
+	private float healthMulti;
+	private float speedMulti;
+	private float damageMulti;
 	
+	// Assessment 3: controls the density of the zombie's box2d body.
+	private int density = 10;
+	
+	/**
+	 * Whether or not the zombie is in range of the player - used to determine whether the zombie
+	 * should attack the player (added in assessment 3).
+	 */
 	public boolean inMeleeRange;
+	
+	// Assessment 3: the amount of time the zombie has been stunned as a result of an incoming attack.
+	public float stunTimer;
 
-	public Zombie(Zepr parent, Sprite sprite, float bRadius, Vector2 initialPos, float initialRot, Type type) {
-		super(parent, sprite, bRadius, initialPos, initialRot);
+	public Zombie(Zepr parent, float bRadius, Vector2 initialPos, float initialRot, Type type) {
+		super(parent, new Sprite(new Texture(type.textureName)), bRadius, initialPos, initialRot);
 		switch (type) {
 		case SLOW:
 			healthMulti = Constant.SLOWHPMULT;
@@ -57,6 +81,7 @@ public class Zombie extends Character {
 		this.attackDamage = (int) (Constant.ZOMBIEDMG * damageMulti);
 	}
 	
+	// Assessment 3: added defineBody() method required for box2d integration.
 	@Override
 	public void defineBody() {
 		BodyDef bDef = new BodyDef();
@@ -67,6 +92,7 @@ public class Zombie extends Character {
 		CircleShape shape = new CircleShape();
 		shape.setRadius(this.bRadius);
 		fBodyDef.shape = shape;
+		fBodyDef.density = density;
 		
 		b2body = world.createBody(bDef);
 		b2body.createFixture(fBodyDef).setUserData(FixtureType.ZOMBIE);
@@ -74,16 +100,35 @@ public class Zombie extends Character {
 		b2body.setUserData(this);
 		shape.dispose();
 		
-		b2body.setLinearDamping(5.0f);
+		b2body.setLinearDamping(5f);
+		b2body.setAngularDamping(5f);
 	}
 
+	/*
+	 * Assessment 3:
+	 * The original attack function checked for the distance to the player each update cycle and,
+	 * if the cooldown for attacking was finished and the player was within range, would apply 
+	 * damage. Using box2d, an event will be generated whenever the zombie collides with a player, 
+	 * making the job easier. The zombie now attacks when it enters melee range of the player.
+	 */
+	
 	@Override
 	public void update(float delta) {
 		super.update(delta);
-		this.setLinearVelocity(getDirNormVector(gameManager.getPlayer().getPos()).scl(this.speed));
 		
-		Vector2 playerLoc = gameManager.getPlayer().getPos();
-		double angle = Math.toDegrees(Math.atan2(playerLoc.y - b2body.getPosition().y, playerLoc.x - b2body.getPosition().x)) - 90;
+		if (stunTimer > 0) {
+			stunTimer -= delta;
+			return;
+		}
+		
+		Player player = gameManager.getPlayer();
+		
+		Vector2 playerVector = getVectorTo(player);
+		
+		b2body.applyLinearImpulse(playerVector.nor().scl(speedMulti), getPos(), true);
+		
+		double angle = Math.toDegrees(Math.atan2(playerVector.y, playerVector.x)) - 90;
+		
 		this.setAngle(angle);
 		
 		if (inMeleeRange && hitRefresh > hitCooldown) {
@@ -94,12 +139,7 @@ public class Zombie extends Character {
 		}
 	}
 	
-	/**
-	 * The original attack function checked for the distance to the player each update cycle and,
-	 * if the cooldown for attacking was finished, would apply damage. Using box2d, an event will
-	 * be generated whenever the zombie collides with a player, making the job easier. The zombie
-	 * now attacks when in enters melee range of the player.
-	 */
+	/* Assessment 3: the two methods below handle contact events generated by box2d. */
 	
 	/**
 	 * Called by {@link WorldContactListener} when the player is in contact.
@@ -115,8 +155,16 @@ public class Zombie extends Character {
 		this.inMeleeRange = false;
 	}
 	
+	// Assessment 3: added knockback and stun when hit by the player to make killing swarms easier.
 	@Override
 	public void takeDamage(int damage) {
+		Player player = gameManager.getPlayer();
+		Vector2 impulse = getVectorTo(player).nor();
+		
+		b2body.applyLinearImpulse(impulse.scl(-8f * b2body.getMass()), getPos(), true);
+		
+		stunTimer = 0.5f;
+		
 		if (health - damage >= 0) {
     		health -= damage;
     	} else {

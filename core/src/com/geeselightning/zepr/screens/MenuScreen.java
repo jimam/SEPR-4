@@ -1,8 +1,6 @@
 package com.geeselightning.zepr.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -13,6 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.geeselightning.zepr.game.Zepr;
 
+/**
+ * Main menu screen. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>now extends DefaultScreen</li>
+ * <li>added menu button for the minigame</li>
+ * </ul>
+ * @author Xzytl
+ * 
+ */
 public class MenuScreen extends DefaultScreen {
 	private Stage stage;
 	private Label titleLabel;
@@ -46,12 +54,15 @@ public class MenuScreen extends DefaultScreen {
 
 		// Creating buttons.
 		TextButton start = new TextButton("Start", skin);
+		TextButton miniGame = new TextButton("Minigame", skin);
 		TextButton exit = new TextButton("Exit", skin);
 
 		// Adding content to the table (screen).
 		table.add(titleLabel);
 		table.row().pad(10, 40, 10, 40);
 		table.add(start).fillX().uniformX();
+		table.row().pad(10, 40, 10, 40);
+		table.add(miniGame).fillX().uniformX();
 		table.row().pad(10, 40, 10, 40);
 		table.add(exit).fillX().uniformX();
 
@@ -60,6 +71,14 @@ public class MenuScreen extends DefaultScreen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				parent.changeScreen(Zepr.SELECT);
+			}
+		});
+		
+		// Defining actions for the minigame button
+		miniGame.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				parent.changeScreen(Zepr.MINIGAME);
 			}
 		});
 

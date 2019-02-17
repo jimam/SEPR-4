@@ -8,9 +8,8 @@ import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -20,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.geeselightning.zepr.KeyboardController;
+import com.geeselightning.zepr.entities.BossZombie;
 import com.geeselightning.zepr.entities.Entity;
 import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.PowerUp;
@@ -33,60 +33,96 @@ import com.geeselightning.zepr.world.WorldContactListener;
 
 import box2dLight.RayHandler;
 
+//import box2dLights.RayHandler;
+
 /**
- * Coordinator for the main game logic and rendering.
- * 
- * @author Xzytl Changes: implemented
+ * Coordinator for the main game logic and rendering. <br/>
+ * Implemented in assessment 3.
+ * @author Xzytl
  */
 public class GameManager implements Disposable {
 
 	private final Zepr parent;
+	// The instance of GameManager used by the game.
 	public static GameManager instance;
 
+	// The preferences file that holds save data.
+	private Preferences prefs;
+
+	// Defines whether the game is currently running.
 	private boolean gameRunning = false;
+	// Defines whether a level is currently loaded.
 	private boolean levelLoaded = false;
 
+	// The furthest level reached.
 	private int levelProgress = 0;
 
 	/* GameScreen display objects */
 	private OrthographicCamera gameCamera;
 	private SpriteBatch batch;
 
+	// The controller used to interact with the player character.
 	private KeyboardController controller;
 
+	// The map of waves in each level.
 	private Map<Level.Location, Wave[]> waves = new HashMap<>();
 
 	/* Level specific fields */
+	// The box2d world the entities exist in.
 	private World world;
+	// The map renderer.
 	private TiledMapRenderer tiledMapRenderer;
 	private Box2DDebugRenderer debugRenderer;
+
 	private RayHandler rayHandler;
 	private Hud hud;
+  
 	private Player player;
 	private Player.Type playerType;
 	private Level level;
 	private Level.Location location;
+	// The current wave being attempted.
 	private int waveProgress = 0;
+	// The number of zombies queued for spawning.
 	private int zombiesToSpawn = 0;
+	// The time until the next set of zombies will be spawned.
 	private float spawnCooldown = 0;
+	// Defines whether there is a boss active in the current wave.
+	private boolean activeBoss;
 
+	// All the active entities - used for update and drawing.
 	private ArrayList<Entity> entities;
+	// All the active zombies.
 	private ArrayList<Zombie> zombies;
+	// All the active power-ups.
 	private ArrayList<PowerUp> powerUps;
 
+	// Random generator for power-up types.
 	private static RandomEnum<PowerUp.Type> randomPowerUpType = new RandomEnum<PowerUp.Type>(PowerUp.Type.class);
+	// Random generator for zombie types.
 	private static RandomEnum<Zombie.Type> randomZombieType = new RandomEnum<Zombie.Type>(Zombie.Type.class);
 
 	private GameManager(Zepr parent) {
 		this.parent = parent;
 
 		controller = new KeyboardController();
+		
+		prefs = Gdx.app.getPreferences("ZEPR Preferences");
 
+		// Define the waves for each level
 		waves.put(Level.Location.TOWN, new Wave[] { Wave.SMALL, Wave.MEDIUM });
 		waves.put(Level.Location.HALIFAX, new Wave[] { Wave.SMALL, Wave.MEDIUM });
-		waves.put(Level.Location.COURTYARD, new Wave[] { Wave.MEDIUM, Wave.LARGE, Wave.MINIBOSS });
+		waves.put(Level.Location.CENTRALHALL, new Wave[] { Wave.MEDIUM, Wave.LARGE, Wave.MINIBOSS });
+		waves.put(Level.Location.COURTYARD, new Wave[] { Wave.MEDIUM, Wave.LARGE, Wave.MEDIUM });
+		waves.put(Level.Location.LIBRARY, new Wave[] { Wave.SMALL, Wave.MEDIUM, Wave.MEDIUM });
+		waves.put(Level.Location.RONCOOKE, new Wave[] { Wave.LARGE, Wave.LARGE, Wave.BOSS });
 	}
 
+	/**
+	 * Fetches the current instance of GameManager, or creates a new one if none currently exist.
+	 * @param parent	the instance of the game to use
+	 * @return	a GameManager instance
+	 */
 	public static GameManager getInstance(Zepr parent) {
 		if (instance == null) {
 			instance = new GameManager(parent);
@@ -95,6 +131,10 @@ public class GameManager implements Disposable {
 	}
 
 	/* Accessor methods */
+	public Preferences getPrefs() {
+		return prefs;
+	}
+	
 	public boolean isGameRunning() {
 		return gameRunning;
 	}
@@ -196,12 +236,12 @@ public class GameManager implements Disposable {
 		this.zombies.remove(zombie);
 		this.entities.remove(zombie);
 	}
-	
+
 	public void addPowerUp(PowerUp powerUp) {
 		this.powerUps.add(powerUp);
 		this.entities.add(powerUp);
 	}
-	
+
 	public void removePowerUp(PowerUp powerUp) {
 		this.powerUps.remove(powerUp);
 		this.entities.remove(powerUp);
@@ -227,8 +267,12 @@ public class GameManager implements Disposable {
 		return mousePos;
 	}
 
+	/**
+	 * Loads the {@link Level} defined by the location variable and sets level-specific fields.
+	 */
 	public void loadLevel() {
 		System.out.println("Beginning level loading...");
+		// Create a new box2d world.
 		world = new World(Vector2.Zero, true);
 		world.setContactListener(new WorldContactListener());
 
@@ -238,11 +282,13 @@ public class GameManager implements Disposable {
 		rayHandler.setAmbientLight(0.7f);
 
 		level = new Level(parent, location);
+		// Loads the level and creates the renderer for the TiledMap.
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(level.load(), 1 / (float) Constant.PPT);
 		tiledMapRenderer.setView(gameCamera);
 
 		hud = new Hud(parent);
 
+		// Instantiates entity lists.
 		this.entities = new ArrayList<>();
 		this.zombies = new ArrayList<>();
 		this.powerUps = new ArrayList<>();
@@ -251,6 +297,7 @@ public class GameManager implements Disposable {
 
 		hud.setHealthLabel(player.getHealth());
 
+		// Initialises/resets the wave progress to the start.
 		waveProgress = 0;
 
 		levelLoaded = true;
@@ -260,14 +307,23 @@ public class GameManager implements Disposable {
 		System.out.println("Finished level loading");
 	}
 
+	/**
+	 * Creates the player character and places it in the world.
+	 */
 	public void spawnPlayer() {
 		player = new Player(parent, 0.3f, level.getPlayerSpawn(), 0f, playerType);
 		player.defineBody();
 		addEntity(player);
 	}
 
+	/**
+	 * Determines number of zombies to spawn based on wave parameter.
+	 * Spawns a power-up if a wave has just been completed.
+	 */
 	public void loadWave() {
 		System.out.println("Beginning wave loading...");
+		boolean spawnBoss = false;
+		activeBoss = false;
 		List<Vector2> zombieSpawns = level.getZombieSpawns();
 		switch (getWave(this.location, waveProgress)) {
 		case LARGE:
@@ -279,27 +335,59 @@ public class GameManager implements Disposable {
 		case SMALL:
 			zombiesToSpawn = 2 * zombieSpawns.size();
 			break;
+		case MINIBOSS:
+		case BOSS:
+			zombiesToSpawn = 3 * zombieSpawns.size();
+			spawnBoss = true;
+			break;
 		default:
 			break;
 		}
 		hud.setProgressLabel(waveProgress + 1, zombiesToSpawn);
 		spawnCooldown = 0;
 		System.out.println("Zombies to spawn: " + zombiesToSpawn);
-		
+
 		if (waveProgress > 0) {
 			PowerUp powerUp = new PowerUp(parent, 0.2f, level.getPlayerSpawn(), 0, randomPowerUpType.getRandom());
 			powerUp.defineBody();
 			addPowerUp(powerUp);
 		}
-		
+
+		if (spawnBoss) {
+			spawnBoss(zombieSpawns.get(0));
+		}
 		System.out.println("Finished wave loading");
 	}
+	
+	/**
+	 * Spawns a boss in the level.
+	 * @param spawnLocation	the world location to spawn the boss
+	 */
+	public void spawnBoss(Vector2 spawnLocation) {
+		BossZombie.Type type;
+		Wave wave = getWave(this.location, waveProgress);
+		if (wave.equals(Wave.MINIBOSS)) {
+			type = BossZombie.Type.MINIBOSS;
+		} else if (wave.equals(Wave.BOSS)) {
+			type = BossZombie.Type.BOSS;
+		} else {
+			return;
+		}
+		BossZombie zombie = new BossZombie(parent, spawnLocation, 0, type);
+		zombie.defineBody();
+		addEntity(zombie);
+		activeBoss = true;
+	}
 
+	/**
+	 * Spawns a set of zombies in the level.
+	 * @param delta	the seconds since the last update cycle
+	 */
 	public void spawnZombies(float delta) {
 		if (spawnCooldown <= 0) {
 			List<Vector2> zombieSpawns = level.getZombieSpawns();
 			zombieSpawns.forEach(sp -> {
-				Zombie zombie = new Zombie(parent, new Sprite(new Texture("zombie01.png")), 0.3f, sp, 0,
+				Zombie zombie = new Zombie(parent, 0.3f, sp, 0,
 						randomZombieType.getRandom());
 				zombie.defineBody();
 				addZombie(zombie);
@@ -311,6 +399,9 @@ public class GameManager implements Disposable {
 		}
 	}
 
+	/**
+	 * Advances to the next wave if one exists, or ends the level if not.
+	 */
 	public void waveComplete() {
 		System.out.println("Wave complete!");
 		this.waveProgress += 1;
@@ -322,6 +413,9 @@ public class GameManager implements Disposable {
 		}
 	}
 
+	/**
+	 * Unlocks the next level and changes to the level complete screen.
+	 */
 	public void levelComplete() {
 		if (location.getNum() + 1 > levelProgress) {
 			levelProgress += 1;
@@ -331,6 +425,10 @@ public class GameManager implements Disposable {
 		parent.changeScreen(Zepr.LEVEL_COMPLETE);
 	}
 
+	/**
+	 * Runs update logic for each entity, processes player input and updates the camera.
+	 * @param delta	the seconds since the last update cycle
+	 */
 	public void update(float delta) {
 		if (!gameRunning)
 			return;
@@ -350,9 +448,11 @@ public class GameManager implements Disposable {
 		}
 
 		// Check if the wave has been completed
-		if (zombies.size() + zombiesToSpawn == 0) {
+		if (zombies.size() + zombiesToSpawn == 0 && !activeBoss) {
 			waveComplete();
 		}
+		
+		hud.setBossLabel(activeBoss);
 
 		// Resolve user input
 		handleInput();
@@ -365,10 +465,12 @@ public class GameManager implements Disposable {
 		// Change the position of the map
 		tiledMapRenderer.setView(gameCamera);
 
+		// Spawns more zombies if necessary.
 		if (zombiesToSpawn > 0) {
 			spawnZombies(delta);
 		}
 
+		// Removes dead entities from the world.
 		List<Entity> deadEntities = entities.stream().filter(e -> (!e.isAlive() && !(e instanceof Player)))
 				.collect(Collectors.toList());
 		deadEntities.forEach(e -> {
@@ -377,20 +479,25 @@ public class GameManager implements Disposable {
 				zombies.remove(e);
 			} else if (e instanceof PowerUp) {
 				powerUps.remove(e);
+			} else if (e instanceof BossZombie) {
+				activeBoss = false;
 			}
 			entities.remove(e);
 		});
 		entities.forEach(e -> e.update(delta));
 
-		hud.setProgressLabel(waveProgress + 1, zombies.size() + zombiesToSpawn);
+		int zombiesAlive = activeBoss ? zombies.size() + zombiesToSpawn + 1: zombies.size() + zombiesToSpawn;
+		hud.setProgressLabel(waveProgress + 1, zombiesAlive);
 		hud.setHealthLabel(player.getHealth());
-		
+
+		// Displays the power-up available.
 		if (powerUps.size() > 0) {
 			hud.setPowerUpLabel(powerUps.get(0).getType());
 		} else {
 			hud.setPowerUpLabel(null);
 		}
 
+		// Renders entities on the screen.
 		draw();
 
 		// Step through the physics world simulation
@@ -441,6 +548,9 @@ public class GameManager implements Disposable {
 
 	}
 
+	/**
+	 * Calls the draw() method for every entity, and renders the map.
+	 */
 	public void draw() {
 		tiledMapRenderer.render(level.getBackgroundLayers());
 		batch.setProjectionMatrix(gameCamera.combined);
@@ -458,7 +568,7 @@ public class GameManager implements Disposable {
 
 	@Override
 	public void dispose() {
-		rayHandler.dispose();
+//		rayHandler.dispose();
 		debugRenderer.dispose();
 		world.dispose();
 	}

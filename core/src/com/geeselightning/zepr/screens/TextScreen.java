@@ -11,6 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.geeselightning.zepr.game.Zepr;
 
+/**
+ * Generic screen for displaying text. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>class now extends DefaultScreen</li>
+ * <li>now allows subtitle text</li>
+ * </ul>
+ * @author Xzytl
+ *
+ */
 public class TextScreen extends DefaultScreen {
 
 	private Label titleText;

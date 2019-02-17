@@ -16,13 +16,42 @@ import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.world.Level;
 
+/**
+ * Screen that displays level and player class options. <br/>
+ * Assessment 3 changes:
+ * <ul>
+ * <li>class now extends DefaultScreen</li>
+ * <li>save/load functionality fully implemented</li>
+ * <li>three additional levels added</li>
+ * <li>level selection is now passed to GameManager for loading, rather than each level being a 
+ * 		different screen to switch to.</li>
+ * </ul>
+ * @author Xzytl
+ *
+ */
 public class SelectLevelScreen extends DefaultScreen {
 
 	private Stage stage;
 	private Label stageDescription;
 	private Label characterDescription;
+	// Defines whether a level has been selected
 	private boolean levelSet;
+	// Defines whether a player class has been selected
 	private boolean playerSet;
+	
+	private TextButton town;
+	private TextButton halifax;
+	private TextButton centralHall;
+	private TextButton courtyard;
+	private TextButton library;
+	private TextButton ronCooke;
+	
+	private final String townDescription = "You wake up hungover in town to discover there is a zombie apocalypse.";
+	private final String halifaxDescription = "You need to get your laptop with the work on it from your accommodation.";
+	private final String centralHallDescription = "For no readily apparent reason, you decide central hall would be a nice place to relax.";
+	private final String courtyardDescription = "You should go to Courtyard and get some breakfast.";
+	private final String libraryDescription = "Surely no zombie would dare defile the sacred silent space of the library? Yeah, right.";
+	private final String ronCookeDescription = "Are you going to allow a little zombie plague to stop you getting all 9250 pounds worth of your education? Time for lectures.";
 	
 	private GameManager gameManager;
 
@@ -47,11 +76,14 @@ public class SelectLevelScreen extends DefaultScreen {
 		TextButton save = new TextButton("Save", skin);
 		TextButton load = new TextButton("Load", skin);
 		TextButton back = new TextButton("Back", skin);
-
+		
 		/* Level selection buttons */
-		TextButton town = new TextButton("Town", skin);
-		TextButton halifax = new TextButton("Halifax", skin);
-		TextButton courtyard = new TextButton("Courtyard", skin);
+		town = new TextButton("Town", skin);
+		halifax = new TextButton("Halifax", skin);
+		centralHall = new TextButton("Central Hall", skin);
+		courtyard = new TextButton("Courtyard", skin);
+		library = new TextButton("Library", skin);
+		ronCooke = new TextButton("Ron Cooke", skin);
 
 		/* Character selection buttons */
 		TextButton nerdy = new TextButton("Nerdy", skin);
@@ -63,10 +95,7 @@ public class SelectLevelScreen extends DefaultScreen {
 
 		/* Level descriptions */
 		Label title = new Label("Choose a stage and character.", skin, "subtitle");
-		final String townDescription = "You wake up hungover in town to discover there is a zombie apocalypse.";
-		final String halifaxDescription = "You need to get your laptop with the work on it from your accomodation.";
-		final String courtyardDescription = "You should go to Courtyard and get some breakfast.";
-		final String lockedDescription = "This stage is locked until you complete the previous one.";
+		//final String lockedDescription = "This stage is locked until you complete the previous one.";
 		final String defaultDescription = "Select a stage from the buttons above.";
 		stageDescription = new Label(defaultDescription, skin);
 		stageDescription.setWrap(true);
@@ -94,7 +123,6 @@ public class SelectLevelScreen extends DefaultScreen {
 		menuBar.add(back).pad(10);
 		menuBar.add(save).pad(10);
 		menuBar.add(load).pad(10);
-
 		// Adding stage selector buttons.
 		Table stageSelect = new Table();
 		stageSelect.setFillParent(true);
@@ -109,7 +137,10 @@ public class SelectLevelScreen extends DefaultScreen {
 		stageSelect.row().pad(50, 0, 100, 0);
 		stageSelect.add(town).pad(10);
 		stageSelect.add(halifax).pad(10);
+		stageSelect.add(centralHall).pad(10).row();
 		stageSelect.add(courtyard).pad(10);
+		stageSelect.add(library).pad(10);
+		stageSelect.add(ronCooke).pad(10);
 
 		stageSelect.row();
 		stageSelect.add(stageDescription).width(1000f).colspan(3);
@@ -132,9 +163,40 @@ public class SelectLevelScreen extends DefaultScreen {
 		bottomTable.bottom();
 		bottomTable.add(play).pad(10).center();
 
-		// Adding button logic.
+		/**
+		 * Button event listeners
+		 */
+		
+		/**
+		 * Defines action for the save button.
+		 */
+		save.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("Level progress saved: " + gameManager.getLevelProgress());
+				gameManager.getPrefs().putInteger("levelProgress", gameManager.getLevelProgress());
+				gameManager.getPrefs().flush();
+			}
+		});
+		
+		/**
+		 * Defines action for the load button.
+		 */
+		load.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				int levelProgress = gameManager.getPrefs().getInteger("levelProgress", 0);
+				System.out.println("Level progress loaded: " + levelProgress);
+				if (levelProgress > gameManager.getLevelProgress()) {
+					gameManager.setLevelProgress(levelProgress);
+					setLevelSelectionHandlers();
+				}
+			}
+		});
 
-		// Defining actions for the back button.
+		/**
+		 * Defines action for the back button.
+		 */
 		back.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -142,7 +204,66 @@ public class SelectLevelScreen extends DefaultScreen {
 			}
 		});
 
-		// Defining actions for the town button.
+		/**
+		 * Defines action for the nerdy character selection button.
+		 */
+		nerdy.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				characterDescription.setText(nerdyDescription);
+				gameManager.setPlayerType(Player.Type.NERDY);
+				playerSet = true;
+			}
+		});
+		/**
+		 * Defines action for the sporty character selection button.
+		 */
+		sporty.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				characterDescription.setText(sportyDescripton);
+				gameManager.setPlayerType(Player.Type.SPORTY);
+				playerSet = true;
+			}
+		});
+		/**
+		 * Defines action for the heavy character selection button.
+		 */
+		heavy.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				characterDescription.setText(heavyDescription);
+				gameManager.setPlayerType(Player.Type.HEAVY);
+				playerSet = true;
+			}
+		});
+
+		/**
+		 * Defines action for the play button.
+		 */
+		play.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if (levelSet && playerSet) {
+					parent.changeScreen(Zepr.GAME);
+				}
+			}
+		});
+		
+		setLevelSelectionHandlers();
+
+	}
+	
+	/**
+	 * Enables/disables level selection buttons depending on whether the user has unlocked it.
+	 * Assessment 3: moved the following code from the show method so that it can
+	 * be called independently to allow dynamic button enabling/disabling (mainly for loading
+	 * functionality).
+	 */
+	private void setLevelSelectionHandlers() {
+		/**
+		 * Defines action for the town level selection button.
+		 */
 		town.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -152,10 +273,13 @@ public class SelectLevelScreen extends DefaultScreen {
 			}
 		});
 
+		/**
+		 * Defines action for the halifax level selection button.
+		 */
 		if (gameManager.getLevelProgress() < 1) {
-			halifax.setColor(Color.DARK_GRAY);
-			halifax.getLabel().setColor(Color.DARK_GRAY);
+			disabledButtonStyle(halifax);
 		} else {
+			enabledButtonStyle(halifax);
 			// Defining actions for the halifax button.
 			halifax.addListener(new ChangeListener() {
 				@Override
@@ -167,10 +291,30 @@ public class SelectLevelScreen extends DefaultScreen {
 			});
 		}
 
+		/**
+		 * Defines action for the central hall level selection button.
+		 */
 		if (gameManager.getLevelProgress() < 2) {
-			courtyard.setColor(Color.DARK_GRAY);
-			courtyard.getLabel().setColor(Color.DARK_GRAY);
+			disabledButtonStyle(centralHall);
 		} else {
+			enabledButtonStyle(centralHall);
+			centralHall.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					stageDescription.setText(centralHallDescription);
+					gameManager.setLocation(Level.Location.CENTRALHALL);
+					levelSet = true;
+				}
+			});
+		}
+		
+		/**
+		 * Defines action for the courtyard level selection button.
+		 */
+		if (gameManager.getLevelProgress() < 3) {
+			disabledButtonStyle(courtyard);
+		} else {
+			enabledButtonStyle(courtyard);
 			// Defining actions for the courtyard button.
 			courtyard.addListener(new ChangeListener() {
 				@Override
@@ -181,44 +325,53 @@ public class SelectLevelScreen extends DefaultScreen {
 				}
 			});
 		}
-
-		// Defining actions for the nerdy button.
-
-		nerdy.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				characterDescription.setText(nerdyDescription);
-				gameManager.setPlayerType(Player.Type.NERDY);
-				playerSet = true;
-			}
-		});
-		sporty.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				characterDescription.setText(sportyDescripton);
-				gameManager.setPlayerType(Player.Type.SPORTY);
-				playerSet = true;
-			}
-		});
-		heavy.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				characterDescription.setText(heavyDescription);
-				gameManager.setPlayerType(Player.Type.HEAVY);
-				playerSet = true;
-			}
-		});
-
-		// Defining actions for the play button.
-		play.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				if (levelSet && playerSet) {
-					parent.changeScreen(Zepr.GAME);
+		
+		/**
+		 * Defines action for the library level selection button.
+		 */
+		if (gameManager.getLevelProgress() < 4) {
+			disabledButtonStyle(library);
+		} else {
+			enabledButtonStyle(library);
+			library.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					stageDescription.setText(libraryDescription);
+					gameManager.setLocation(Level.Location.LIBRARY);
+					levelSet = true;
 				}
-			}
-		});
-
+			});
+		}
+		
+		/**
+		 * Defines action for the Ron Cooke level selection button.
+		 */
+		if (gameManager.getLevelProgress() < 5) {
+			disabledButtonStyle(ronCooke);
+		} else {
+			enabledButtonStyle(ronCooke);
+			ronCooke.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					stageDescription.setText(ronCookeDescription);
+					gameManager.setLocation(Level.Location.RONCOOKE);
+					levelSet = true;
+				}
+			});
+		}
+		
+	}
+	
+	// Assessment 3: convenience method to set a button to the disabled style.
+	private void disabledButtonStyle(TextButton button) {
+		button.setColor(Color.DARK_GRAY);
+		button.getLabel().setColor(Color.DARK_GRAY);
+	}
+	
+	// Assessment 3: convenience method to set a button to the enabled style.
+	private void enabledButtonStyle(TextButton button) {
+		button.setColor(Color.WHITE);
+		button.getLabel().setColor(Color.WHITE);
 	}
 
 	@Override
