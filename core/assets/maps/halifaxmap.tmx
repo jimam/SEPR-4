@@ -98,31 +98,31 @@
 </data>
  </layer>
  <objectgroup id="3" name="Spawns">
-  <object id="29" name="Player" x="290" y="249">
+  <object id="29" name="PlayerSpawn" x="290" y="249">
    <properties>
     <property name="type" value="player"/>
    </properties>
    <point/>
   </object>
-  <object id="30" name="Zombie" x="488" y="283">
+  <object id="30" name="ZombieSpawn1" x="488" y="283">
    <properties>
     <property name="type" value="zombie"/>
    </properties>
    <point/>
   </object>
-  <object id="31" name="Zombie" x="93" y="184">
+  <object id="31" name="ZombieSpawn2" x="93" y="184">
    <properties>
     <property name="type" value="zombie"/>
    </properties>
    <point/>
   </object>
-  <object id="32" name="Zombie" x="595" y="46">
+  <object id="32" name="ZombieSpawn3" x="595" y="46">
    <properties>
     <property name="type" value="zombie"/>
    </properties>
    <point/>
   </object>
-  <object id="33" name="Zombie" x="128" y="444">
+  <object id="33" name="ZombieSpawn4" x="128" y="444">
    <properties>
     <property name="type" value="Zombie"/>
    </properties>
