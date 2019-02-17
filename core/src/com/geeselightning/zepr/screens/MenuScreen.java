@@ -44,12 +44,15 @@ public class MenuScreen extends DefaultScreen {
 
 		// Creating buttons.
 		TextButton start = new TextButton("Start", skin);
+		TextButton miniGame = new TextButton("Minigame", skin);
 		TextButton exit = new TextButton("Exit", skin);
 
 		// Adding content to the table (screen).
 		table.add(titleLabel);
 		table.row().pad(10, 40, 10, 40);
 		table.add(start).fillX().uniformX();
+		table.row().pad(10, 40, 10, 40);
+		table.add(miniGame).fillX().uniformX();
 		table.row().pad(10, 40, 10, 40);
 		table.add(exit).fillX().uniformX();
 
@@ -58,6 +61,13 @@ public class MenuScreen extends DefaultScreen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				parent.changeScreen(Zepr.SELECT);
+			}
+		});
+		
+		miniGame.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				parent.changeScreen(Zepr.MINIGAME);
 			}
 		});
 
