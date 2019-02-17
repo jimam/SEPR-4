@@ -11,6 +11,7 @@ public class DesktopLauncher {
 			if (arg.equals("--dev")) {
 				devMode = true;
 			}
+
 		}
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.resizable = false;

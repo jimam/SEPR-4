@@ -63,7 +63,7 @@ public class SelectLevelScreen extends DefaultScreen {
 		TextButton save = new TextButton("Save", skin);
 		TextButton load = new TextButton("Load", skin);
 		TextButton back = new TextButton("Back", skin);
-
+		TextButton miniGame = new TextButton("Mini Game", skin);
 		/* Level selection buttons */
 		town = new TextButton("Town", skin);
 		halifax = new TextButton("Halifax", skin);
@@ -110,7 +110,7 @@ public class SelectLevelScreen extends DefaultScreen {
 		menuBar.add(back).pad(10);
 		menuBar.add(save).pad(10);
 		menuBar.add(load).pad(10);
-
+		menuBar.add(miniGame).pad(10);
 		// Adding stage selector buttons.
 		Table stageSelect = new Table();
 		stageSelect.setFillParent(true);
