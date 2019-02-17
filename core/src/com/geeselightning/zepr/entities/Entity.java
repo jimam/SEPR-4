@@ -110,4 +110,5 @@ public abstract class Entity {
 		
 		return new Vector2(dx, dy);
 	}
+
 }

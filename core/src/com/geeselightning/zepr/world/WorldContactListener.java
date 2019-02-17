@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.geeselightning.zepr.entities.BossZombie;
 import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.PowerUp;
 import com.geeselightning.zepr.entities.Zombie;
@@ -30,6 +31,9 @@ public class WorldContactListener implements ContactListener {
 		switch(fAType) {
 		case ZOMBIE:
 			zombieContactBegun(fA, fBType, fB);
+			break;
+		case BOSSZOMBIE:
+			bossZombieContactBegun(fA, fBType, fB);
 			break;
 		case PLAYER:
 			playerContactBegun(fA, fBType, fB);
@@ -65,6 +69,20 @@ public class WorldContactListener implements ContactListener {
 		}
 	}
 	
+	public void bossZombieContactBegun(Fixture fA, FixtureType fBType, Fixture fB) {
+		BossZombie boss = (BossZombie) fA.getBody().getUserData();
+		switch(fBType) {
+		case PLAYER:
+			boss.beginContact();
+			break;
+		case MELEE_SENSOR:
+			((Player)fB.getBody().getUserData()).onMeleeRangeEntered(boss);
+			break;
+		default:
+			break;
+		}
+	}
+	
 	/**
 	 * Called when a player comes into contact with a second fixture.
 	 * @param fA		the player body fixture
@@ -76,6 +94,9 @@ public class WorldContactListener implements ContactListener {
 		switch(fBType) {
 		case ZOMBIE:
 			((Zombie)fB.getBody().getUserData()).beginContact();
+			break;
+		case BOSSZOMBIE:
+			((BossZombie)fB.getBody().getUserData()).beginContact();
 			break;
 		case POWERUP:
 			player.onPickup((PowerUp)fB.getBody().getUserData());
@@ -98,6 +119,7 @@ public class WorldContactListener implements ContactListener {
 		case PLAYER:
 			((Player)fB.getBody().getUserData()).onPickup(powerUp);
 			powerUp.setAlive(false);
+			break;
 		default:
 			break;
 		}
@@ -113,6 +135,10 @@ public class WorldContactListener implements ContactListener {
 		switch(fBType) {
 		case ZOMBIE:
 			((Player)fA.getBody().getUserData()).onMeleeRangeEntered((Zombie)fB.getBody().getUserData());
+			break;
+		case BOSSZOMBIE:
+			((Player)fA.getBody().getUserData()).onMeleeRangeEntered((BossZombie)fB.getBody().getUserData());
+			break;
 		default:
 			break;
 		}
@@ -131,6 +157,9 @@ public class WorldContactListener implements ContactListener {
 		switch(fAType) {
 		case ZOMBIE:
 			zombieContactEnded(fA, fBType, fB);
+			break;
+		case BOSSZOMBIE:
+			bossZombieContactEnded(fA, fBType, fB);
 			break;
 		case PLAYER:
 			playerContactEnded(fA, fBType, fB);
@@ -164,6 +193,26 @@ public class WorldContactListener implements ContactListener {
 	}
 	
 	/**
+	 * Called when a boss leaves contact with a second fixture.
+	 * @param fA		the boss body fixture
+	 * @param fBType	the type of the second fixture
+	 * @param fB		the second fixture
+	 */
+	public void bossZombieContactEnded(Fixture fA, FixtureType fBType, Fixture fB) {
+		BossZombie boss = (BossZombie) fA.getBody().getUserData();
+		switch(fBType) {
+		case PLAYER:
+			boss.endContact();
+			break;
+		case MELEE_SENSOR:
+			((Player)fB.getBody().getUserData()).onMeleeRangeLeft(boss);
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/**
 	 * Called when a player leaves contact with a second fixture.
 	 * @param fA		the power-up body fixture
 	 * @param fBType	the type of the second fixture
@@ -173,6 +222,9 @@ public class WorldContactListener implements ContactListener {
 		switch(fBType) {
 		case ZOMBIE:
 			((Zombie)fB.getBody().getUserData()).endContact();
+			break;
+		case BOSSZOMBIE:
+			((BossZombie)fB.getBody().getUserData()).endContact();
 			break;
 		default:
 			break;
@@ -189,6 +241,10 @@ public class WorldContactListener implements ContactListener {
 		switch(fBType) {
 		case ZOMBIE:
 			((Player)fA.getBody().getUserData()).onMeleeRangeLeft((Zombie)fB.getBody().getUserData());
+			break;
+		case BOSSZOMBIE:
+			((Player)fA.getBody().getUserData()).onMeleeRangeLeft((BossZombie)fB.getBody().getUserData());
+			break;
 		default:
 			break;
 		}

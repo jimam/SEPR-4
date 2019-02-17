@@ -33,6 +33,7 @@ public class Hud implements Disposable {
 	private Label progressLabel;
 	private Label healthLabel;
 	private Label powerUpLabel;
+	private Label bossLabel;
 
 	public Hud(Zepr parent) {
 		viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -45,11 +46,13 @@ public class Hud implements Disposable {
 		progressLabel = new Label("Wave 1", skin);
 		healthLabel = new Label("Health: 100HP", skin);
 		powerUpLabel = new Label("No powerup", skin);
+		bossLabel = new Label("", skin);
 
 		table.top().left();
 		table.add(progressLabel).pad(10).left().row();
 		table.add(healthLabel).pad(10).left().row();
-		table.add(powerUpLabel).pad(10).left();
+		table.add(powerUpLabel).pad(10).left().row();
+		table.add(bossLabel).pad(10).left();
 
 		stage.addActor(table);
 	}
@@ -68,6 +71,14 @@ public class Hud implements Disposable {
 			powerUpLabel.setText("Power up available: " + type);
 		} else {
 			powerUpLabel.setText("No powerup");
+		}
+	}
+	
+	public void setBossLabel(boolean activeBoss) {
+		if (activeBoss) {
+			bossLabel.setText("Active boss");
+		} else {
+			bossLabel.setText("");
 		}
 	}
 

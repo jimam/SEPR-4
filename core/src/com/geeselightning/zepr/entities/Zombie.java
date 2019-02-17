@@ -1,5 +1,6 @@
 package com.geeselightning.zepr.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -19,14 +20,25 @@ import com.geeselightning.zepr.world.WorldContactListener;
 public class Zombie extends Character {
 	
 	public enum Type {
-		SLOW, MEDIUM, FAST
+		SLOW("zombie01.png"),
+		MEDIUM("zombie02.png"),
+		FAST("zombie03.png");
+		
+		String textureName;
+		
+		Type(String textureName) {
+			this.textureName = textureName;
+		}
+		
 	}
 
-	protected int attackDamage = Constant.ZOMBIEDMG;
+	private int attackDamage = Constant.ZOMBIEDMG;
 	private final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
 	private float healthMulti;
 	private float speedMulti;
 	private float damageMulti;
+	
+	private int density = 10;
 	
 	/**
 	 * Whether or not the zombie is in range of the player - used to determine whether the zombie
@@ -36,8 +48,8 @@ public class Zombie extends Character {
 	
 	public float stunTimer;
 
-	public Zombie(Zepr parent, Sprite sprite, float bRadius, Vector2 initialPos, float initialRot, Type type) {
-		super(parent, sprite, bRadius, initialPos, initialRot);
+	public Zombie(Zepr parent, float bRadius, Vector2 initialPos, float initialRot, Type type) {
+		super(parent, new Sprite(new Texture(type.textureName)), bRadius, initialPos, initialRot);
 		switch (type) {
 		case SLOW:
 			healthMulti = Constant.SLOWHPMULT;
@@ -72,7 +84,7 @@ public class Zombie extends Character {
 		CircleShape shape = new CircleShape();
 		shape.setRadius(this.bRadius);
 		fBodyDef.shape = shape;
-		fBodyDef.density = 10;
+		fBodyDef.density = density;
 		
 		b2body = world.createBody(bDef);
 		b2body.createFixture(fBodyDef).setUserData(FixtureType.ZOMBIE);
@@ -137,7 +149,7 @@ public class Zombie extends Character {
 		Player player = gameManager.getPlayer();
 		Vector2 impulse = getVectorTo(player);
 
-		b2body.applyLinearImpulse(impulse.scl(-10f), getPos(), true);
+		b2body.applyLinearImpulse(impulse.scl(-1f * density), getPos(), true);
 		
 		stunTimer = 0.5f;
 		

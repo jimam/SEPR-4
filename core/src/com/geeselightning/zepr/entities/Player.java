@@ -56,7 +56,7 @@ public class Player extends Character {
 	 * Contains the zombies currently in range and in front of the player that will
 	 * be damaged when the attack ability is used.
 	 */
-	private Set<Zombie> zombiesInRange;
+	private Set<Character> zombiesInRange;
 
 	/**
 	 * Contains the power-ups currently active on the player. Float represents the
@@ -188,23 +188,23 @@ public class Player extends Character {
 	}
 
 	/**
-	 * Called by {@link WorldContactListener} when a zombie enters the player's
+	 * Called by {@link WorldContactListener} when a character enters the player's
 	 * melee range.
 	 * 
-	 * @param zombie the zombie that has entered range
+	 * @param character the character that has entered range
 	 */
-	public void onMeleeRangeEntered(Zombie zombie) {
-		this.zombiesInRange.add(zombie);
+	public void onMeleeRangeEntered(Character character) {
+		this.zombiesInRange.add(character);
 	}
 
 	/**
-	 * Called by {@link WorldContactListener} when a zombie leaves the player's
+	 * Called by {@link WorldContactListener} when a character leaves the player's
 	 * melee range
 	 * 
-	 * @param zombie the zombie that has left range
+	 * @param character the character that has left range
 	 */
-	public void onMeleeRangeLeft(Zombie zombie) {
-		this.zombiesInRange.remove(zombie);
+	public void onMeleeRangeLeft(Character character) {
+		this.zombiesInRange.remove(character);
 	}
 
 }

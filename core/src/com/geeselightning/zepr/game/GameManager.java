@@ -10,8 +10,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -21,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.geeselightning.zepr.KeyboardController;
+import com.geeselightning.zepr.entities.BossZombie;
 import com.geeselightning.zepr.entities.Entity;
 import com.geeselightning.zepr.entities.Player;
 import com.geeselightning.zepr.entities.PowerUp;
@@ -76,6 +75,7 @@ public class GameManager implements Disposable {
 	private int waveProgress = 0;
 	private int zombiesToSpawn = 0;
 	private float spawnCooldown = 0;
+	private boolean activeBoss;
 
 	private ArrayList<Entity> entities;
 	private ArrayList<Zombie> zombies;
@@ -284,6 +284,8 @@ public class GameManager implements Disposable {
 
 	public void loadWave() {
 		System.out.println("Beginning wave loading...");
+		boolean spawnBoss = false;
+		activeBoss = false;
 		List<Vector2> zombieSpawns = level.getZombieSpawns();
 		switch (getWave(this.location, waveProgress)) {
 		case LARGE:
@@ -294,6 +296,11 @@ public class GameManager implements Disposable {
 			break;
 		case SMALL:
 			zombiesToSpawn = 2 * zombieSpawns.size();
+			break;
+		case MINIBOSS:
+		case BOSS:
+			zombiesToSpawn = 3 * zombieSpawns.size();
+			spawnBoss = true;
 			break;
 		default:
 			break;
@@ -308,14 +315,33 @@ public class GameManager implements Disposable {
 			addPowerUp(powerUp);
 		}
 
+		if (spawnBoss) {
+			spawnBoss(zombieSpawns.get(0));
+		}
 		System.out.println("Finished wave loading");
+	}
+	
+	public void spawnBoss(Vector2 spawnLocation) {
+		BossZombie.Type type;
+		Wave wave = getWave(this.location, waveProgress);
+		if (wave.equals(Wave.MINIBOSS)) {
+			type = BossZombie.Type.MINIBOSS;
+		} else if (wave.equals(Wave.BOSS)) {
+			type = BossZombie.Type.BOSS;
+		} else {
+			return;
+		}
+		BossZombie zombie = new BossZombie(parent, spawnLocation, 0, type);
+		zombie.defineBody();
+		addEntity(zombie);
+		activeBoss = true;
 	}
 
 	public void spawnZombies(float delta) {
 		if (spawnCooldown <= 0) {
 			List<Vector2> zombieSpawns = level.getZombieSpawns();
 			zombieSpawns.forEach(sp -> {
-				Zombie zombie = new Zombie(parent, new Sprite(new Texture("zombie01.png")), 0.3f, sp, 0,
+				Zombie zombie = new Zombie(parent, 0.3f, sp, 0,
 						randomZombieType.getRandom());
 				zombie.defineBody();
 				addZombie(zombie);
@@ -366,9 +392,11 @@ public class GameManager implements Disposable {
 		}
 
 		// Check if the wave has been completed
-		if (zombies.size() + zombiesToSpawn == 0) {
+		if (zombies.size() + zombiesToSpawn == 0 && !activeBoss) {
 			waveComplete();
 		}
+		
+		hud.setBossLabel(activeBoss);
 
 		// Resolve user input
 		handleInput();
@@ -393,12 +421,15 @@ public class GameManager implements Disposable {
 				zombies.remove(e);
 			} else if (e instanceof PowerUp) {
 				powerUps.remove(e);
+			} else if (e instanceof BossZombie) {
+				activeBoss = false;
 			}
 			entities.remove(e);
 		});
 		entities.forEach(e -> e.update(delta));
 
-		hud.setProgressLabel(waveProgress + 1, zombies.size() + zombiesToSpawn);
+		int zombiesAlive = activeBoss ? zombies.size() + zombiesToSpawn + 1: zombies.size() + zombiesToSpawn;
+		hud.setProgressLabel(waveProgress + 1, zombiesAlive);
 		hud.setHealthLabel(player.getHealth());
 
 		if (powerUps.size() > 0) {

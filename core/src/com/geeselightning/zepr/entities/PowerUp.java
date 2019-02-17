@@ -64,9 +64,6 @@ public class PowerUp extends Entity {
 	}
 
 	@Override
-	public void update(float delta) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void update(float delta) {}
 
 }
