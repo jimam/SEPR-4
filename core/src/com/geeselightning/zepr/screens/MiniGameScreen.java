@@ -2,24 +2,15 @@ package com.geeselightning.zepr.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.geeselightning.zepr.KeyboardController;
 import com.geeselightning.zepr.game.Zepr;
-import com.geeselightning.zepr.minigame.Goose;
 import com.geeselightning.zepr.minigame.MiniGame;
-//import com.geeselightning.zepr.minigame.ShapeRenderer;
-import com.geeselightning.zepr.util.Constant;
 /**
  * 
  * @author ljd546
@@ -122,10 +113,9 @@ public class MiniGameScreen extends DefaultScreen {
 		public void dispose() {
 			batch.dispose();
 		}
+		
 		public void quit() {
-			this.dispose();
 			parent.changeScreen(Zepr.SELECT);
-			
 		}
 }
 
