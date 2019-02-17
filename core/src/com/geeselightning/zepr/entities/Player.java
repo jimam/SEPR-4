@@ -59,7 +59,6 @@ public class Player extends Character {
 
 	private boolean attacking;
 
-	private int attackDamage = Constant.PLAYERDMG;
 	private int hitRange = Constant.PLAYERRANGE;
 	private float hitCooldown = Constant.PLAYERHITCOOLDOWN;
 	private Texture mainTexture;
@@ -110,6 +109,18 @@ public class Player extends Character {
 	public boolean isPowerUpActive(PowerUp.Type type) {
 		return activePowerUps.containsKey(type);
 	}
+	
+	public float getPowerUpTime(PowerUp.Type type) {
+		if (isPowerUpActive(type)) {
+			return activePowerUps.get(type);
+		} else {
+			return 0f;
+		}
+	}
+	
+	public Set<Character> getZombiesInRange() {
+		return zombiesInRange;
+	}
 
 	/* Assessment 3: 
 	 *  - power-ups are now handled by the player class.
@@ -130,13 +141,18 @@ public class Player extends Character {
 
 		// Reduces the time left on a power-up every update cycle, and removes expired ones.
 		for (Map.Entry<PowerUp.Type, Float> entry : activePowerUps.entrySet()) {
-			if (entry.getValue() > 0) {
+			if (entry.getValue() - delta > 0) {
 				activePowerUps.put(entry.getKey(), entry.getValue() - delta);
 			} else {
 				activePowerUps.remove(entry.getKey());
 			}
 		}
-
+		
+		attack(delta);
+		
+	}
+	
+	public void attack(float delta) {
 		if (attacking && hitRefresh > hitCooldown) {
 			this.sprite.setTexture(attackTexture);
 			final int damage = isPowerUpActive(PowerUp.Type.STRENGTH) ? attackDamage * 2 : attackDamage;

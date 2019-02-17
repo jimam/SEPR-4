@@ -23,6 +23,8 @@ public abstract class Character extends Entity {
     protected float speed;
     /* The health of the character */
     protected int health;
+    /* The attack damage of the character */
+    protected int attackDamage;
     /* The cooldown for attacking */
     float hitRefresh = 2;
 
@@ -38,6 +40,10 @@ public abstract class Character extends Entity {
     
     public float getSpeed() {
     	return speed;
+    }
+    
+    public int getAttackDamage() {
+    	return attackDamage;
     }
     
     /* Assessment 3: main implementation handled by child classes */
