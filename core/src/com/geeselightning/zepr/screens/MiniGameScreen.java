@@ -12,9 +12,11 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.minigame.MiniGame;
 /**
+<<<<<<< HEAD
  * The screen used to render the minigame. Implemented in assessment 3.
  * @author ljd546
  * @author Xzytl
+ *
  */
 public class MiniGameScreen extends DefaultScreen {
 		
@@ -26,6 +28,10 @@ public class MiniGameScreen extends DefaultScreen {
 		private Label scoreLabel;
 		private Label ammoLabel;
 		private Label waveLabel;
+
+//		Uncomment below for debug
+//		public ShapeRenderer shapeRenderer;
+		
 		
 		public MiniGameScreen(Zepr parent){
 			super(parent);			
@@ -40,6 +46,8 @@ public class MiniGameScreen extends DefaultScreen {
 			this.backgroundSprite = new Sprite(new Texture("miniGameBG.png"));
 			this.backgroundSprite.setCenter(0, 0);
 			this.batch = new SpriteBatch();	
+			
+//			shapeRenderer = new ShapeRenderer();
 		}
 		
 		@Override
@@ -69,21 +77,34 @@ public class MiniGameScreen extends DefaultScreen {
 				quit();
 			}
 			this.miniGame.update(delta);
+			//Rendering the background
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
 			backgroundSprite.draw(batch);
+
 			// Renders goose
 			if (!miniGame.goose.isDead) {
 				miniGame.goose.draw(this.batch);
 			}
-			// Renders labels
+
+			//Renders labels for score, ammo, wave number
 			this.scoreLabel.setText("Score:   " + String.valueOf(miniGame.score));
 			this.ammoLabel.setText("Ammo: " + String.valueOf(miniGame.ammo));
 			this.waveLabel.setText("Round: " + String.valueOf(miniGame.wave));
 			this.scoreLabel.draw(batch, 1f);
 			this.ammoLabel.draw(batch, 1f);
 			this.waveLabel.draw(batch, 1f);
-			batch.end();	
+			batch.end();
+			
+//			shapeRenderer.setProjectionMatrix(camera.combined);
+//			shapeRenderer.begin(ShapeType.Line);
+//			shapeRenderer.setColor(Color.RED);
+//			//BOX AROUND GOOSE 
+//		    shapeRenderer.rect(Gdx.input.getX() - Gdx.graphics.getWidth()/2,-1 * Gdx.input.getY() + Gdx.graphics.getHeight()/2, 20, 20);
+//		    shapeRenderer.end();
+		    
+		    //DEBUG ENDS
+		    
 		}
 		
 		@Override
