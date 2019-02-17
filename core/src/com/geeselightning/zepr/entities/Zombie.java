@@ -149,7 +149,7 @@ public class Zombie extends Character {
 		Player player = gameManager.getPlayer();
 		Vector2 impulse = getVectorTo(player);
 
-		b2body.applyLinearImpulse(impulse.scl(-1f * density), getPos(), true);
+		b2body.applyLinearImpulse(impulse.scl(-1f * density * speedMulti), getPos(), true);
 		
 		stunTimer = 0.5f;
 		

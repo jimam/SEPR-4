@@ -31,6 +31,8 @@ import com.geeselightning.zepr.world.Level;
 import com.geeselightning.zepr.world.Wave;
 import com.geeselightning.zepr.world.WorldContactListener;
 
+import box2dLight.RayHandler;
+
 //import box2dLights.RayHandler;
 
 /**
