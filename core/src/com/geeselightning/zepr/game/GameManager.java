@@ -499,8 +499,8 @@ public class GameManager implements Disposable {
 		entities.forEach(entity -> entity.draw(batch));
 		batch.end();
 		tiledMapRenderer.render(level.getForegroundLayers());
-//		rayHandler.setCombinedMatrix(gameCamera);
-//		rayHandler.updateAndRender();
+		rayHandler.setCombinedMatrix(gameCamera);
+		rayHandler.updateAndRender();
 		// If dev mode is enabled, show the debug renderer for Box2D
 		if (Zepr.devMode)
 			debugRenderer.render(world, gameCamera.combined);

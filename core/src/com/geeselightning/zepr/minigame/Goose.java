@@ -35,7 +35,7 @@ public class Goose {
 			this.currentPos = new Vector2();
 			this.isDead = false;
 			this.flapping = false;
-			this.speed = speed + 0.1f;
+			this.speed = (speed + 0.1f) / 10f;
 			
 			Random rand = new Random();
 			//Generates a random start location for the goose

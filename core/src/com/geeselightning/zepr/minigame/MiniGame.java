@@ -30,7 +30,7 @@ public class MiniGame {
 		this.ammo = 3;
 		this.score = 0;
 		this.wave = 1;
-		this.goose = new Goose(1/10);
+		this.goose = new Goose(1/10f);
 		//initialises other necessary variables
 		this.timeSinceLastClick = 0;
 		this.rand = new Random();
@@ -97,7 +97,7 @@ public class MiniGame {
 		this.timeSinceLastClick = 0;
 		active = true;
 		if (wave < 8) {
-			this.goose = new Goose(wave/10);
+			this.goose = new Goose(wave/10f);
 		} else {
 			this.goose = new Goose(0.8f);
 		}
