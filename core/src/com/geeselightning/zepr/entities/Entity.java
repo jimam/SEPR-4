@@ -103,5 +103,12 @@ public abstract class Entity {
 	public double distanceFrom(Entity entity) {
 		return Math.sqrt(Math.pow(getX() - entity.getX(), 2) + Math.pow(getY() - entity.getY() ,2));
 	}
+	
+	public Vector2 getVectorTo(Entity entity) {
+		float dx = entity.getX() - getX();
+		float dy = entity.getY() - getY();
+		
+		return new Vector2(dx, dy);
+	}
 
 }

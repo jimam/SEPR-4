@@ -2,12 +2,14 @@ package com.geeselightning.zepr.world;
 
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.CircleMapObject;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -39,8 +41,10 @@ public class MapBodyBuilder {
 		Array<Body> bodies = new Array<>();
 
 		objs.forEach(o -> {
-			if (o instanceof TextureMapObject)
+			if (o instanceof TextureMapObject) {
+				System.out.println("Ignoring texture map object.");
 				return;
+			}
 
 			Shape shape;
 
@@ -52,6 +56,8 @@ public class MapBodyBuilder {
 				shape = getPolyline((PolylineMapObject) o);
 			} else if (o instanceof CircleMapObject) {
 				shape = getCircle((CircleMapObject) o);
+			} else if (o instanceof EllipseMapObject) {
+				shape = getEllipse((EllipseMapObject) o);
 			} else {
 				return;
 			}
@@ -64,7 +70,7 @@ public class MapBodyBuilder {
 			bodies.add(body);
 			shape.dispose();
 		});
-
+		
 		return bodies;
 	}
 
@@ -112,6 +118,23 @@ public class MapBodyBuilder {
 		circleShape.setRadius(circle.radius / Constant.PPT);
 		circleShape.setPosition(new Vector2(circle.x / Constant.PPT, circle.y / Constant.PPT));
 		return circleShape;
+	}
+	
+	private static ChainShape getEllipse(EllipseMapObject ellipseObject) {
+		Ellipse ellipse = ellipseObject.getEllipse();
+		float width = ellipse.width / (2 * Constant.PPT);
+		float height = ellipse.height / (2 * Constant.PPT);
+		float x = (ellipse.x / Constant.PPT) + width;
+		float y = (ellipse.y / Constant.PPT) + height;
+		ChainShape chainEllipse = new ChainShape();
+		Vector2[] vertices = new Vector2[64];
+		for (int i = 0; i < 64; i++) {
+			float t = (float)(i*2*Math.PI) / 64;
+			vertices[i] = new Vector2((width * (float)Math.cos(t) + x), (height * (float)Math.sin(t) + y));
+		}
+		
+		chainEllipse.createLoop(vertices);
+		return chainEllipse;
 	}
 
 }

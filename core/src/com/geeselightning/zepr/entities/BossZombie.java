@@ -11,67 +11,54 @@ import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.FixtureType;
 import com.geeselightning.zepr.world.WorldContactListener;
 
-/**
- * A hostile computer-controlled character that will pursue and attempt to harm the player.
- * @author Xzytl
- * Changes:
- * 	integrated box2d - position now revolves around world location rather than screen position
- */
-public class Zombie extends Character {
+public class BossZombie extends Character {
 	
 	public enum Type {
-		SLOW("zombie01.png"),
-		MEDIUM("zombie02.png"),
-		FAST("zombie03.png");
+		MINIBOSS("smallboss.png", 0.4f),
+		BOSS("smallboss.png", 0.5f);
 		
 		String textureName;
+		float bRadius;
 		
-		Type(String textureName) {
+		Type(String textureName, float bRadius) {
 			this.textureName = textureName;
+			this.bRadius = bRadius;
 		}
-		
 	}
+	
+	private int density;
+	private float hitCooldown;
+	
+	private boolean inMeleeRange;
+	
+	private float stunTimer;
+	
+	private int attackDamage;
 
-	private int attackDamage = Constant.ZOMBIEDMG;
-	private final float hitCooldown = Constant.ZOMBIEHITCOOLDOWN;
-	private float healthMulti;
-	private float speedMulti;
-	private float damageMulti;
-	
-	private int density = 10;
-	
-	/**
-	 * Whether or not the zombie is in range of the player - used to determine whether the zombie
-	 * should attack the player.
-	 */
-	public boolean inMeleeRange;
-	
-	public float stunTimer;
-
-	public Zombie(Zepr parent, float bRadius, Vector2 initialPos, float initialRot, Type type) {
-		super(parent, new Sprite(new Texture(type.textureName)), bRadius, initialPos, initialRot);
-		switch (type) {
-		case SLOW:
-			healthMulti = Constant.SLOWHPMULT;
-			speedMulti = Constant.SLOWSPEEDMULT;
-			damageMulti = Constant.SLOWDMGMULT;
+	public BossZombie(Zepr parent, Vector2 initialPos, float initialRot, Type type) {
+		super(parent, new Sprite(new Texture(type.textureName)), type.bRadius, initialPos, initialRot);
+		float speedModifier = 1.0f;
+		float healthModifier = 1.0f;
+		float damageModifier = 1.0f;
+		switch(type) {
+		case MINIBOSS:
+			speedModifier = 1.2f;
+			healthModifier = 1.0f;
+			damageModifier = 1.5f;
+			density = 15;
+			hitCooldown = Constant.ZOMBIEHITCOOLDOWN / 0.75f;
 			break;
-		case MEDIUM:
-			healthMulti = Constant.MEDHPMULT;
-			speedMulti = Constant.MEDSPEEDMULT;
-			damageMulti = Constant.MEDDMGMULT;
-			break;
-		case FAST:
-			healthMulti = Constant.FASTHPMULT;
-			speedMulti = Constant.FASTSPEEDMULT;
-			damageMulti = Constant.FASTDMGMULT;
-			break;
+		case BOSS:
+			speedModifier = 0.8f;
+			healthModifier = 2.0f;
+			damageModifier = 2.0f;
+			density = 20;
 		default:
 			break;
 		}
-		this.speed = (int) (Constant.ZOMBIESPEED * speedMulti);
-		this.health = (int) (Constant.ZOMBIEMAXHP * healthMulti);
-		this.attackDamage = (int) (Constant.ZOMBIEDMG * damageMulti);
+		this.speed = (int) (Constant.ZOMBIESPEED * speedModifier);
+		this.health = (int) (Constant.ZOMBIEMAXHP * healthModifier);
+		this.attackDamage = (int) (Constant.ZOMBIEDMG * damageModifier);
 	}
 	
 	@Override
@@ -87,7 +74,7 @@ public class Zombie extends Character {
 		fBodyDef.density = density;
 		
 		b2body = world.createBody(bDef);
-		b2body.createFixture(fBodyDef).setUserData(FixtureType.ZOMBIE);
+		b2body.createFixture(fBodyDef).setUserData(FixtureType.BOSSZOMBIE);
 		
 		b2body.setUserData(this);
 		shape.dispose();
@@ -95,13 +82,6 @@ public class Zombie extends Character {
 		b2body.setLinearDamping(5f);
 		b2body.setAngularDamping(5f);
 	}
-
-	/**
-	 * The original attack function checked for the distance to the player each update cycle and,
-	 * if the cooldown for attacking was finished and the player was within range, would apply 
-	 * damage. Using box2d, an event will be generated whenever the zombie collides with a player, 
-	 * making the job easier. The zombie now attacks when in enters melee range of the player.
-	 */
 	
 	@Override
 	public void update(float delta) {
@@ -160,4 +140,5 @@ public class Zombie extends Character {
     		this.alive = false;
     	}
 	}
+
 }

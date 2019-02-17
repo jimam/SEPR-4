@@ -34,15 +34,14 @@ public class GameScreen extends DefaultScreen {
 		gameManager.setGameCamera(camera);
 		gameManager.setSpriteBatch(batch);
 		
-		gameManager.loadLevel();
-		
-		gameManager.setGameRunning(true);
-		
 	}
 
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(gameManager.getController());
+		
+		gameManager.loadLevel();
+		gameManager.setGameRunning(true);
 	}
 
 	@Override

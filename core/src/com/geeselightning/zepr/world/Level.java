@@ -18,7 +18,10 @@ public class Level {
 	public enum Location {
 		TOWN("Town", "townmap", 0),
 		HALIFAX("Halifax College", "halifaxmap", 1),
-		COURTYARD("Courtyard", "courtyard", 2);
+		CENTRALHALL("Central Hall", "centralhallmap", 2),
+		COURTYARD("Courtyard", "courtyard", 3),
+		LIBRARY("Library", "library", 4),
+		RONCOOKE("Ron Cooke Hub", "roncooke", 5);
 		
 		String name;
 		String mapFileName;
@@ -29,9 +32,12 @@ public class Level {
 			this.mapFileName = mapFileName;
 			this.num = num;
 		}
+		
+		public int getNum() {
+			return num;
+		}
 	}
 	
-	private Zepr parent;
 	private GameManager gameManager;
 	
 	private Location location;
@@ -43,7 +49,6 @@ public class Level {
 	private List<Vector2> zombieSpawnPoints;
 
 	public Level(Zepr parent, Location location) {
-		this.parent = parent;
 		this.location = location;
 		this.gameManager = GameManager.getInstance(parent);
 		zombieSpawnPoints = new ArrayList<>();
