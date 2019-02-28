@@ -249,6 +249,15 @@ public class GameManager implements Disposable {
 		this.entities.remove(powerUp);
 	}
 
+	public void cureZombies(){
+		List<Zombie> aliveZombies = zombies.stream().filter(e -> (e.isAlive()))
+				.collect(Collectors.toList());
+		aliveZombies.forEach(e -> {
+			e.setType(Zombie.Type.HUMAN);
+			e.setSprite("player01.png");
+		});
+	}
+
 	/**
 	 * Gets the mouse position in screen coordinates (origin top-left).
 	 * 
@@ -526,10 +535,13 @@ public class GameManager implements Disposable {
 		speed *= modifier;
 
 		if (controller.F) {
+			/*
 			if(turning){
 				turnMutant();
 				turning = false;
 			}
+			*/
+			cureZombies();
 		}
 		if (controller.left) {
 			player.setLinearVelocityX(-1 * speed);
