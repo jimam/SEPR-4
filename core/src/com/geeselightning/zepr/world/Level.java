@@ -124,6 +124,8 @@ public class Level {
 	public Vector2 getPlayerSpawn() {
 		return playerSpawn;
 	}
+
+	public void setPlayerSpawn(Vector2 spawn){ playerSpawn = spawn;}
 	
 	public List<Vector2> getZombieSpawns() {
 		return zombieSpawnPoints;

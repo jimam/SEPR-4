@@ -122,20 +122,23 @@ public class Zombie extends Character {
 		}
 		
 		Player player = gameManager.getPlayer();
-		
-		Vector2 playerVector = getVectorTo(player);
-		
-		b2body.applyLinearImpulse(playerVector.nor().scl(speedMulti), getPos(), true);
-		
-		double angle = Math.toDegrees(Math.atan2(playerVector.y, playerVector.x)) - 90;
-		
-		this.setAngle(angle);
-		
-		if (inMeleeRange && hitRefresh > hitCooldown) {
-			gameManager.getPlayer().takeDamage(this.attackDamage);
-			hitRefresh = 0;
-		} else {
-			hitRefresh += delta;
+
+		if(!(player.getType() == Player.Type.MUTANT)){
+
+			Vector2 playerVector = getVectorTo(player);
+
+			b2body.applyLinearImpulse(playerVector.nor().scl(speedMulti), getPos(), true);
+
+			double angle = Math.toDegrees(Math.atan2(playerVector.y, playerVector.x)) - 90;
+
+			this.setAngle(angle);
+
+			if (inMeleeRange && hitRefresh > hitCooldown) {
+				gameManager.getPlayer().takeDamage(this.attackDamage);
+				hitRefresh = 0;
+			} else {
+				hitRefresh += delta;
+			}
 		}
 	}
 	
