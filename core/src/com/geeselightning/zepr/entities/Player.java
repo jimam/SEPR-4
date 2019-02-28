@@ -119,8 +119,11 @@ public class Player extends Character {
 		}
 	}
 
-	public void setType(Type type) {
-		this.type = type;
+	public void setType(Type type) { this.type = type; }
+
+	public void setSprite(String sprite) {
+		mainTexture = new Texture(sprite);
+		this.sprite.setTexture(mainTexture);
 	}
 
 	public Set<Character> getZombiesInRange() {
