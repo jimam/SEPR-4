@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
 import com.geeselightning.zepr.util.Constant;
 import com.geeselightning.zepr.world.BodyFactory;
@@ -145,6 +147,10 @@ public class Player extends Character {
 			} else {
 				this.health = (int) (type.healthMultiplier * Constant.PLAYERMAXHP);
 			}
+		}
+
+		if(isPowerUpActive(PowerUp.Type.CURE)){
+			GameManager.getInstance(parent).cureZombies();
 		}
 
 		// Reduces the time left on a power-up every update cycle, and removes expired ones.

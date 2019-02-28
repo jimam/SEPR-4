@@ -27,7 +27,8 @@ public class Zombie extends Character {
 	public enum Type {
 		SLOW("zombie01.png"),
 		MEDIUM("zombie02.png"),
-		FAST("zombie03.png");
+		FAST("zombie03.png"),
+		HUMAN("player01.png");
 		
 		// The filename of the image to use as a texture
 		String textureName;
@@ -42,6 +43,8 @@ public class Zombie extends Character {
 	private float healthMulti;
 	private float speedMulti;
 	private float damageMulti;
+
+	private Type type;
 	
 	// Assessment 3: controls the density of the zombie's box2d body.
 	private int density = 10;
@@ -57,6 +60,7 @@ public class Zombie extends Character {
 
 	public Zombie(Zepr parent, float bRadius, Vector2 initialPos, float initialRot, Type type) {
 		super(parent, new Sprite(new Texture(type.textureName)), bRadius, initialPos, initialRot);
+		this.type = type;
 		switch (type) {
 		case SLOW:
 			healthMulti = Constant.SLOWHPMULT;
@@ -72,6 +76,11 @@ public class Zombie extends Character {
 			healthMulti = Constant.FASTHPMULT;
 			speedMulti = Constant.FASTSPEEDMULT;
 			damageMulti = Constant.FASTDMGMULT;
+			break;
+		case HUMAN:
+			healthMulti = Constant.FASTHPMULT;
+			speedMulti = 0;
+			damageMulti = 0;
 			break;
 		default:
 			break;
@@ -150,7 +159,15 @@ public class Zombie extends Character {
 	public void beginContact() {
 		this.inMeleeRange = true;
 	}
-	
+
+	public void setType(Type type){
+		this.type = type;
+	}
+
+	public void setSprite(String textureName){
+		this.sprite.setTexture(new Texture(textureName));
+	}
+
 	/**
 	 * Called by {@link WorldContactListener} when the player leaves contact.
 	 */
