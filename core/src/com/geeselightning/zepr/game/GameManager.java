@@ -54,6 +54,8 @@ public class GameManager implements Disposable {
 	// Defines whether a level is currently loaded.
 	private boolean levelLoaded = false;
 
+	private boolean turning = true;
+
 	// The furthest level reached.
 	private int levelProgress = 0;
 
@@ -425,6 +427,10 @@ public class GameManager implements Disposable {
 		parent.changeScreen(Zepr.LEVEL_COMPLETE);
 	}
 
+	public void turnMutant() {
+		player.setType(Player.Type.MUTANT);
+	}
+
 	/**
 	 * Runs update logic for each entity, processes player input and updates the camera.
 	 * @param delta	the seconds since the last update cycle
@@ -519,6 +525,12 @@ public class GameManager implements Disposable {
 
 		speed *= modifier;
 
+		if (controller.F) {
+			if(turning){
+				turnMutant();
+				turning = false;
+			}
+		}
 		if (controller.left) {
 			player.setLinearVelocityX(-1 * speed);
 		}

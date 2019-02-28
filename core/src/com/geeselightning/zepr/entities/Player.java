@@ -37,7 +37,8 @@ public class Player extends Character {
 
 		NERDY("player01.png", "player01_attack.png", 1.5f, 1.0f, 1.0f),
 		SPORTY("player02.png", "player02_attack.png", 1.0f, 1.0f, 1.5f),
-		HEAVY("player03.png", "player03_attack.png", 1.0f, 1.5f, 1.0f);
+		HEAVY("player03.png", "player03_attack.png", 1.0f, 1.5f, 1.0f),
+		MUTANT("player03.png", "player03_attack.png", 1.0f, 1.5f, 1.0f);
 
 		String normalTextureName;
 		String attackTextureName;
@@ -117,7 +118,11 @@ public class Player extends Character {
 			return 0f;
 		}
 	}
-	
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
 	public Set<Character> getZombiesInRange() {
 		return zombiesInRange;
 	}
