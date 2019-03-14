@@ -79,8 +79,8 @@ public class Zombie extends Character {
 			break;
 		case HUMAN:
 			healthMulti = Constant.FASTHPMULT;
-			speedMulti = 0;
-			damageMulti = 0;
+			speedMulti = Constant.FASTSPEEDMULT;
+			damageMulti = Constant.FASTDMGMULT;
 			break;
 		default:
 			break;
@@ -132,7 +132,7 @@ public class Zombie extends Character {
 		
 		Player player = gameManager.getPlayer();
 
-		if(!(player.getType() == Player.Type.MUTANT)){
+		if(((!(player.getType() == Player.Type.MUTANT)) && !(type == Type.HUMAN)) || ((player.getType() == Player.Type.MUTANT) && (type == Type.HUMAN))){
 
 			Vector2 playerVector = getVectorTo(player);
 

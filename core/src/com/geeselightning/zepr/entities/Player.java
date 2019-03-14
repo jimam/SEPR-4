@@ -64,6 +64,7 @@ public class Player extends Character {
 
 	private int hitRange = Constant.PLAYERRANGE;
 	private float hitCooldown = Constant.PLAYERHITCOOLDOWN;
+	private int hitCounter = 0;
 	private Texture mainTexture;
 	private Texture attackTexture;
 
@@ -101,6 +102,8 @@ public class Player extends Character {
 		return type;
 	}
 
+	public Texture getSprite(){ return mainTexture;}
+
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
 	}
@@ -128,6 +131,13 @@ public class Player extends Character {
 		this.sprite.setTexture(mainTexture);
 	}
 
+	public void setSpriteTexture(Texture texture) {
+		System.out.println("here");
+		mainTexture = texture;
+		this.sprite.setTexture(mainTexture);
+	}
+
+
 	public Set<Character> getZombiesInRange() {
 		return zombiesInRange;
 	}
@@ -140,6 +150,10 @@ public class Player extends Character {
 	@Override
 	public void update(float delta) {
 		super.update(delta);
+
+		if(hitCounter == 3){
+			GameManager.getInstance(parent).turnMutant();
+		}
 
 		if (isPowerUpActive(PowerUp.Type.HEAL)) {
 			if (getHealth() + Constant.HEALUP < type.healthMultiplier * Constant.PLAYERMAXHP) {
@@ -195,6 +209,7 @@ public class Player extends Character {
 			return;
 		} else {
 			if (health - damage >= 0) {
+				hitCounter++;
 				health -= damage;
 			} else {
 				health = 0;

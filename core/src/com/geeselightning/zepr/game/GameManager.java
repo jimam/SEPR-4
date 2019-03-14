@@ -10,6 +10,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -84,6 +85,10 @@ public class GameManager implements Disposable {
 	private Player.Type playerType;
 	private Level level;
 	private Level.Location location;
+
+	private Player.Type oldType;
+	private Texture oldSprite;
+	private float cureCooldown = 0;
 	// The current wave being attempted.
 	private int waveProgress = 0;
 	// The number of zombies queued for spawning.
@@ -251,6 +256,11 @@ public class GameManager implements Disposable {
 	}
 
 	public void cureZombies(){
+		if(player.getType() == Player.Type.MUTANT){
+			player.setType(oldType);
+			player.setSpriteTexture(oldSprite);
+			turning = true;
+		}
 		List<Zombie> aliveZombies = zombies.stream().filter(e -> (e.isAlive()))
 				.collect(Collectors.toList());
 		aliveZombies.forEach(e -> {
@@ -438,8 +448,13 @@ public class GameManager implements Disposable {
 	}
 
 	public void turnMutant() {
-		player.setType(Player.Type.MUTANT);
-		player.setSprite("zombie02.png");
+		if(turning){
+			oldType = player.getType();
+			oldSprite = player.getSprite();
+			player.setType(Player.Type.MUTANT);
+			player.setSprite("zombie02.png");
+			turning = false;
+		}
 	}
 
 	/**
@@ -447,12 +462,17 @@ public class GameManager implements Disposable {
 	 * @param delta	the seconds since the last update cycle
 	 */
 	public void update(float delta) {
+
 		if (!gameRunning)
 			return;
 		if (!levelLoaded)
 			return;
 		if (gameCamera == null || batch == null)
 			return;
+
+		if (cureCooldown > 0){
+			cureCooldown -= delta;
+		}
 
 		// Check if the player has been killed
 		if (player.getHealth() <= 0) {
@@ -537,13 +557,10 @@ public class GameManager implements Disposable {
 		speed *= modifier;
 
 		if (controller.F) {
-			/*
-			if(turning){
-				turnMutant();
-				turning = false;
+			if(cureCooldown == 0){
+				cureZombies();
+				cureCooldown = 3;
 			}
-			*/
-			cureZombies();
 		}
 		if (controller.left) {
 			player.setLinearVelocityX(-1 * speed);
