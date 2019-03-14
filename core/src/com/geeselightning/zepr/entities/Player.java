@@ -132,7 +132,6 @@ public class Player extends Character {
 	}
 
 	public void setSpriteTexture(Texture texture) {
-		System.out.println("here");
 		mainTexture = texture;
 		this.sprite.setTexture(mainTexture);
 	}
@@ -151,8 +150,9 @@ public class Player extends Character {
 	public void update(float delta) {
 		super.update(delta);
 
-		if(hitCounter == 3){
+		if(hitCounter == 3 && type != Type.MUTANT){
 			GameManager.getInstance(parent).turnMutant();
+			hitCounter = 0;
 		}
 
 		if (isPowerUpActive(PowerUp.Type.HEAL)) {
