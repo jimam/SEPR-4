@@ -31,7 +31,7 @@ public class PowerUp extends Entity {
 		RAPID_FIRE("rapidfire.png", Constant.RPDFIRETIME),
 		SPEED("speed.png", Constant.SPEEDUPTIME),
 		STRENGTH("strength.png", Constant.ATKUPTIME),
-		CURE("strength.png", Constant.CURETIME);
+		CURE("cure.png", Constant.CURETIME);
 
 		String textureName;
 		float duration;

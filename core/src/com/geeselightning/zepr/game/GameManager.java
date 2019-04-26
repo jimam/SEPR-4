@@ -110,6 +110,8 @@ public class GameManager implements Disposable {
 	// Random generator for zombie types.
 	private static RandomEnum<Zombie.Type> randomZombieType = new RandomEnum<Zombie.Type>(Zombie.Type.class);
 
+	private float time;
+
 	private GameManager(Zepr parent) {
 		this.parent = parent;
 
@@ -254,6 +256,15 @@ public class GameManager implements Disposable {
 		this.powerUps.remove(powerUp);
 		this.entities.remove(powerUp);
 	}
+
+	public void mutateZombies(){
+        List<Zombie> aliveZombies = zombies.stream().filter(e -> (e.isAlive()))
+                .collect(Collectors.toList());
+        aliveZombies.forEach(e -> {
+                e.setType(randomZombieType.getRandom());
+                e.setSprite("zombie02.png");
+        });
+    }
 
 	public void cureZombies(){
 		if(player.getType() == Player.Type.MUTANT){
@@ -465,6 +476,8 @@ public class GameManager implements Disposable {
 	 */
 	public void update(float delta) {
 
+        time = time + delta;
+
 		if (!gameRunning)
 			return;
 		if (!levelLoaded)
@@ -472,9 +485,15 @@ public class GameManager implements Disposable {
 		if (gameCamera == null || batch == null)
 			return;
 
-		if (cureCooldown > 0){
-			cureCooldown -= delta;
-		}
+		if(Math.round(time) % 5 == 0){
+		    mutateZombies();
+        }
+        if(Math.round(time) % 20 == 0){
+            PowerUp powerUp = new PowerUp(parent, 0.2f,level.getPlayerSpawn(),0 , PowerUp.Type.CURE);
+            powerUp.defineBody();
+            addPowerUp(powerUp);
+        }
+
 
 		// Check if the player has been killed
 		if (player.getHealth() <= 0) {
@@ -558,13 +577,6 @@ public class GameManager implements Disposable {
 
 		speed *= modifier;
 
-		if (controller.F) {
-		    System.out.println(cureCooldown);
-			if(cureCooldown <= 0){
-				cureZombies();
-				cureCooldown = 3f;
-			}
-		}
 		if (controller.left) {
 			player.setLinearVelocityX(-1 * speed);
 		}

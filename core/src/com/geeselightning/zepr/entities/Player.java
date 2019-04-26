@@ -162,7 +162,6 @@ public class Player extends Character {
 				this.health = (int) (type.healthMultiplier * Constant.PLAYERMAXHP);
 			}
 		}
-
 		if(isPowerUpActive(PowerUp.Type.CURE)){
 			GameManager.getInstance(parent).cureZombies();
 		}
