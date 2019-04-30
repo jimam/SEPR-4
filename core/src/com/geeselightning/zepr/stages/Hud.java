@@ -1,5 +1,6 @@
 package com.geeselightning.zepr.stages;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.geeselightning.zepr.entities.PowerUp;
+import com.geeselightning.zepr.game.GameManager;
 import com.geeselightning.zepr.game.Zepr;
 
 /**
@@ -33,6 +35,7 @@ public class Hud implements Disposable {
 	private Label healthLabel;
 	private Label powerUpLabel;
 	private Label bossLabel;
+	private Label pauseLabel;
 
 	public Hud(Zepr parent) {
 		viewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -46,12 +49,14 @@ public class Hud implements Disposable {
 		healthLabel = new Label("Health: 100HP", skin);
 		powerUpLabel = new Label("No powerup", skin);
 		bossLabel = new Label("", skin);
+		pauseLabel = new Label("", skin);
 
 		table.top().left();
 		table.add(progressLabel).pad(10).left().row();
 		table.add(healthLabel).pad(10).left().row();
 		table.add(powerUpLabel).pad(10).left().row();
-		table.add(bossLabel).pad(10).left();
+		table.add(bossLabel).pad(10).left().row();
+		table.add(pauseLabel).pad(10).left();
 
 		stage.addActor(table);
 	}
@@ -71,6 +76,15 @@ public class Hud implements Disposable {
 		} else {
 			powerUpLabel.setText("No powerup");
 		}
+	}
+
+	public void setPauseLabel(){
+		if(GameManager.isPaused){
+			pauseLabel.setText("Game paused");
+		}else{
+			pauseLabel.setText("");
+		}
+
 	}
 	
 	public void setBossLabel(boolean activeBoss) {

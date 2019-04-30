@@ -16,7 +16,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class KeyboardController implements InputProcessor {
 
-	public boolean left, right, up, down, F;
+	public boolean left, right, up, down, ESCAPE;
 
 	public boolean isMouse1Down, isMouse2Down, isMouse3Down;
 
@@ -28,10 +28,6 @@ public class KeyboardController implements InputProcessor {
 	public boolean keyDown(int keycode) {
 		boolean keyProcessed = false;
 		switch (keycode) {
-		case Keys.F:
-			F = true;
-			keyProcessed = true;
-			break;
 		case Keys.LEFT:
 		case Keys.A:
 			left = true;
@@ -60,10 +56,6 @@ public class KeyboardController implements InputProcessor {
 	public boolean keyUp(int keycode) {
 		boolean keyProcessed = false;
 		switch (keycode) {
-		case Keys.F:
-			F = false;
-			keyProcessed = true;
-			break;
 		case Keys.LEFT:
 		case Keys.A:
 			left = false;
@@ -89,9 +81,7 @@ public class KeyboardController implements InputProcessor {
 	}
 
 	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
+	public boolean keyTyped(char character) { return false;}
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {

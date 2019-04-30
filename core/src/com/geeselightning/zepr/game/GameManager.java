@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -57,6 +58,8 @@ public class GameManager implements Disposable {
 	private boolean levelLoaded = false;
 
 	private boolean turning = true;
+
+	public static boolean isPaused = false;
 
 	// The furthest level reached.
 	private int levelProgress = 0;
@@ -282,6 +285,21 @@ public class GameManager implements Disposable {
 		});
 	}
 
+	public void setPaused(boolean isPaused){
+	    this.isPaused = isPaused;
+	    if(isPaused){
+	        this.isPaused = false;
+        }else{
+            List<Zombie> aliveZombies = zombies.stream().filter(e -> (e.isAlive()))
+                    .collect(Collectors.toList());
+            aliveZombies.forEach(e -> {
+                e.setLinearVelocity(0,0);
+            });
+            player.setLinearVelocity(0,0);
+	        this.isPaused = true;
+        }
+    }
+
 	/**
 	 * Gets the mouse position in screen coordinates (origin top-left).
 	 * 
@@ -478,89 +496,102 @@ public class GameManager implements Disposable {
 
         time = time + delta;
 
-		if (!gameRunning)
-			return;
-		if (!levelLoaded)
-			return;
-		if (gameCamera == null || batch == null)
-			return;
+        if(!isPaused) {
+            if (!gameRunning)
+                return;
+            if (!levelLoaded)
+                return;
+            if (gameCamera == null || batch == null)
+                return;
 
-		if(Math.round(time) % 5 == 0){
-		    mutateZombies();
+            if (Math.round(time) % 5 == 0) {
+                mutateZombies();
+            }
+            if (Math.round(time) % 20 == 0) {
+                PowerUp powerUp = new PowerUp(parent, 0.2f, level.getPlayerSpawn(), 0, PowerUp.Type.CURE);
+                powerUp.defineBody();
+                addPowerUp(powerUp);
+            }
+
+
+            // Check if the player has been killed
+            if (player.getHealth() <= 0) {
+                entities.forEach(e -> e.delete());
+                this.entities.clear();
+                this.zombies.clear();
+                this.powerUps.clear();
+                spawnPlayer();
+                loadWave();
+            }
+
+            // Check if the wave has been completed
+            if (zombies.size() + zombiesToSpawn == 0 && !activeBoss) {
+                waveComplete();
+            }
+
+            hud.setBossLabel(activeBoss);
+
+            // Re-centre the camera on the player after movement
+            gameCamera.position.x = player.getX();
+            gameCamera.position.y = player.getY();
+            gameCamera.update();
+
+            // Change the position of the map
+            tiledMapRenderer.setView(gameCamera);
+
+            // Spawns more zombies if necessary.
+            if (zombiesToSpawn > 0) {
+                spawnZombies(delta);
+            }
+
+            // Resolve user input
+            handleInput();
+
+            // Removes dead entities from the world.
+            List<Entity> deadEntities = entities.stream().filter(e -> (!e.isAlive() && !(e instanceof Player)))
+                    .collect(Collectors.toList());
+            deadEntities.forEach(e -> {
+                e.delete();
+                if (e instanceof Zombie) {
+                    zombies.remove(e);
+                } else if (e instanceof PowerUp) {
+                    powerUps.remove(e);
+                } else if (e instanceof BossZombie) {
+                    activeBoss = false;
+                }
+                entities.remove(e);
+            });
+            entities.forEach(e -> e.update(delta));
+
+            int zombiesAlive = activeBoss ? zombies.size() + zombiesToSpawn + 1 : zombies.size() + zombiesToSpawn;
+            hud.setProgressLabel(waveProgress + 1, zombiesAlive);
+            hud.setHealthLabel(player.getHealth());
+
+            // Displays the power-up available.
+            if (powerUps.size() > 0) {
+                hud.setPowerUpLabel(powerUps.get(0).getType());
+            } else {
+                hud.setPowerUpLabel(null);
+            }
         }
-        if(Math.round(time) % 20 == 0){
-            PowerUp powerUp = new PowerUp(parent, 0.2f,level.getPlayerSpawn(),0 , PowerUp.Type.CURE);
-            powerUp.defineBody();
-            addPowerUp(powerUp);
-        }
 
+        hud.setPauseLabel();
 
-		// Check if the player has been killed
-		if (player.getHealth() <= 0) {
-			entities.forEach(e -> e.delete());
-			this.entities.clear();
-			this.zombies.clear();
-			this.powerUps.clear();
-			spawnPlayer();
-			loadWave();
-		}
+        handlePausedInput();
 
-		// Check if the wave has been completed
-		if (zombies.size() + zombiesToSpawn == 0 && !activeBoss) {
-			waveComplete();
-		}
-		
-		hud.setBossLabel(activeBoss);
+        // Renders entities on the screen.
+        draw();
 
-		// Resolve user input
-		handleInput();
+        // Step through the physics world simulation
+        world.step(1 / 60f, 6, 2);
 
-		// Re-centre the camera on the player after movement
-		gameCamera.position.x = player.getX();
-		gameCamera.position.y = player.getY();
-		gameCamera.update();
-
-		// Change the position of the map
-		tiledMapRenderer.setView(gameCamera);
-
-		// Spawns more zombies if necessary.
-		if (zombiesToSpawn > 0) {
-			spawnZombies(delta);
-		}
-
-		// Removes dead entities from the world.
-		List<Entity> deadEntities = entities.stream().filter(e -> (!e.isAlive() && !(e instanceof Player)))
-				.collect(Collectors.toList());
-		deadEntities.forEach(e -> {
-			e.delete();
-			if (e instanceof Zombie) {
-				zombies.remove(e);
-			} else if (e instanceof PowerUp) {
-				powerUps.remove(e);
-			} else if (e instanceof BossZombie) {
-				activeBoss = false;
-			}
-			entities.remove(e);
-		});
-		entities.forEach(e -> e.update(delta));
-
-		int zombiesAlive = activeBoss ? zombies.size() + zombiesToSpawn + 1: zombies.size() + zombiesToSpawn;
-		hud.setProgressLabel(waveProgress + 1, zombiesAlive);
-		hud.setHealthLabel(player.getHealth());
-
-		// Displays the power-up available.
-		if (powerUps.size() > 0) {
-			hud.setPowerUpLabel(powerUps.get(0).getType());
-		} else {
-			hud.setPowerUpLabel(null);
-		}
-
-		// Renders entities on the screen.
-		draw();
-
-		// Step through the physics world simulation
-		world.step(1 / 60f, 6, 2);
 	}
+
+	public void handlePausedInput(){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            setPaused(isPaused);
+        }
+    }
 
 	/**
 	 * Retrieves user input from the {@link InputProcessor} and moves the player
@@ -574,9 +605,7 @@ public class GameManager implements Disposable {
 		if (player.isPowerUpActive(PowerUp.Type.SPEED)) {
 			modifier = 2f;
 		}
-
 		speed *= modifier;
-
 		if (controller.left) {
 			player.setLinearVelocityX(-1 * speed);
 		}
